@@ -1,0 +1,22 @@
+# Claude Code
+CLAUDE.md
+.claude/
+.claudeignore
+
+# .NET / MAUI
+bin/
+obj/
+*.user
+*.suo
+.vs/
+.idea/
+*.DotSettings.user
+
+# NuGet
+packages/
+*.nupkg
+project.lock.json
+
+# OS
+.DS_Store
+Thumbs.db
