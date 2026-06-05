@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="bgdlib.Views.NoteEditorPage"
+             BackgroundColor="#1e1e2e">
+
+    <ContentPage.ToolbarItems>
+        <ToolbarItem Text="💾" Clicked="OnSaveClicked" Order="Primary"/>
+        <ToolbarItem Text="↗" Clicked="OnExportClicked" Order="Primary"/>
+    </ContentPage.ToolbarItems>
+
+    <Grid RowDefinitions="Auto,*">
+
+        <!-- Заголовок и теги -->
+        <VerticalStackLayout Grid.Row="0" Padding="12,8" Spacing="6">
+            <Entry x:Name="TitleEntry"
+                   Text="{Binding Title}"
+                   Placeholder="Заголовок заметки"
+                   BackgroundColor="#313244" TextColor="#cdd6f4"
+                   PlaceholderColor="#6c7086" FontSize="16" FontAttributes="Bold"/>
+            <Entry Text="{Binding Tags}"
+                   Placeholder="#теги через пробел"
+                   BackgroundColor="#313244" TextColor="#89b4fa"
+                   PlaceholderColor="#6c7086" FontSize="13"/>
+        </VerticalStackLayout>
+
+        <!-- EasyMDE в WebView -->
+        <WebView x:Name="EditorWebView" Grid.Row="1"
+                 Navigating="OnEditorNavigating"/>
+
+    </Grid>
+</ContentPage>

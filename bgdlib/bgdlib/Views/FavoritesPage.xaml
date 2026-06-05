@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:models="clr-namespace:bgdlib.Models"
+             x:Class="bgdlib.Views.FavoritesPage"
+             Title="Избранное"
+             BackgroundColor="#1e1e2e">
+
+    <CollectionView ItemsSource="{Binding Items}"
+                    SelectionMode="Single"
+                    SelectionChanged="OnItemSelected">
+        <CollectionView.EmptyView>
+            <Label Text="Нет сохранённых статей"
+                   TextColor="#6c7086" HorizontalOptions="Center"
+                   VerticalOptions="Center" Margin="0,40"/>
+        </CollectionView.EmptyView>
+        <CollectionView.ItemTemplate>
+            <DataTemplate x:DataType="models:FavoriteItem">
+                <SwipeView>
+                    <SwipeView.RightItems>
+                        <SwipeItems>
+                            <SwipeItem Text="Удалить" BackgroundColor="#f38ba8"
+                                       Command="{Binding Source={RelativeSource AncestorType={x:Type ContentPage}}, Path=BindingContext.RemoveCommand}"
+                                       CommandParameter="{Binding .}"/>
+                        </SwipeItems>
+                    </SwipeView.RightItems>
+                    <Border Margin="12,4" Padding="12" BackgroundColor="#313244"
+                            StrokeShape="RoundRectangle 8">
+                        <Grid RowDefinitions="Auto,Auto">
+                            <Label Text="{Binding Title}" TextColor="#cdd6f4"
+                                   FontSize="15" FontAttributes="Bold" MaxLines="2"/>
+                            <HorizontalStackLayout Grid.Row="1" Spacing="8" Margin="0,4,0,0">
+                                <Label Text="{Binding Source}" TextColor="#89b4fa" FontSize="11"/>
+                                <Label Text="{Binding SavedAt, StringFormat='{0:dd.MM.yy}'}"
+                                       TextColor="#6c7086" FontSize="11"/>
+                            </HorizontalStackLayout>
+                        </Grid>
+                    </Border>
+                </SwipeView>
+            </DataTemplate>
+        </CollectionView.ItemTemplate>
+    </CollectionView>
+</ContentPage>

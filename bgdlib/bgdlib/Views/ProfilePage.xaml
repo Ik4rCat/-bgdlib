@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="bgdlib.Views.ProfilePage"
+             Title="Профиль"
+             BackgroundColor="#1e1e2e">
+
+    <ScrollView>
+        <VerticalStackLayout Padding="20" Spacing="16">
+
+            <!-- Аватар и имя -->
+            <Frame BackgroundColor="#313244" CornerRadius="12" Padding="16" BorderColor="Transparent">
+                <VerticalStackLayout Spacing="8" HorizontalOptions="Center">
+                    <Label Text="👤" FontSize="48" HorizontalOptions="Center"/>
+                    <Label Text="{Binding DisplayName}" TextColor="#cdd6f4"
+                           FontSize="20" FontAttributes="Bold" HorizontalOptions="Center"/>
+                    <Label Text="{Binding Email}" TextColor="#6c7086"
+                           FontSize="13" HorizontalOptions="Center"
+                           IsVisible="{Binding IsGuest, Converter={StaticResource InvertBoolConverter}}"/>
+                    <Label Text="Режим гостя — данные хранятся локально"
+                           TextColor="#f9e2af" FontSize="12" HorizontalOptions="Center"
+                           IsVisible="{Binding IsGuest}"/>
+                </VerticalStackLayout>
+            </Frame>
+
+            <!-- Войти (только для гостей) -->
+            <Button Text="Войти через Google"
+                    BackgroundColor="#89b4fa" TextColor="#1e1e2e"
+                    CornerRadius="8" IsVisible="{Binding IsGuest}"
+                    Clicked="OnLoginClicked"/>
+
+            <!-- Кэш -->
+            <Frame BackgroundColor="#313244" CornerRadius="12" Padding="16" BorderColor="Transparent">
+                <Grid ColumnDefinitions="*,Auto">
+                    <VerticalStackLayout>
+                        <Label Text="Кэш ленты" TextColor="#cdd6f4" FontSize="15"/>
+                        <Label Text="{Binding CacheSize}" TextColor="#6c7086" FontSize="13"/>
+                    </VerticalStackLayout>
+                    <Button Grid.Column="1" Text="Очистить"
+                            Command="{Binding ClearCacheCommand}"
+                            BackgroundColor="#f38ba8" TextColor="#1e1e2e"
+                            CornerRadius="6" Padding="12,6"/>
+                </Grid>
+            </Frame>
+
+        </VerticalStackLayout>
+    </ScrollView>
+</ContentPage>

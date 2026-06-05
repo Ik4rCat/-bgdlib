@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:models="clr-namespace:bgdlib.Models"
+             x:Class="bgdlib.Views.NotesPage"
+             Title="Заметки"
+             BackgroundColor="#1e1e2e">
+
+    <ContentPage.ToolbarItems>
+        <ToolbarItem Text="+" Clicked="OnNewNoteClicked" Order="Primary"/>
+    </ContentPage.ToolbarItems>
+
+    <Grid RowDefinitions="Auto,*">
+
+        <SearchBar Grid.Row="0"
+                   Text="{Binding SearchQuery}"
+                   Placeholder="Поиск по заметкам и тегам..."
+                   BackgroundColor="#313244" TextColor="#cdd6f4"
+                   PlaceholderColor="#6c7086" Margin="8"/>
+
+        <CollectionView Grid.Row="1"
+                        ItemsSource="{Binding Notes}"
+                        SelectionMode="Single"
+                        SelectionChanged="OnNoteSelected">
+            <CollectionView.EmptyView>
+                <Label Text="Нет заметок. Нажми + чтобы создать."
+                       TextColor="#6c7086" HorizontalOptions="Center"
+                       VerticalOptions="Center" Margin="0,40"/>
+            </CollectionView.EmptyView>
+            <CollectionView.ItemTemplate>
+                <DataTemplate x:DataType="models:Note">
+                    <SwipeView>
+                        <SwipeView.RightItems>
+                            <SwipeItems>
+                                <SwipeItem Text="Удалить" BackgroundColor="#f38ba8"
+                                           Command="{Binding Source={RelativeSource AncestorType={x:Type ContentPage}}, Path=BindingContext.DeleteCommand}"
+                                           CommandParameter="{Binding .}"/>
+                            </SwipeItems>
+                        </SwipeView.RightItems>
+                        <Border Margin="12,4" Padding="12" BackgroundColor="#313244"
+                                StrokeShape="RoundRectangle 8">
+                            <Grid RowDefinitions="Auto,Auto">
+                                <Label Text="{Binding Title}" TextColor="#cdd6f4"
+                                       FontSize="15" FontAttributes="Bold"/>
+                                <HorizontalStackLayout Grid.Row="1" Spacing="6" Margin="0,4,0,0">
+                                    <Label Text="{Binding Tags}" TextColor="#89b4fa" FontSize="11"/>
+                                    <Label Text="{Binding UpdatedAt, StringFormat='{0:dd.MM.yy}'}"
+                                           TextColor="#6c7086" FontSize="11"/>
+                                </HorizontalStackLayout>
+                            </Grid>
+                        </Border>
+                    </SwipeView>
+                </DataTemplate>
+            </CollectionView.ItemTemplate>
+        </CollectionView>
+    </Grid>
+</ContentPage>

@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:models="clr-namespace:bgdlib.Models"
+             x:Class="bgdlib.Views.FeedPage"
+             Title="BGDLib"
+             BackgroundColor="#1e1e2e">
+
+    <Grid RowDefinitions="Auto,Auto,*,Auto">
+
+        <!-- Фильтры -->
+        <HorizontalStackLayout Grid.Row="0" Spacing="8" Padding="12,8">
+            <Picker ItemsSource="{Binding Engines}"
+                    SelectedItem="{Binding SelectedEngine}"
+                    TextColor="#cdd6f4" BackgroundColor="#313244"
+                    WidthRequest="130"/>
+            <Picker ItemsSource="{Binding Categories}"
+                    SelectedItem="{Binding SelectedCategory}"
+                    TextColor="#cdd6f4" BackgroundColor="#313244"
+                    WidthRequest="140"/>
+        </HorizontalStackLayout>
+
+        <!-- Статус -->
+        <Label Grid.Row="1" Text="{Binding StatusText}"
+               TextColor="#6c7086" FontSize="12"
+               Padding="12,0" IsVisible="{Binding StatusText, Converter={StaticResource NotEmptyConverter}}"/>
+
+        <!-- Лента -->
+        <CollectionView Grid.Row="2"
+                        ItemsSource="{Binding Items}"
+                        SelectionMode="Single"
+                        SelectionChanged="OnArticleSelected">
+            <CollectionView.ItemTemplate>
+                <DataTemplate x:DataType="models:FeedItem">
+                    <Border Margin="12,4" Padding="12" BackgroundColor="#313244"
+                            StrokeShape="RoundRectangle 8">
+                        <Grid RowDefinitions="Auto,Auto,Auto" ColumnDefinitions="*,Auto">
+                            <Label Grid.Row="0" Grid.Column="0"
+                                   Text="{Binding Title}"
+                                   TextColor="#cdd6f4" FontSize="15" FontAttributes="Bold"
+                                   LineBreakMode="WordWrap" MaxLines="2"/>
+                            <Label Grid.Row="1" Grid.Column="0"
+                                   Text="{Binding Description}"
+                                   TextColor="#a6adc8" FontSize="12"
+                                   LineBreakMode="TailTruncation" MaxLines="2"
+                                   Margin="0,4,0,0"/>
+                            <HorizontalStackLayout Grid.Row="2" Grid.Column="0" Spacing="8" Margin="0,6,0,0">
+                                <Label Text="{Binding Source}" TextColor="#89b4fa" FontSize="11"/>
+                                <Label Text="{Binding Engine}" TextColor="#a6e3a1" FontSize="11"/>
+                                <Label Text="{Binding Category}" TextColor="#f9e2af" FontSize="11"/>
+                            </HorizontalStackLayout>
+                            <Label Grid.Row="0" Grid.Column="1"
+                                   Text="{Binding PublishedAt, StringFormat='{0:dd.MM}'}"
+                                   TextColor="#6c7086" FontSize="11" VerticalOptions="Start"/>
+                        </Grid>
+                    </Border>
+                </DataTemplate>
+            </CollectionView.ItemTemplate>
+        </CollectionView>
+
+        <!-- Индикатор загрузки -->
+        <ActivityIndicator Grid.Row="2" IsRunning="{Binding IsLoading}"
+                           Color="#89b4fa" VerticalOptions="Center" HorizontalOptions="Center"
+                           IsVisible="{Binding IsLoading}"/>
+
+    </Grid>
+</ContentPage>
