@@ -17,8 +17,8 @@ public partial class FeedViewModel : ObservableObject
     [ObservableProperty] private string _selectedCategory = "Все";
 
     public ObservableCollection<FeedItem> Items { get; } = [];
-    public List<string> Engines { get; } = ["Все", "Unity", "Godot", "Unreal", "Other"];
-    public List<string> Categories { get; } = ["Все", "news", "tutorial", "job", "postmortem", "tool"];
+    public List<string> Engines { get; } = ["All", "Unity", "Unreal", "Godot", "S&box", "Other"];
+    public List<string> Categories { get; } = ["All", "news", "tutorial", "job", "postmortem", "tool"];
 
     private List<FeedItem> _allItems = [];
 
