@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:vm="clr-namespace:bgdlib.ViewModels"
+             xmlns:models="clr-namespace:bgdlib.Models"
+             xmlns:conv="clr-namespace:bgdlib.Converters"
+             x:Class="bgdlib.Views.DocsPage"
+             x:DataType="vm:DocsViewModel"
+             x:Name="DocsPageRoot"
+             Title="Документации"
+             BackgroundColor="#1e1e2e">
+
+    <ContentPage.Resources>
+        <conv:ChipSelectedConverter x:Key="ChipSelected"/>
+        <conv:ChipTextColorConverter x:Key="ChipText"/>
+        <conv:EngineColorConverter x:Key="EngineColor"/>
+        <conv:EngineLetterConverter x:Key="EngineLetter"/>
+    </ContentPage.Resources>
+
+    <Grid RowDefinitions="Auto,Auto,*">
+
+        <Label Grid.Row="0" Text="Документации" FontSize="22" FontAttributes="Bold"
+               TextColor="#cdd6f4" Margin="16,12,16,4"/>
+
+        <!-- Фильтр по движку -->
+        <ScrollView Grid.Row="1" Orientation="Horizontal" HorizontalScrollBarVisibility="Never">
+            <HorizontalStackLayout Spacing="8" Padding="12,6">
+                <Border BackgroundColor="{Binding SelectedEngine, Converter={StaticResource ChipSelected}, ConverterParameter='Все'}"
+                        StrokeShape="RoundRectangle 20" Padding="0">
+                    <Label Text="Все" FontSize="12" Padding="14,6"
+                           TextColor="{Binding SelectedEngine, Converter={StaticResource ChipText}, ConverterParameter='Все'}">
+                        <Label.GestureRecognizers>
+                            <TapGestureRecognizer Command="{Binding SetEngineDocsCommand}" CommandParameter="Все"/>
+                        </Label.GestureRecognizers>
+                    </Label>
+                </Border>
+                <Border BackgroundColor="{Binding SelectedEngine, Converter={StaticResource ChipSelected}, ConverterParameter='Unity'}"
+                        StrokeShape="RoundRectangle 20" Padding="0">
+                    <Label Text="Unity" FontSize="12" Padding="14,6"
+                           TextColor="{Binding SelectedEngine, Converter={StaticResource ChipText}, ConverterParameter='Unity'}">
+                        <Label.GestureRecognizers>
+                            <TapGestureRecognizer Command="{Binding SetEngineDocsCommand}" CommandParameter="Unity"/>
+                        </Label.GestureRecognizers>
+                    </Label>
+                </Border>
+                <Border BackgroundColor="{Binding SelectedEngine, Converter={StaticResource ChipSelected}, ConverterParameter='Godot'}"
+                        StrokeShape="RoundRectangle 20" Padding="0">
+                    <Label Text="Godot" FontSize="12" Padding="14,6"
+                           TextColor="{Binding SelectedEngine, Converter={StaticResource ChipText}, ConverterParameter='Godot'}">
+                        <Label.GestureRecognizers>
+                            <TapGestureRecognizer Command="{Binding SetEngineDocsCommand}" CommandParameter="Godot"/>
+                        </Label.GestureRecognizers>
+                    </Label>
+                </Border>
+                <Border BackgroundColor="{Binding SelectedEngine, Converter={StaticResource ChipSelected}, ConverterParameter='Unreal'}"
+                        StrokeShape="RoundRectangle 20" Padding="0">
+                    <Label Text="Unreal" FontSize="12" Padding="14,6"
+                           TextColor="{Binding SelectedEngine, Converter={StaticResource ChipText}, ConverterParameter='Unreal'}">
+                        <Label.GestureRecognizers>
+                            <TapGestureRecognizer Command="{Binding SetEngineDocsCommand}" CommandParameter="Unreal"/>
+                        </Label.GestureRecognizers>
+                    </Label>
+                </Border>
+                <Border BackgroundColor="{Binding SelectedEngine, Converter={StaticResource ChipSelected}, ConverterParameter='Other'}"
+                        StrokeShape="RoundRectangle 20" Padding="0">
+                    <Label Text="Other" FontSize="12" Padding="14,6"
+                           TextColor="{Binding SelectedEngine, Converter={StaticResource ChipText}, ConverterParameter='Other'}">
+                        <Label.GestureRecognizers>
+                            <TapGestureRecognizer Command="{Binding SetEngineDocsCommand}" CommandParameter="Other"/>
+                        </Label.GestureRecognizers>
+                    </Label>
+                </Border>
+            </HorizontalStackLayout>
+        </ScrollView>
+
+        <!-- Список документаций -->
+        <CollectionView Grid.Row="2" ItemsSource="{Binding Docs}">
+            <CollectionView.ItemTemplate>
+                <DataTemplate x:DataType="models:DocLink">
+                    <Border Margin="12,4" Padding="0" BackgroundColor="#313244"
+                            StrokeShape="RoundRectangle 10">
+                        <Border.GestureRecognizers>
+                            <TapGestureRecognizer
+                                Command="{Binding Source={x:Reference DocsPageRoot}, Path=BindingContext.OpenDocCommand}"
+                                CommandParameter="{Binding .}"/>
+                        </Border.GestureRecognizers>
+                        <Grid ColumnDefinitions="6,*">
+                            <!-- Цветная полоска -->
+                            <BoxView Grid.Column="0"
+                                     BackgroundColor="{Binding AccentColor}"
+                                     WidthRequest="6"
+                                     CornerRadius="10,0,10,0"/>
+                            <!-- Контент -->
+                            <Grid Grid.Column="1" RowDefinitions="Auto,Auto,Auto"
+                                  Padding="12,10">
+                                <Grid Grid.Row="0" ColumnDefinitions="36,*">
+                                    <Border Grid.Column="0"
+                                            BackgroundColor="{Binding AccentColor}"
+                                            StrokeShape="RoundRectangle 6"
+                                            HeightRequest="28" WidthRequest="32">
+                                        <Label Text="{Binding Engine, Converter={StaticResource EngineLetter}}"
+                                               HorizontalOptions="Center" VerticalOptions="Center"
+                                               FontSize="11" FontAttributes="Bold" TextColor="#1e1e2e"/>
+                                    </Border>
+                                    <Label Grid.Column="1" Text="{Binding Title}"
+                                           TextColor="#cdd6f4" FontSize="14" FontAttributes="Bold"
+                                           VerticalOptions="Center" Margin="8,0,0,0"/>
+                                </Grid>
+                                <Label Grid.Row="1" Text="{Binding Description}"
+                                       TextColor="#a6adc8" FontSize="12"
+                                       MaxLines="2" LineBreakMode="TailTruncation"
+                                       Margin="0,6,0,0"/>
+                                <Label Grid.Row="2" Text="{Binding Author}"
+                                       TextColor="#6c7086" FontSize="11" Margin="0,4,0,0"/>
+                            </Grid>
+                        </Grid>
+                    </Border>
+                </DataTemplate>
+            </CollectionView.ItemTemplate>
+        </CollectionView>
+
+    </Grid>
+</ContentPage>

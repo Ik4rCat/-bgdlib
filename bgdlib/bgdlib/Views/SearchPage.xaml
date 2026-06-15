@@ -1,0 +1,136 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:vm="clr-namespace:bgdlib.ViewModels"
+             xmlns:models="clr-namespace:bgdlib.Models"
+             xmlns:conv="clr-namespace:bgdlib.Converters"
+             x:Class="bgdlib.Views.SearchPage"
+             x:DataType="vm:SearchViewModel"
+             x:Name="SearchPageRoot"
+             Title="Поиск"
+             BackgroundColor="#1e1e2e">
+
+    <ContentPage.Resources>
+        <conv:InvertBoolConverter x:Key="InvertBool"/>
+        <conv:EngineColorConverter x:Key="EngineColor"/>
+        <conv:EngineLetterConverter x:Key="EngineLetter"/>
+    </ContentPage.Resources>
+
+    <Grid RowDefinitions="Auto,*">
+
+        <SearchBar Grid.Row="0"
+                   Placeholder="Unity, Godot, геймдизайн ..."
+                   Text="{Binding SearchQuery}"
+                   BackgroundColor="#313244"
+                   TextColor="#cdd6f4"
+                   PlaceholderColor="#6c7086"
+                   CancelButtonColor="#89b4fa"
+                   Margin="12,8"/>
+
+        <!-- Категории и теги (нет результатов) -->
+        <ScrollView Grid.Row="1"
+                    IsVisible="{Binding ShowResults, Converter={StaticResource InvertBool}}">
+            <VerticalStackLayout Spacing="0">
+                <Label Text="КАТЕГОРИИ" TextColor="#6c7086" FontSize="11"
+                       FontAttributes="Bold" Margin="16,12,0,8"/>
+
+                <CollectionView ItemsSource="{Binding CategoryGrid}"
+                                Margin="12,0">
+                    <CollectionView.ItemsLayout>
+                        <GridItemsLayout Orientation="Vertical" Span="2"
+                                         HorizontalItemSpacing="8" VerticalItemSpacing="8"/>
+                    </CollectionView.ItemsLayout>
+                    <CollectionView.ItemTemplate>
+                        <DataTemplate x:DataType="vm:CategoryTile">
+                            <Border BackgroundColor="{Binding Color}"
+                                    StrokeShape="RoundRectangle 12"
+                                    Padding="0" HeightRequest="72">
+                                <Border.GestureRecognizers>
+                                    <TapGestureRecognizer
+                                        Command="{Binding Source={x:Reference SearchPageRoot}, Path=BindingContext.SelectCategoryCommand}"
+                                        CommandParameter="{Binding Filter}"/>
+                                </Border.GestureRecognizers>
+                                <Grid ColumnDefinitions="44,*" Padding="10,0">
+                                    <Label Grid.Column="0" Text="{Binding Letter}"
+                                           FontSize="22" FontAttributes="Bold"
+                                           TextColor="#1e1e2e" VerticalOptions="Center"
+                                           HorizontalOptions="Center"/>
+                                    <Label Grid.Column="1" Text="{Binding Name}"
+                                           FontSize="14" FontAttributes="Bold"
+                                           TextColor="#1e1e2e" VerticalOptions="Center"/>
+                                </Grid>
+                            </Border>
+                        </DataTemplate>
+                    </CollectionView.ItemTemplate>
+                </CollectionView>
+
+                <Label Text="ПОПУЛЯРНЫЕ ТЕГИ" TextColor="#6c7086" FontSize="11"
+                       FontAttributes="Bold" Margin="16,16,0,8"/>
+
+                <ScrollView Orientation="Horizontal" HorizontalScrollBarVisibility="Never"
+                            Margin="12,0,12,16">
+                    <HorizontalStackLayout Spacing="8"
+                                           BindableLayout.ItemsSource="{Binding PopularTags}">
+                        <BindableLayout.ItemTemplate>
+                            <DataTemplate x:DataType="x:String">
+                                <Border BackgroundColor="#313244" StrokeShape="RoundRectangle 20"
+                                        Padding="14,6">
+                                    <Border.GestureRecognizers>
+                                        <TapGestureRecognizer
+                                            Command="{Binding Source={x:Reference SearchPageRoot}, Path=BindingContext.SelectTagCommand}"
+                                            CommandParameter="{Binding .}"/>
+                                    </Border.GestureRecognizers>
+                                    <Label Text="{Binding .}" TextColor="#cdd6f4" FontSize="12"/>
+                                </Border>
+                            </DataTemplate>
+                        </BindableLayout.ItemTemplate>
+                    </HorizontalStackLayout>
+                </ScrollView>
+            </VerticalStackLayout>
+        </ScrollView>
+
+        <!-- Результаты -->
+        <CollectionView Grid.Row="1"
+                        ItemsSource="{Binding Results}"
+                        IsVisible="{Binding ShowResults}">
+            <CollectionView.EmptyView>
+                <Label Text="Ничего не найдено" TextColor="#6c7086"
+                       HorizontalOptions="Center" VerticalOptions="Center" Margin="0,40"/>
+            </CollectionView.EmptyView>
+            <CollectionView.ItemTemplate>
+                <DataTemplate x:DataType="models:FeedItem">
+                    <Border Margin="12,4" Padding="10" BackgroundColor="#313244"
+                            StrokeShape="RoundRectangle 10">
+                        <Grid ColumnDefinitions="44,*" ColumnSpacing="10">
+                            <!-- Engine badge -->
+                            <Border Grid.Column="0"
+                                    BackgroundColor="{Binding Engine, Converter={StaticResource EngineColor}}"
+                                    StrokeShape="RoundRectangle 8"
+                                    HeightRequest="44" WidthRequest="44"
+                                    VerticalOptions="Start">
+                                <Label Text="{Binding Engine, Converter={StaticResource EngineLetter}}"
+                                       HorizontalOptions="Center" VerticalOptions="Center"
+                                       FontSize="13" FontAttributes="Bold" TextColor="#1e1e2e"/>
+                            </Border>
+                            <!-- Content -->
+                            <Grid Grid.Column="1" RowDefinitions="Auto,Auto,Auto">
+                                <Label Grid.Row="0" Text="{Binding Title}"
+                                       TextColor="#cdd6f4" FontSize="13" FontAttributes="Bold"
+                                       MaxLines="2" LineBreakMode="WordWrap"/>
+                                <Label Grid.Row="1" Text="{Binding Description}"
+                                       TextColor="#a6adc8" FontSize="11"
+                                       MaxLines="2" LineBreakMode="TailTruncation" Margin="0,4,0,0"/>
+                                <HorizontalStackLayout Grid.Row="2" Spacing="6" Margin="0,4,0,0">
+                                    <Label Text="{Binding Source}" TextColor="#89b4fa" FontSize="10"/>
+                                    <Label Text="•" TextColor="#6c7086" FontSize="10"/>
+                                    <Label Text="{Binding Engine}" TextColor="#a6e3a1" FontSize="10"/>
+                                </HorizontalStackLayout>
+                            </Grid>
+                        </Grid>
+                    </Border>
+                </DataTemplate>
+            </CollectionView.ItemTemplate>
+        </CollectionView>
+
+    </Grid>
+</ContentPage>

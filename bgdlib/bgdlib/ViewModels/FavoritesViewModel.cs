@@ -11,25 +11,45 @@ public partial class FavoritesViewModel : ObservableObject
     private readonly DatabaseService _db;
 
     [ObservableProperty] private bool _isEmpty;
+    [ObservableProperty] private string _selectedEngine = "Все";
 
+    public List<string> EngineFilters { get; } = ["Все", "Unity", "Godot", "Unreal", "Other"];
     public ObservableCollection<FavoriteItem> Items { get; } = [];
+
+    private List<FavoriteItem> _allItems = [];
 
     public FavoritesViewModel(DatabaseService db) => _db = db;
 
     [RelayCommand]
     public async Task LoadAsync()
     {
-        var items = await _db.GetFavoritesAsync();
-        Items.Clear();
-        foreach (var item in items) Items.Add(item);
-        IsEmpty = Items.Count == 0;
+        _allItems = await _db.GetFavoritesAsync();
+        ApplyFilter();
+    }
+
+    [RelayCommand]
+    public void SetEngine(string engine)
+    {
+        SelectedEngine = engine;
+        ApplyFilter();
     }
 
     [RelayCommand]
     public async Task RemoveAsync(FavoriteItem item)
     {
         await _db.RemoveFavoriteAsync(item.Url);
-        Items.Remove(item);
+        _allItems.Remove(item);
+        ApplyFilter();
+    }
+
+    private void ApplyFilter()
+    {
+        var filtered = SelectedEngine == "Все"
+            ? _allItems
+            : _allItems.Where(x => x.Engine == SelectedEngine).ToList();
+
+        Items.Clear();
+        foreach (var item in filtered) Items.Add(item);
         IsEmpty = Items.Count == 0;
     }
 }

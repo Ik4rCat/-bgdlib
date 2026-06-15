@@ -15,7 +15,6 @@ public partial class NoteEditorPage : ContentPage
         _vm = vm;
         BindingContext = vm;
 
-        // Когда ViewModel загрузила контент — передаём в JS
         _vm.ContentLoaded += async content =>
         {
             var escaped = content.Replace("\\", "\\\\").Replace("`", "\\`").Replace("'", "\\'");
@@ -26,15 +25,21 @@ public partial class NoteEditorPage : ContentPage
     protected override async void OnAppearing()
     {
         base.OnAppearing();
-        // Загружаем editor.html из Raw assets
+        EditorWebView.Navigated += OnEditorLoaded;
         EditorWebView.Source = new HtmlWebViewSource
         {
-            Html = await LoadEditorHtmlAsync()
+            Html = await LoadEditorHtmlAsync(),
+            BaseUrl = "file:///android_asset/"
         };
+    }
+
+    private async void OnEditorLoaded(object? sender, WebNavigatedEventArgs e)
+    {
+        if (e.Result != WebNavigationResult.Success) return;
+        EditorWebView.Navigated -= OnEditorLoaded;
         await _vm.InitAsync(Note);
     }
 
-    // Перехватываем bgdlib:// навигацию из JS
     private async void OnEditorNavigating(object sender, WebNavigatingEventArgs e)
     {
         if (!e.Url.StartsWith("bgdlib://")) return;

@@ -28,10 +28,10 @@
         <MauiXamlInflator>SourceGen</MauiXamlInflator>
 
         <!-- Display name -->
-        <ApplicationTitle>bgdlib</ApplicationTitle>
+        <ApplicationTitle>BGDLib</ApplicationTitle>
 
         <!-- App Identifier -->
-        <ApplicationId>com.companyname.bgdlib</ApplicationId>
+        <ApplicationId>com.crazyanimals.bgdlib</ApplicationId>
 
         <!-- Versions -->
         <ApplicationDisplayVersion>1.0</ApplicationDisplayVersion>
@@ -73,7 +73,6 @@
         <PackageReference Include="sqlite-net-pcl" Version="1.9.172"/>
         <PackageReference Include="SQLitePCLRaw.bundle_green" Version="2.1.10"/>
         <PackageReference Include="CodeHollow.FeedReader" Version="1.2.6"/>
-        <PackageReference Include="Markdig" Version="0.40.0"/>
     </ItemGroup>
 
 </Project>

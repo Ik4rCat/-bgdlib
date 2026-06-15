@@ -1,43 +1,126 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:vm="clr-namespace:bgdlib.ViewModels"
              xmlns:models="clr-namespace:bgdlib.Models"
+             xmlns:conv="clr-namespace:bgdlib.Converters"
              x:Class="bgdlib.Views.FavoritesPage"
-             Title="Избранное"
+             x:DataType="vm:FavoritesViewModel"
+             x:Name="FavsPageRoot"
+             Title="Сохранено"
              BackgroundColor="#1e1e2e">
 
-    <CollectionView ItemsSource="{Binding Items}"
-                    SelectionMode="Single"
-                    SelectionChanged="OnItemSelected">
-        <CollectionView.EmptyView>
-            <Label Text="Нет сохранённых статей"
-                   TextColor="#6c7086" HorizontalOptions="Center"
-                   VerticalOptions="Center" Margin="0,40"/>
-        </CollectionView.EmptyView>
-        <CollectionView.ItemTemplate>
-            <DataTemplate x:DataType="models:FavoriteItem">
-                <SwipeView>
-                    <SwipeView.RightItems>
-                        <SwipeItems>
-                            <SwipeItem Text="Удалить" BackgroundColor="#f38ba8"
-                                       Command="{Binding Source={RelativeSource AncestorType={x:Type ContentPage}}, Path=BindingContext.RemoveCommand}"
-                                       CommandParameter="{Binding .}"/>
-                        </SwipeItems>
-                    </SwipeView.RightItems>
-                    <Border Margin="12,4" Padding="12" BackgroundColor="#313244"
-                            StrokeShape="RoundRectangle 8">
-                        <Grid RowDefinitions="Auto,Auto">
-                            <Label Text="{Binding Title}" TextColor="#cdd6f4"
-                                   FontSize="15" FontAttributes="Bold" MaxLines="2"/>
-                            <HorizontalStackLayout Grid.Row="1" Spacing="8" Margin="0,4,0,0">
-                                <Label Text="{Binding Source}" TextColor="#89b4fa" FontSize="11"/>
-                                <Label Text="{Binding SavedAt, StringFormat='{0:dd.MM.yy}'}"
-                                       TextColor="#6c7086" FontSize="11"/>
-                            </HorizontalStackLayout>
-                        </Grid>
-                    </Border>
-                </SwipeView>
-            </DataTemplate>
-        </CollectionView.ItemTemplate>
-    </CollectionView>
+    <ContentPage.Resources>
+        <conv:ChipSelectedConverter x:Key="ChipSelected"/>
+        <conv:ChipTextColorConverter x:Key="ChipText"/>
+        <conv:EngineColorConverter x:Key="EngineColor"/>
+        <conv:EngineLetterConverter x:Key="EngineLetter"/>
+        <conv:NotEmptyConverter x:Key="NotEmpty"/>
+    </ContentPage.Resources>
+
+    <Grid RowDefinitions="Auto,*">
+
+        <!-- Фильтры по движку -->
+        <ScrollView Grid.Row="0" Orientation="Horizontal" HorizontalScrollBarVisibility="Never">
+            <HorizontalStackLayout Spacing="8" Padding="12,8">
+                <Border BackgroundColor="{Binding SelectedEngine, Converter={StaticResource ChipSelected}, ConverterParameter='Все'}"
+                        StrokeShape="RoundRectangle 20" Padding="0">
+                    <Label Text="Все" FontSize="12" Padding="14,6"
+                           TextColor="{Binding SelectedEngine, Converter={StaticResource ChipText}, ConverterParameter='Все'}">
+                        <Label.GestureRecognizers>
+                            <TapGestureRecognizer Command="{Binding SetEngineCommand}" CommandParameter="Все"/>
+                        </Label.GestureRecognizers>
+                    </Label>
+                </Border>
+                <Border BackgroundColor="{Binding SelectedEngine, Converter={StaticResource ChipSelected}, ConverterParameter='Unity'}"
+                        StrokeShape="RoundRectangle 20" Padding="0">
+                    <Label Text="Unity" FontSize="12" Padding="14,6"
+                           TextColor="{Binding SelectedEngine, Converter={StaticResource ChipText}, ConverterParameter='Unity'}">
+                        <Label.GestureRecognizers>
+                            <TapGestureRecognizer Command="{Binding SetEngineCommand}" CommandParameter="Unity"/>
+                        </Label.GestureRecognizers>
+                    </Label>
+                </Border>
+                <Border BackgroundColor="{Binding SelectedEngine, Converter={StaticResource ChipSelected}, ConverterParameter='Godot'}"
+                        StrokeShape="RoundRectangle 20" Padding="0">
+                    <Label Text="Godot" FontSize="12" Padding="14,6"
+                           TextColor="{Binding SelectedEngine, Converter={StaticResource ChipText}, ConverterParameter='Godot'}">
+                        <Label.GestureRecognizers>
+                            <TapGestureRecognizer Command="{Binding SetEngineCommand}" CommandParameter="Godot"/>
+                        </Label.GestureRecognizers>
+                    </Label>
+                </Border>
+                <Border BackgroundColor="{Binding SelectedEngine, Converter={StaticResource ChipSelected}, ConverterParameter='Unreal'}"
+                        StrokeShape="RoundRectangle 20" Padding="0">
+                    <Label Text="Unreal" FontSize="12" Padding="14,6"
+                           TextColor="{Binding SelectedEngine, Converter={StaticResource ChipText}, ConverterParameter='Unreal'}">
+                        <Label.GestureRecognizers>
+                            <TapGestureRecognizer Command="{Binding SetEngineCommand}" CommandParameter="Unreal"/>
+                        </Label.GestureRecognizers>
+                    </Label>
+                </Border>
+                <Border BackgroundColor="{Binding SelectedEngine, Converter={StaticResource ChipSelected}, ConverterParameter='Other'}"
+                        StrokeShape="RoundRectangle 20" Padding="0">
+                    <Label Text="Other" FontSize="12" Padding="14,6"
+                           TextColor="{Binding SelectedEngine, Converter={StaticResource ChipText}, ConverterParameter='Other'}">
+                        <Label.GestureRecognizers>
+                            <TapGestureRecognizer Command="{Binding SetEngineCommand}" CommandParameter="Other"/>
+                        </Label.GestureRecognizers>
+                    </Label>
+                </Border>
+            </HorizontalStackLayout>
+        </ScrollView>
+
+        <!-- Список избранного -->
+        <CollectionView Grid.Row="1" ItemsSource="{Binding Items}"
+                        SelectionMode="Single"
+                        SelectionChanged="OnItemSelected">
+            <CollectionView.EmptyView>
+                <Label Text="Нет сохранённых статей"
+                       TextColor="#6c7086" HorizontalOptions="Center"
+                       VerticalOptions="Center" Margin="0,40"/>
+            </CollectionView.EmptyView>
+            <CollectionView.ItemTemplate>
+                <DataTemplate x:DataType="models:FavoriteItem">
+                    <SwipeView>
+                        <SwipeView.RightItems>
+                            <SwipeItems>
+                                <SwipeItem Text="Удалить" BackgroundColor="#f38ba8"
+                                           Command="{Binding Source={x:Reference FavsPageRoot}, Path=BindingContext.RemoveCommand}"
+                                           CommandParameter="{Binding .}"/>
+                            </SwipeItems>
+                        </SwipeView.RightItems>
+                        <Border Margin="12,4" Padding="10" BackgroundColor="#313244"
+                                StrokeShape="RoundRectangle 10">
+                            <Grid ColumnDefinitions="44,*" ColumnSpacing="10">
+                                <!-- Engine badge -->
+                                <Border Grid.Column="0"
+                                        BackgroundColor="{Binding Engine, Converter={StaticResource EngineColor}}"
+                                        StrokeShape="RoundRectangle 8"
+                                        HeightRequest="44" WidthRequest="44"
+                                        VerticalOptions="Start">
+                                    <Label Text="{Binding Engine, Converter={StaticResource EngineLetter}}"
+                                           HorizontalOptions="Center" VerticalOptions="Center"
+                                           FontSize="14" FontAttributes="Bold" TextColor="#1e1e2e"/>
+                                </Border>
+                                <!-- Content -->
+                                <Grid Grid.Column="1" RowDefinitions="Auto,Auto">
+                                    <Label Grid.Row="0" Text="{Binding Title}"
+                                           TextColor="#cdd6f4" FontSize="14" FontAttributes="Bold"
+                                           MaxLines="2" LineBreakMode="WordWrap"/>
+                                    <HorizontalStackLayout Grid.Row="1" Spacing="6" Margin="0,4,0,0">
+                                        <Label Text="{Binding Source}" TextColor="#89b4fa" FontSize="11"/>
+                                        <Label Text="•" TextColor="#6c7086" FontSize="11"/>
+                                        <Label Text="{Binding SavedAt, StringFormat='{0:dd.MM.yy}'}"
+                                               TextColor="#6c7086" FontSize="11"/>
+                                    </HorizontalStackLayout>
+                                </Grid>
+                            </Grid>
+                        </Border>
+                    </SwipeView>
+                </DataTemplate>
+            </CollectionView.ItemTemplate>
+        </CollectionView>
+
+    </Grid>
 </ContentPage>

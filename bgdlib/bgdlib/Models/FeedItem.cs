@@ -17,4 +17,7 @@ public class FeedItem
     public string ImageUrl { get; set; } = string.Empty;
     public DateTime PublishedAt { get; set; }
     public DateTime CachedAt { get; set; } = DateTime.UtcNow;
+
+    [SQLite.Ignore]
+    public bool IsFavorite { get; set; }
 }

@@ -18,7 +18,7 @@ public static class MauiProgram
                 fonts.AddFont("OpenSans-Semibold.ttf", "OpenSansSemibold");
             });
 
-        // Services (Singleton — один экземпляр на всё приложение)
+        // Services
         builder.Services.AddSingleton<DatabaseService>();
         builder.Services.AddSingleton<RssService>();
         builder.Services.AddSingleton<NoteFileService>();
@@ -29,6 +29,9 @@ public static class MauiProgram
         builder.Services.AddTransient<NotesViewModel>();
         builder.Services.AddTransient<NoteEditorViewModel>();
         builder.Services.AddTransient<ProfileViewModel>();
+        builder.Services.AddTransient<SearchViewModel>();
+        builder.Services.AddTransient<JobsViewModel>();
+        builder.Services.AddTransient<DocsViewModel>();
 
         // Views
         builder.Services.AddTransient<FeedPage>();
@@ -37,6 +40,9 @@ public static class MauiProgram
         builder.Services.AddTransient<NoteEditorPage>();
         builder.Services.AddTransient<ProfilePage>();
         builder.Services.AddTransient<ArticlePage>();
+        builder.Services.AddTransient<SearchPage>();
+        builder.Services.AddTransient<JobsPage>();
+        builder.Services.AddTransient<DocsPage>();
 
 #if DEBUG
         builder.Logging.AddDebug();
