@@ -1,47 +1,173 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:vm="clr-namespace:bgdlib.ViewModels"
+             xmlns:conv="clr-namespace:bgdlib.Converters"
              x:Class="bgdlib.Views.ProfilePage"
-             Title="Профиль"
-             BackgroundColor="#1e1e2e">
+             x:DataType="vm:ProfileViewModel"
+             BackgroundColor="#0f0f0f">
+
+    <ContentPage.Resources>
+        <conv:InvertBoolConverter x:Key="InvertBool"/>
+        <conv:ChipSelectedConverter x:Key="ChipSelected"/>
+        <conv:ChipTextColorConverter x:Key="ChipText"/>
+    </ContentPage.Resources>
 
     <ScrollView>
-        <VerticalStackLayout Padding="20" Spacing="16">
+        <VerticalStackLayout Padding="16" Spacing="12">
 
-            <!-- Аватар и имя -->
-            <Frame BackgroundColor="#313244" CornerRadius="12" Padding="16" BorderColor="Transparent">
-                <VerticalStackLayout Spacing="8" HorizontalOptions="Center">
-                    <Label Text="👤" FontSize="48" HorizontalOptions="Center"/>
-                    <Label Text="{Binding DisplayName}" TextColor="#cdd6f4"
-                           FontSize="20" FontAttributes="Bold" HorizontalOptions="Center"/>
-                    <Label Text="{Binding Email}" TextColor="#6c7086"
-                           FontSize="13" HorizontalOptions="Center"
-                           IsVisible="{Binding IsGuest, Converter={StaticResource InvertBoolConverter}}"/>
-                    <Label Text="Режим гостя — данные хранятся локально"
-                           TextColor="#f9e2af" FontSize="12" HorizontalOptions="Center"
-                           IsVisible="{Binding IsGuest}"/>
-                </VerticalStackLayout>
-            </Frame>
+            <!-- Header -->
+            <Label Margin="0,8,0,4">
+                <Label.FormattedText>
+                    <FormattedString>
+                        <Span Text="BGD" TextColor="#FFFFFF" FontSize="22" FontAttributes="Bold"/>
+                        <Span Text="lib" TextColor="#E53935" FontSize="22" FontAttributes="Bold"/>
+                    </FormattedString>
+                </Label.FormattedText>
+            </Label>
 
-            <!-- Войти (только для гостей) -->
-            <Button Text="Войти через Google"
-                    BackgroundColor="#89b4fa" TextColor="#1e1e2e"
-                    CornerRadius="8" IsVisible="{Binding IsGuest}"
-                    Clicked="OnLoginClicked"/>
-
-            <!-- Кэш -->
-            <Frame BackgroundColor="#313244" CornerRadius="12" Padding="16" BorderColor="Transparent">
-                <Grid ColumnDefinitions="*,Auto">
-                    <VerticalStackLayout>
-                        <Label Text="Кэш ленты" TextColor="#cdd6f4" FontSize="15"/>
-                        <Label Text="{Binding CacheSize}" TextColor="#6c7086" FontSize="13"/>
+            <!-- User card -->
+            <Border BackgroundColor="#1a1a1a" StrokeShape="RoundRectangle 14" StrokeThickness="0" Padding="16">
+                <Grid ColumnDefinitions="56,*">
+                    <Border Grid.Column="0" BackgroundColor="#242424"
+                            StrokeShape="RoundRectangle 28" StrokeThickness="0"
+                            HeightRequest="56" WidthRequest="56">
+                        <Label Text="&#xe7fd;" FontFamily="MaterialIcons"
+                               FontSize="30" TextColor="#555555"
+                               HorizontalOptions="Center" VerticalOptions="Center"/>
+                    </Border>
+                    <VerticalStackLayout Grid.Column="1" Margin="12,0,0,0" VerticalOptions="Center" Spacing="2">
+                        <Label Text="{Binding [Profile_Guest], Source={StaticResource Loc}}"
+                               TextColor="#FFFFFF" FontSize="16" FontAttributes="Bold"
+                               IsVisible="{Binding IsGuest}"/>
+                        <Label Text="{Binding DisplayName}" TextColor="#FFFFFF" FontSize="16" FontAttributes="Bold"
+                               IsVisible="{Binding IsGuest, Converter={StaticResource InvertBool}}"/>
+                        <Label Text="{Binding [Profile_GuestNote], Source={StaticResource Loc}}"
+                               TextColor="#555555" FontSize="12" IsVisible="{Binding IsGuest}"/>
+                        <Label Text="{Binding Email}" TextColor="#555555" FontSize="12"
+                               IsVisible="{Binding IsGuest, Converter={StaticResource InvertBool}}"/>
                     </VerticalStackLayout>
-                    <Button Grid.Column="1" Text="Очистить"
-                            Command="{Binding ClearCacheCommand}"
-                            BackgroundColor="#f38ba8" TextColor="#1e1e2e"
-                            CornerRadius="6" Padding="12,6"/>
                 </Grid>
-            </Frame>
+            </Border>
+
+            <!-- Sign in button -->
+            <Border BackgroundColor="#E53935" StrokeShape="RoundRectangle 12" StrokeThickness="0"
+                    IsVisible="{Binding IsGuest}" Padding="0">
+                <Label Text="{Binding [Profile_LoginBtn], Source={StaticResource Loc}}"
+                       TextColor="#FFFFFF" FontSize="15" FontAttributes="Bold"
+                       HorizontalOptions="Center" Padding="0,14">
+                    <Label.GestureRecognizers>
+                        <TapGestureRecognizer Tapped="OnLoginClicked"/>
+                    </Label.GestureRecognizers>
+                </Label>
+            </Border>
+
+            <!-- Section: Content -->
+            <Label Text="КОНТЕНТ" TextColor="#555555" FontSize="11"
+                   FontAttributes="Bold" CharacterSpacing="1" Margin="4,8,0,4"/>
+
+            <!-- Jobs -->
+            <Border BackgroundColor="#1a1a1a" StrokeShape="RoundRectangle 14" StrokeThickness="0" Padding="0">
+                <Grid ColumnDefinitions="Auto,*,Auto" Padding="16,14">
+                    <Label Grid.Column="0" Text="&#xe8f9;" FontFamily="MaterialIcons"
+                           FontSize="22" TextColor="#fab387" VerticalOptions="Center"/>
+                    <Label Grid.Column="1" Text="{Binding [Tab_Jobs], Source={StaticResource Loc}}"
+                           TextColor="#FFFFFF" FontSize="15" Margin="12,0,0,0" VerticalOptions="Center"/>
+                    <Label Grid.Column="2" Text="&#xe5c8;" FontFamily="MaterialIcons"
+                           FontSize="20" TextColor="#555555" VerticalOptions="Center"/>
+                </Grid>
+                <Border.GestureRecognizers>
+                    <TapGestureRecognizer Command="{Binding GoToJobsCommand}"/>
+                </Border.GestureRecognizers>
+            </Border>
+
+            <!-- Docs -->
+            <Border BackgroundColor="#1a1a1a" StrokeShape="RoundRectangle 14" StrokeThickness="0" Padding="0">
+                <Grid ColumnDefinitions="Auto,*,Auto" Padding="16,14">
+                    <Label Grid.Column="0" Text="&#xe86f;" FontFamily="MaterialIcons"
+                           FontSize="22" TextColor="#94e2d5" VerticalOptions="Center"/>
+                    <Label Grid.Column="1" Text="{Binding [Tab_Docs], Source={StaticResource Loc}}"
+                           TextColor="#FFFFFF" FontSize="15" Margin="12,0,0,0" VerticalOptions="Center"/>
+                    <Label Grid.Column="2" Text="&#xe5c8;" FontFamily="MaterialIcons"
+                           FontSize="20" TextColor="#555555" VerticalOptions="Center"/>
+                </Grid>
+                <Border.GestureRecognizers>
+                    <TapGestureRecognizer Command="{Binding GoToDocsCommand}"/>
+                </Border.GestureRecognizers>
+            </Border>
+
+            <!-- Notes -->
+            <Border BackgroundColor="#1a1a1a" StrokeShape="RoundRectangle 14" StrokeThickness="0" Padding="0">
+                <Grid ColumnDefinitions="Auto,*,Auto" Padding="16,14">
+                    <Label Grid.Column="0" Text="&#xe3f4;" FontFamily="MaterialIcons"
+                           FontSize="22" TextColor="#cba6f7" VerticalOptions="Center"/>
+                    <Label Grid.Column="1" Text="{Binding [Tab_Notes], Source={StaticResource Loc}}"
+                           TextColor="#FFFFFF" FontSize="15" Margin="12,0,0,0" VerticalOptions="Center"/>
+                    <Label Grid.Column="2" Text="&#xe5c8;" FontFamily="MaterialIcons"
+                           FontSize="20" TextColor="#555555" VerticalOptions="Center"/>
+                </Grid>
+                <Border.GestureRecognizers>
+                    <TapGestureRecognizer Command="{Binding GoToNotesCommand}"/>
+                </Border.GestureRecognizers>
+            </Border>
+
+            <!-- Section: Settings -->
+            <Label Text="НАСТРОЙКИ" TextColor="#555555" FontSize="11"
+                   FontAttributes="Bold" CharacterSpacing="1" Margin="4,8,0,4"/>
+
+            <!-- Cache -->
+            <Border BackgroundColor="#1a1a1a" StrokeShape="RoundRectangle 14" StrokeThickness="0" Padding="16">
+                <Grid ColumnDefinitions="Auto,*,Auto" ColumnSpacing="12">
+                    <Label Grid.Column="0" Text="&#xe871;" FontFamily="MaterialIcons"
+                           FontSize="22" TextColor="#9E9E9E" VerticalOptions="Center"/>
+                    <VerticalStackLayout Grid.Column="1" VerticalOptions="Center" Spacing="2">
+                        <Label Text="{Binding [Profile_Cache], Source={StaticResource Loc}}"
+                               TextColor="#FFFFFF" FontSize="14"/>
+                        <Label Text="{Binding CacheSize}" TextColor="#555555" FontSize="12"/>
+                    </VerticalStackLayout>
+                    <Border Grid.Column="2" BackgroundColor="#242424"
+                            StrokeShape="RoundRectangle 8" StrokeThickness="0" Padding="0">
+                        <Label Text="{Binding [Profile_ClearCache], Source={StaticResource Loc}}"
+                               Padding="14,8" FontSize="13" TextColor="#E53935">
+                            <Label.GestureRecognizers>
+                                <TapGestureRecognizer Command="{Binding ClearCacheCommand}"/>
+                            </Label.GestureRecognizers>
+                        </Label>
+                    </Border>
+                </Grid>
+            </Border>
+
+            <!-- Language -->
+            <Border BackgroundColor="#1a1a1a" StrokeShape="RoundRectangle 14" StrokeThickness="0" Padding="16">
+                <Grid ColumnDefinitions="Auto,*,Auto,Auto" ColumnSpacing="12">
+                    <Label Grid.Column="0" Text="&#xe894;" FontFamily="MaterialIcons"
+                           FontSize="22" TextColor="#9E9E9E" VerticalOptions="Center"/>
+                    <Label Grid.Column="1" Text="{Binding [Profile_Lang], Source={StaticResource Loc}}"
+                           TextColor="#FFFFFF" FontSize="14" VerticalOptions="Center"/>
+                    <Border Grid.Column="2" Margin="0,0,6,0"
+                            BackgroundColor="{Binding CurrentLang, Converter={StaticResource ChipSelected}, ConverterParameter='ru'}"
+                            StrokeShape="RoundRectangle 8" StrokeThickness="0" Padding="0">
+                        <Label Text="{Binding [Profile_LangRU], Source={StaticResource Loc}}"
+                               Padding="14,8" FontSize="13"
+                               TextColor="{Binding CurrentLang, Converter={StaticResource ChipText}, ConverterParameter='ru'}">
+                            <Label.GestureRecognizers>
+                                <TapGestureRecognizer Command="{Binding SetLanguageCommand}" CommandParameter="ru"/>
+                            </Label.GestureRecognizers>
+                        </Label>
+                    </Border>
+                    <Border Grid.Column="3"
+                            BackgroundColor="{Binding CurrentLang, Converter={StaticResource ChipSelected}, ConverterParameter='en'}"
+                            StrokeShape="RoundRectangle 8" StrokeThickness="0" Padding="0">
+                        <Label Text="{Binding [Profile_LangEN], Source={StaticResource Loc}}"
+                               Padding="14,8" FontSize="13"
+                               TextColor="{Binding CurrentLang, Converter={StaticResource ChipText}, ConverterParameter='en'}">
+                            <Label.GestureRecognizers>
+                                <TapGestureRecognizer Command="{Binding SetLanguageCommand}" CommandParameter="en"/>
+                            </Label.GestureRecognizers>
+                        </Label>
+                    </Border>
+                </Grid>
+            </Border>
 
         </VerticalStackLayout>
     </ScrollView>

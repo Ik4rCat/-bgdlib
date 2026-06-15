@@ -1,3 +1,4 @@
+using bgdlib.Services;
 using bgdlib.ViewModels;
 
 namespace bgdlib.Views;
@@ -18,7 +19,7 @@ public partial class ProfilePage : ContentPage
 
     private async void OnLoginClicked(object sender, EventArgs e)
     {
-        // TODO: Firebase Auth Google Sign-In
-        await DisplayAlert("Скоро", "Авторизация через Google будет добавлена в следующей версии", "OK");
+        var L = LocalizationService.Instance;
+        await DisplayAlert("Google Sign-In", L["Profile_GuestNote"], L["OK"]);
     }
 }

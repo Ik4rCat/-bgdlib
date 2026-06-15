@@ -7,9 +7,9 @@ namespace bgdlib.ViewModels;
 
 public partial class DocsViewModel : ObservableObject
 {
-    [ObservableProperty] private string _selectedEngine = "Все";
+    [ObservableProperty] private string _selectedEngine = "ALL";
 
-    public List<string> Engines { get; } = ["Все", "Unity", "Godot", "Unreal", "Other"];
+    public List<string> Engines { get; } = ["ALL", "Unity", "Godot", "Unreal", "Other"];
 
     private static readonly List<DocLink> AllDocs =
     [
@@ -79,7 +79,7 @@ public partial class DocsViewModel : ObservableObject
     private void ApplyFilter()
     {
         Docs.Clear();
-        var filtered = SelectedEngine == "Все"
+        var filtered = SelectedEngine == "ALL"
             ? AllDocs
             : AllDocs.Where(x => x.Engine == SelectedEngine);
         foreach (var doc in filtered) Docs.Add(doc);

@@ -4,6 +4,8 @@ using System.Collections.ObjectModel;
 using bgdlib.Models;
 using bgdlib.Services;
 
+
+
 namespace bgdlib.ViewModels;
 
 public partial class FeedViewModel : ObservableObject
@@ -13,12 +15,12 @@ public partial class FeedViewModel : ObservableObject
 
     [ObservableProperty] private bool _isLoading;
     [ObservableProperty] private string _statusText = string.Empty;
-    [ObservableProperty] private string _selectedEngine = "Все";
-    [ObservableProperty] private string _selectedCategory = "Все";
+    [ObservableProperty] private string _selectedEngine = "ALL";
+    [ObservableProperty] private string _selectedCategory = "ALL";
 
     public ObservableCollection<FeedItem> Items { get; } = [];
-    public List<string> Engines { get; } = ["Все", "Unity", "Unreal", "Godot", "Other"];
-    public List<string> Categories { get; } = ["Все", "news", "tutorial", "job", "postmortem", "tool", "docs"];
+    public List<string> Engines { get; } = ["ALL", "Unity", "Unreal", "Godot", "Other"];
+    public List<string> Categories { get; } = ["ALL", "news", "tutorial", "job", "postmortem", "tool", "docs"];
 
     private List<FeedItem> _allItems = [];
     private HashSet<string> _favoriteUrls = [];
@@ -35,6 +37,7 @@ public partial class FeedViewModel : ObservableObject
         IsLoading = true;
         StatusText = "Загрузка ленты...";
 
+        var L = LocalizationService.Instance;
         try
         {
             _allItems = await _db.GetFeedItemsAsync();
@@ -44,18 +47,18 @@ public partial class FeedViewModel : ObservableObject
                 item.IsFavorite = _favoriteUrls.Contains(item.Url);
             ApplyFilters();
 
-            var progress = new Progress<string>(s => StatusText = s);
-            var fresh = await _rss.FetchAllAsync(progress);
+            StatusText = L["Feed_Loading"];
+            var fresh = await _rss.FetchAllAsync();
             await _db.SaveFeedItemsAsync(fresh);
             foreach (var item in fresh)
                 item.IsFavorite = _favoriteUrls.Contains(item.Url);
             _allItems = fresh;
             ApplyFilters();
-            StatusText = $"Обновлено: {fresh.Count} статей";
+            StatusText = L.Format("Feed_Updated", fresh.Count);
         }
         catch
         {
-            StatusText = _allItems.Count > 0 ? "Нет сети — показан кэш" : "Нет сети";
+            StatusText = _allItems.Count > 0 ? L["Feed_NoNetworkCache"] : L["Feed_NoNetwork"];
         }
         finally
         {
@@ -101,9 +104,9 @@ public partial class FeedViewModel : ObservableObject
     private void ApplyFilters()
     {
         var filtered = _allItems.AsEnumerable();
-        if (SelectedEngine != "Все")
+        if (SelectedEngine != "ALL")
             filtered = filtered.Where(x => x.Engine == SelectedEngine);
-        if (SelectedCategory != "Все")
+        if (SelectedCategory != "ALL")
             filtered = filtered.Where(x => x.Category == SelectedCategory);
 
         Items.Clear();

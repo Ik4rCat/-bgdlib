@@ -11,9 +11,9 @@ public partial class FavoritesViewModel : ObservableObject
     private readonly DatabaseService _db;
 
     [ObservableProperty] private bool _isEmpty;
-    [ObservableProperty] private string _selectedEngine = "Все";
+    [ObservableProperty] private string _selectedEngine = "ALL";
 
-    public List<string> EngineFilters { get; } = ["Все", "Unity", "Godot", "Unreal", "Other"];
+    public List<string> EngineFilters { get; } = ["ALL", "Unity", "Godot", "Unreal", "Other"];
     public ObservableCollection<FavoriteItem> Items { get; } = [];
 
     private List<FavoriteItem> _allItems = [];
@@ -44,7 +44,7 @@ public partial class FavoritesViewModel : ObservableObject
 
     private void ApplyFilter()
     {
-        var filtered = SelectedEngine == "Все"
+        var filtered = SelectedEngine == "ALL"
             ? _allItems
             : _allItems.Where(x => x.Engine == SelectedEngine).ToList();
 

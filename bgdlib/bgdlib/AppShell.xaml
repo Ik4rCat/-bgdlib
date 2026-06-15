@@ -9,22 +9,35 @@
     <Shell.Resources>
         <ResourceDictionary>
             <Style TargetType="Shell" ApplyToDerivedTypes="True">
-                <Setter Property="Shell.TabBarBackgroundColor" Value="#1e1e2e"/>
-                <Setter Property="Shell.TabBarForegroundColor" Value="#89b4fa"/>
-                <Setter Property="Shell.TabBarUnselectedColor" Value="#45475a"/>
-                <Setter Property="Shell.TabBarTitleColor" Value="#cdd6f4"/>
+                <Setter Property="Shell.TabBarBackgroundColor" Value="#0f0f0f"/>
+                <Setter Property="Shell.TabBarForegroundColor" Value="#E53935"/>
+                <Setter Property="Shell.TabBarUnselectedColor" Value="#555555"/>
+                <Setter Property="Shell.TabBarTitleColor" Value="#E53935"/>
             </Style>
         </ResourceDictionary>
     </Shell.Resources>
 
     <TabBar>
-        <ShellContent Title="Лента"      ContentTemplate="{DataTemplate views:FeedPage}"      Route="FeedPage"/>
-        <ShellContent Title="Поиск"      ContentTemplate="{DataTemplate views:SearchPage}"    Route="SearchPage"/>
-        <ShellContent Title="Сохранено"  ContentTemplate="{DataTemplate views:FavoritesPage}" Route="FavoritesPage"/>
-        <ShellContent Title="Вакансии"   ContentTemplate="{DataTemplate views:JobsPage}"      Route="JobsPage"/>
-        <ShellContent Title="Доки"       ContentTemplate="{DataTemplate views:DocsPage}"      Route="DocsPage"/>
-        <ShellContent Title="Заметки"    ContentTemplate="{DataTemplate views:NotesPage}"     Route="NotesPage"/>
-        <ShellContent Title="Профиль"    ContentTemplate="{DataTemplate views:ProfilePage}"   Route="ProfilePage"/>
+        <ShellContent x:Name="TabFeed"    ContentTemplate="{DataTemplate views:FeedPage}"      Route="FeedPage">
+            <ShellContent.Icon>
+                <FontImageSource FontFamily="MaterialIcons" Glyph="&#xe88a;" Color="White" Size="24"/>
+            </ShellContent.Icon>
+        </ShellContent>
+        <ShellContent x:Name="TabSearch"  ContentTemplate="{DataTemplate views:SearchPage}"    Route="SearchPage">
+            <ShellContent.Icon>
+                <FontImageSource FontFamily="MaterialIcons" Glyph="&#xe8b6;" Color="White" Size="24"/>
+            </ShellContent.Icon>
+        </ShellContent>
+        <ShellContent x:Name="TabSaved"   ContentTemplate="{DataTemplate views:FavoritesPage}" Route="FavoritesPage">
+            <ShellContent.Icon>
+                <FontImageSource FontFamily="MaterialIcons" Glyph="&#xe866;" Color="White" Size="24"/>
+            </ShellContent.Icon>
+        </ShellContent>
+        <ShellContent x:Name="TabProfile" ContentTemplate="{DataTemplate views:ProfilePage}"   Route="ProfilePage">
+            <ShellContent.Icon>
+                <FontImageSource FontFamily="MaterialIcons" Glyph="&#xe8b8;" Color="White" Size="24"/>
+            </ShellContent.Icon>
+        </ShellContent>
     </TabBar>
 
 </Shell>

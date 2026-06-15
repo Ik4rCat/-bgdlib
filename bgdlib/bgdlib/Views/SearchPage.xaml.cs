@@ -16,6 +16,7 @@ public partial class SearchPage : ContentPage
     protected override async void OnAppearing()
     {
         base.OnAppearing();
+        _vm.RebuildLocalized();
         await _vm.LoadAsync();
     }
 }
