@@ -6,12 +6,14 @@ namespace bgdlib.Models;
 public class UserSession
 {
     [PrimaryKey]
-    public int Id { get; set; } = 1; // всегда одна запись
-
+    public int Id { get; set; } = 1;
     public bool IsGuest { get; set; } = true;
-    public string FirebaseUid { get; set; } = string.Empty;
-    public string Email { get; set; } = string.Empty;
+    public int UserId { get; set; }
     public string DisplayName { get; set; } = string.Empty;
-    public string IdToken { get; set; } = string.Empty;
-    public DateTime TokenExpiresAt { get; set; }
+    public string Email { get; set; } = string.Empty;
+    public string AvatarUrl { get; set; } = string.Empty;
+    public string AccessToken { get; set; } = string.Empty;
+    public string RefreshToken { get; set; } = string.Empty;
+    public DateTime AccessTokenExpiresAt { get; set; }
+    public DateTime RefreshTokenExpiresAt { get; set; }
 }

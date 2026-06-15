@@ -9,11 +9,13 @@ public partial class AppShell : Shell
     {
         InitializeComponent();
 
+        Routing.RegisterRoute(nameof(AuthPage),       typeof(AuthPage));
         Routing.RegisterRoute(nameof(ArticlePage),    typeof(ArticlePage));
         Routing.RegisterRoute(nameof(NoteEditorPage), typeof(NoteEditorPage));
-        Routing.RegisterRoute(nameof(JobsPage),       typeof(JobsPage));
         Routing.RegisterRoute(nameof(DocsPage),       typeof(DocsPage));
         Routing.RegisterRoute(nameof(NotesPage),      typeof(NotesPage));
+        Routing.RegisterRoute(nameof(PostDetailPage), typeof(PostDetailPage));
+        Routing.RegisterRoute(nameof(CreatePostPage), typeof(CreatePostPage));
 
         UpdateTabTitles();
         LocalizationService.Instance.PropertyChanged += (_, _) => UpdateTabTitles();
@@ -22,9 +24,9 @@ public partial class AppShell : Shell
     private void UpdateTabTitles()
     {
         var L = LocalizationService.Instance;
-        TabFeed.Title    = L["Tab_Feed"];
-        TabSearch.Title  = L["Tab_Search"];
-        TabSaved.Title   = L["Tab_Saved"];
+        TabMain.Title    = L["Tab_Main"];
+        TabRss.Title     = L["Tab_Feed"];
+        TabJobs.Title    = L["Tab_Jobs"];
         TabProfile.Title = L["Tab_Profile"];
     }
 }

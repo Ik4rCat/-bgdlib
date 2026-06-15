@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:vm="clr-namespace:bgdlib.ViewModels"
+             xmlns:conv="clr-namespace:bgdlib.Converters"
+             x:Class="bgdlib.Views.AuthPage"
+             x:DataType="vm:AuthViewModel"
+             BackgroundColor="#0f0f0f">
+
+    <ContentPage.Resources>
+        <conv:InvertBoolConverter x:Key="InvertBool"/>
+        <conv:BoolToAccentConverter x:Key="BoolToAccent"/>
+        <conv:BoolToAccentInvConverter x:Key="BoolToAccentInv"/>
+    </ContentPage.Resources>
+
+    <ScrollView>
+        <VerticalStackLayout Padding="24" Spacing="16" VerticalOptions="Center">
+
+            <Label Margin="0,40,0,24">
+                <Label.FormattedText>
+                    <FormattedString>
+                        <Span Text="BGD" TextColor="#FFFFFF" FontSize="32" FontAttributes="Bold"/>
+                        <Span Text="lib" TextColor="#E53935" FontSize="32" FontAttributes="Bold"/>
+                    </FormattedString>
+                </Label.FormattedText>
+            </Label>
+
+            <!-- Toggle -->
+            <Grid ColumnDefinitions="*,*" BackgroundColor="#1a1a1a" Padding="4">
+                <Border Grid.Column="0" StrokeShape="RoundRectangle 8" StrokeThickness="0"
+                        BackgroundColor="{Binding IsLogin, Converter={StaticResource BoolToAccent}}" Padding="0">
+                    <Label Text="{Binding [Auth_Login], Source={StaticResource Loc}}"
+                           TextColor="#FFFFFF" HorizontalOptions="Center" Padding="0,10" FontSize="14">
+                        <Label.GestureRecognizers>
+                            <TapGestureRecognizer Command="{Binding SwitchToLoginCommand}"/>
+                        </Label.GestureRecognizers>
+                    </Label>
+                </Border>
+                <Border Grid.Column="1" StrokeShape="RoundRectangle 8" StrokeThickness="0"
+                        BackgroundColor="{Binding IsLogin, Converter={StaticResource BoolToAccentInv}}" Padding="0">
+                    <Label Text="{Binding [Auth_Register], Source={StaticResource Loc}}"
+                           TextColor="#FFFFFF" HorizontalOptions="Center" Padding="0,10" FontSize="14">
+                        <Label.GestureRecognizers>
+                            <TapGestureRecognizer Command="{Binding SwitchToRegisterCommand}"/>
+                        </Label.GestureRecognizers>
+                    </Label>
+                </Border>
+            </Grid>
+
+            <!-- Name (register only) -->
+            <Border BackgroundColor="#1a1a1a" StrokeShape="RoundRectangle 10" StrokeThickness="0"
+                    IsVisible="{Binding IsLogin, Converter={StaticResource InvertBool}}" Padding="14,4">
+                <Entry Placeholder="{Binding [Auth_Name], Source={StaticResource Loc}}"
+                       PlaceholderColor="#555555" TextColor="#FFFFFF" BackgroundColor="Transparent"
+                       Text="{Binding Name}"/>
+            </Border>
+
+            <!-- Email -->
+            <Border BackgroundColor="#1a1a1a" StrokeShape="RoundRectangle 10" StrokeThickness="0" Padding="14,4">
+                <Entry Placeholder="{Binding [Auth_Email], Source={StaticResource Loc}}"
+                       PlaceholderColor="#555555" TextColor="#FFFFFF" BackgroundColor="Transparent"
+                       Text="{Binding Email}" Keyboard="Email"/>
+            </Border>
+
+            <!-- Password -->
+            <Border BackgroundColor="#1a1a1a" StrokeShape="RoundRectangle 10" StrokeThickness="0" Padding="14,4">
+                <Entry Placeholder="{Binding [Auth_Password], Source={StaticResource Loc}}"
+                       PlaceholderColor="#555555" TextColor="#FFFFFF" BackgroundColor="Transparent"
+                       Text="{Binding Password}" IsPassword="True"/>
+            </Border>
+
+            <!-- Error -->
+            <Label Text="{Binding ErrorMessage}" TextColor="#E53935" FontSize="13"
+                   IsVisible="{Binding HasError}" HorizontalOptions="Center"/>
+
+            <!-- Submit -->
+            <Border BackgroundColor="#E53935" StrokeShape="RoundRectangle 12" StrokeThickness="0"
+                    IsEnabled="{Binding IsBusy, Converter={StaticResource InvertBool}}" Padding="0">
+                <Label Text="{Binding SubmitLabel}" TextColor="#FFFFFF" FontSize="15" FontAttributes="Bold"
+                       HorizontalOptions="Center" Padding="0,16">
+                    <Label.GestureRecognizers>
+                        <TapGestureRecognizer Command="{Binding SubmitCommand}"/>
+                    </Label.GestureRecognizers>
+                </Label>
+            </Border>
+
+            <!-- Guest -->
+            <Label Text="{Binding [Auth_GuestMode], Source={StaticResource Loc}}"
+                   TextColor="#555555" FontSize="13" HorizontalOptions="Center">
+                <Label.GestureRecognizers>
+                    <TapGestureRecognizer Command="{Binding GuestCommand}"/>
+                </Label.GestureRecognizers>
+            </Label>
+
+        </VerticalStackLayout>
+    </ScrollView>
+</ContentPage>

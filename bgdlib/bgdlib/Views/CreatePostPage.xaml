@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:vm="clr-namespace:bgdlib.ViewModels"
+             xmlns:conv="clr-namespace:bgdlib.Converters"
+             x:Class="bgdlib.Views.CreatePostPage"
+             x:DataType="vm:CreatePostViewModel"
+             BackgroundColor="#0f0f0f">
+
+    <ContentPage.Resources>
+        <conv:InvertBoolConverter x:Key="InvertBool"/>
+    </ContentPage.Resources>
+
+    <ScrollView>
+        <VerticalStackLayout Padding="16" Spacing="12">
+
+            <Label Text="{Binding [Ribbon_CreatePost], Source={StaticResource Loc}}"
+                   TextColor="#FFFFFF" FontSize="20" FontAttributes="Bold" Margin="0,8,0,4"/>
+
+            <Border BackgroundColor="#1a1a1a" StrokeShape="RoundRectangle 10" StrokeThickness="0" Padding="14,4">
+                <Entry Placeholder="{Binding [Post_Title], Source={StaticResource Loc}}"
+                       PlaceholderColor="#555555" TextColor="#FFFFFF" BackgroundColor="Transparent"
+                       Text="{Binding Title}"/>
+            </Border>
+
+            <Border BackgroundColor="#1a1a1a" StrokeShape="RoundRectangle 10" StrokeThickness="0" Padding="14,8">
+                <Editor Placeholder="{Binding [Post_Body], Source={StaticResource Loc}}"
+                        PlaceholderColor="#555555" TextColor="#FFFFFF" BackgroundColor="Transparent"
+                        Text="{Binding Body}" MinimumHeightRequest="120" AutoSize="TextChanges"/>
+            </Border>
+
+            <Border BackgroundColor="#1a1a1a" StrokeShape="RoundRectangle 10" StrokeThickness="0" Padding="14,4">
+                <Entry Placeholder="{Binding [Post_Tags], Source={StaticResource Loc}}"
+                       PlaceholderColor="#555555" TextColor="#FFFFFF" BackgroundColor="Transparent"
+                       Text="{Binding TagsRaw}"/>
+            </Border>
+
+            <Picker Title="{Binding [Post_Engine], Source={StaticResource Loc}}"
+                    TextColor="#FFFFFF" TitleColor="#555555" BackgroundColor="#1a1a1a"
+                    SelectedItem="{Binding Engine}">
+                <Picker.Items>
+                    <x:String>Unity</x:String>
+                    <x:String>Unreal</x:String>
+                    <x:String>Godot</x:String>
+                    <x:String>Other</x:String>
+                </Picker.Items>
+            </Picker>
+
+            <Border BackgroundColor="#E53935" StrokeShape="RoundRectangle 12" StrokeThickness="0"
+                    IsEnabled="{Binding IsBusy, Converter={StaticResource InvertBool}}" Padding="0">
+                <Label Text="{Binding [Post_Submit], Source={StaticResource Loc}}"
+                       TextColor="#FFFFFF" FontSize="15" FontAttributes="Bold"
+                       HorizontalOptions="Center" Padding="0,16">
+                    <Label.GestureRecognizers>
+                        <TapGestureRecognizer Command="{Binding SubmitCommand}"/>
+                    </Label.GestureRecognizers>
+                </Label>
+            </Border>
+
+        </VerticalStackLayout>
+    </ScrollView>
+</ContentPage>

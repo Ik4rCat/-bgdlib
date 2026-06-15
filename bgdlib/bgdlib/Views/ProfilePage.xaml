@@ -50,36 +50,33 @@
                 </Grid>
             </Border>
 
-            <!-- Sign in button -->
+            <!-- Sign in button (guest only) -->
             <Border BackgroundColor="#E53935" StrokeShape="RoundRectangle 12" StrokeThickness="0"
                     IsVisible="{Binding IsGuest}" Padding="0">
                 <Label Text="{Binding [Profile_LoginBtn], Source={StaticResource Loc}}"
                        TextColor="#FFFFFF" FontSize="15" FontAttributes="Bold"
                        HorizontalOptions="Center" Padding="0,14">
                     <Label.GestureRecognizers>
-                        <TapGestureRecognizer Tapped="OnLoginClicked"/>
+                        <TapGestureRecognizer Command="{Binding LoginCommand}"/>
+                    </Label.GestureRecognizers>
+                </Label>
+            </Border>
+
+            <!-- Logout button (logged-in only) -->
+            <Border BackgroundColor="#1a1a1a" StrokeShape="RoundRectangle 12" StrokeThickness="0"
+                    IsVisible="{Binding IsGuest, Converter={StaticResource InvertBool}}" Padding="0">
+                <Label Text="{Binding [Profile_Logout], Source={StaticResource Loc}}"
+                       TextColor="#E53935" FontSize="15" FontAttributes="Bold"
+                       HorizontalOptions="Center" Padding="0,14">
+                    <Label.GestureRecognizers>
+                        <TapGestureRecognizer Command="{Binding LogoutCommand}"/>
                     </Label.GestureRecognizers>
                 </Label>
             </Border>
 
             <!-- Section: Content -->
-            <Label Text="КОНТЕНТ" TextColor="#555555" FontSize="11"
-                   FontAttributes="Bold" CharacterSpacing="1" Margin="4,8,0,4"/>
-
-            <!-- Jobs -->
-            <Border BackgroundColor="#1a1a1a" StrokeShape="RoundRectangle 14" StrokeThickness="0" Padding="0">
-                <Grid ColumnDefinitions="Auto,*,Auto" Padding="16,14">
-                    <Label Grid.Column="0" Text="&#xe8f9;" FontFamily="MaterialIcons"
-                           FontSize="22" TextColor="#fab387" VerticalOptions="Center"/>
-                    <Label Grid.Column="1" Text="{Binding [Tab_Jobs], Source={StaticResource Loc}}"
-                           TextColor="#FFFFFF" FontSize="15" Margin="12,0,0,0" VerticalOptions="Center"/>
-                    <Label Grid.Column="2" Text="&#xe5c8;" FontFamily="MaterialIcons"
-                           FontSize="20" TextColor="#555555" VerticalOptions="Center"/>
-                </Grid>
-                <Border.GestureRecognizers>
-                    <TapGestureRecognizer Command="{Binding GoToJobsCommand}"/>
-                </Border.GestureRecognizers>
-            </Border>
+            <Label Text="{Binding [Profile_SectionContent], Source={StaticResource Loc}}"
+                   TextColor="#555555" FontSize="11" FontAttributes="Bold" CharacterSpacing="1" Margin="4,8,0,4"/>
 
             <!-- Docs -->
             <Border BackgroundColor="#1a1a1a" StrokeShape="RoundRectangle 14" StrokeThickness="0" Padding="0">
@@ -112,8 +109,8 @@
             </Border>
 
             <!-- Section: Settings -->
-            <Label Text="НАСТРОЙКИ" TextColor="#555555" FontSize="11"
-                   FontAttributes="Bold" CharacterSpacing="1" Margin="4,8,0,4"/>
+            <Label Text="{Binding [Profile_SectionSettings], Source={StaticResource Loc}}"
+                   TextColor="#555555" FontSize="11" FontAttributes="Bold" CharacterSpacing="1" Margin="4,8,0,4"/>
 
             <!-- Cache -->
             <Border BackgroundColor="#1a1a1a" StrokeShape="RoundRectangle 14" StrokeThickness="0" Padding="16">

@@ -9,6 +9,7 @@ namespace bgdlib.ViewModels;
 public partial class ProfileViewModel : ObservableObject
 {
     private readonly DatabaseService _db;
+    private readonly ApiService _api;
 
     [ObservableProperty] private bool _isGuest = true;
     [ObservableProperty] private string _displayName = string.Empty;
@@ -16,7 +17,7 @@ public partial class ProfileViewModel : ObservableObject
     [ObservableProperty] private string _cacheSize = "0 KB";
     [ObservableProperty] private string _currentLang = LocalizationService.Instance.CurrentLanguage;
 
-    public ProfileViewModel(DatabaseService db) => _db = db;
+    public ProfileViewModel(DatabaseService db, ApiService api) { _db = db; _api = api; }
 
     [RelayCommand]
     public async Task LoadAsync()
@@ -46,7 +47,19 @@ public partial class ProfileViewModel : ObservableObject
     }
 
     [RelayCommand]
-    public async Task GoToJobs() => await Shell.Current.GoToAsync(nameof(JobsPage));
+    public async Task LoginAsync() => await Shell.Current.GoToAsync(nameof(AuthPage));
+
+    [RelayCommand]
+    public async Task LogoutAsync()
+    {
+        var session = await _db.GetSessionAsync();
+        if (!session.IsGuest)
+            await _api.LogoutAsync(session.RefreshToken);
+        await _db.ClearSessionAsync();
+        IsGuest = true;
+        DisplayName = string.Empty;
+        Email = string.Empty;
+    }
 
     [RelayCommand]
     public async Task GoToDocs() => await Shell.Current.GoToAsync(nameof(DocsPage));

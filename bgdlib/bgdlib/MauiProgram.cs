@@ -23,6 +23,7 @@ public static class MauiProgram
         builder.Services.AddSingleton<DatabaseService>();
         builder.Services.AddSingleton<RssService>();
         builder.Services.AddSingleton<NoteFileService>();
+        builder.Services.AddSingleton<ApiService>();
 
         // ViewModels
         builder.Services.AddTransient<FeedViewModel>();
@@ -33,6 +34,10 @@ public static class MauiProgram
         builder.Services.AddTransient<SearchViewModel>();
         builder.Services.AddTransient<JobsViewModel>();
         builder.Services.AddTransient<DocsViewModel>();
+        builder.Services.AddTransient<MainRibbonViewModel>();
+        builder.Services.AddTransient<AuthViewModel>();
+        builder.Services.AddTransient<PostDetailViewModel>();
+        builder.Services.AddTransient<CreatePostViewModel>();
 
         // Views
         builder.Services.AddTransient<FeedPage>();
@@ -44,6 +49,10 @@ public static class MauiProgram
         builder.Services.AddTransient<SearchPage>();
         builder.Services.AddTransient<JobsPage>();
         builder.Services.AddTransient<DocsPage>();
+        builder.Services.AddTransient<MainRibbonPage>();
+        builder.Services.AddTransient<AuthPage>();
+        builder.Services.AddTransient<PostDetailPage>();
+        builder.Services.AddTransient<CreatePostPage>();
 
 #if DEBUG
         builder.Logging.AddDebug();

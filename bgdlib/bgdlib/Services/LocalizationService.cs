@@ -70,6 +70,30 @@ public class LocalizationService : INotifyPropertyChanged
             ["OK"] = "OK",
             // Popular tags
             ["Tags"] = "C#|Unity|Godot|Shaders|AI / NPC|Level Design|Blueprints|Patterns|Pixel Art|GDScript",
+            // Main Ribbon
+            ["Tab_Main"]       = "Main",
+            ["Ribbon_Empty"]   = "No posts yet. Be the first!",
+            ["Ribbon_CreatePost"] = "New Post",
+            // Auth
+            ["Auth_Login"]    = "Sign In",
+            ["Auth_Register"] = "Register",
+            ["Auth_Email"]    = "Email",
+            ["Auth_Password"] = "Password",
+            ["Auth_Name"]     = "Display Name",
+            ["Auth_GuestMode"] = "Continue as guest",
+            ["Auth_Error"]    = "Error. Check your details.",
+            // Post
+            ["Post_Title"]      = "Title",
+            ["Post_Body"]       = "Content (Markdown)",
+            ["Post_Tags"]       = "Tags (comma separated)",
+            ["Post_Engine"]     = "Engine",
+            ["Post_Submit"]     = "Publish",
+            ["Post_Comments"]   = "COMMENTS",
+            ["Post_AddComment"] = "Add a comment...",
+            // Profile
+            ["Profile_Logout"]          = "Sign Out",
+            ["Profile_SectionContent"]  = "CONTENT",
+            ["Profile_SectionSettings"] = "SETTINGS",
         },
         ["ru"] = new()
         {
@@ -129,6 +153,30 @@ public class LocalizationService : INotifyPropertyChanged
             ["OK"] = "OK",
             // Popular tags
             ["Tags"] = "C#|Unity|Godot|Шейдеры|AI / NPC|Level Design|Blueprints|Паттерны|Pixel Art|GDScript",
+            // Main Ribbon
+            ["Tab_Main"]       = "Лента",
+            ["Ribbon_Empty"]   = "Постов пока нет. Будьте первым!",
+            ["Ribbon_CreatePost"] = "Новый пост",
+            // Auth
+            ["Auth_Login"]    = "Войти",
+            ["Auth_Register"] = "Регистрация",
+            ["Auth_Email"]    = "Email",
+            ["Auth_Password"] = "Пароль",
+            ["Auth_Name"]     = "Имя",
+            ["Auth_GuestMode"] = "Продолжить как гость",
+            ["Auth_Error"]    = "Ошибка. Проверьте данные.",
+            // Post
+            ["Post_Title"]      = "Заголовок",
+            ["Post_Body"]       = "Содержание (Markdown)",
+            ["Post_Tags"]       = "Теги (через запятую)",
+            ["Post_Engine"]     = "Движок",
+            ["Post_Submit"]     = "Опубликовать",
+            ["Post_Comments"]   = "КОММЕНТАРИИ",
+            ["Post_AddComment"] = "Добавить комментарий...",
+            // Profile
+            ["Profile_Logout"]          = "Выйти",
+            ["Profile_SectionContent"]  = "КОНТЕНТ",
+            ["Profile_SectionSettings"] = "НАСТРОЙКИ",
         }
     };
 

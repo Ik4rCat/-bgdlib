@@ -10,7 +10,8 @@ public class RssService
     [
         ("Unity Blog",       "https://unity.com/blog/rss.xml",                              "Unity"),
         ("Godot News",       "https://godotengine.org/rss.xml",                              "Godot"),
-        ("Unreal Blog",      "https://www.unrealengine.com/en-US/rss",                       "Unreal"),
+        ("Unreal Blog",    "https://www.unrealengine.com/blog/rss",          "Unreal"),
+        ("Unreal Forums",  "https://forums.unrealengine.com/latest.rss",     "Unreal"),
         ("Gamasutra",        "https://www.gamedeveloper.com/rss.xml",                        "Other"),
         ("r/gamedev",        "https://www.reddit.com/r/gamedev/.rss",                        "Other"),
         ("r/unity",          "https://www.reddit.com/r/Unity3D/.rss",                        "Unity"),
@@ -63,31 +64,21 @@ public class RssService
     private static string GuessCategory(string title, string desc)
     {
         var text = (title + " " + desc).ToLowerInvariant();
-
-        if (text.Contains("tutorial") || text.Contains("how to") || text.Contains("guide") ||
-            text.Contains("туториал") || text.Contains("урок") || text.Contains("руководство") ||
-            text.Contains("как сделать") || text.Contains("научитесь"))
-            return "tutorial";
-
-        if (text.Contains("job") || text.Contains("hiring") || text.Contains("vacancy") ||
-            text.Contains("вакансия") || text.Contains("ищем") || text.Contains("разработчик нужен") ||
-            text.Contains("gamedevclassifieds") || text.Contains("remote"))
+        if (ContainsAny(text, "hiring", "job", "vacancy", "вакансия", "ищем", "требуется"))
             return "job";
-
-        if (text.Contains("tool") || text.Contains("asset") || text.Contains("plugin") ||
-            text.Contains("инструмент") || text.Contains("плагин") || text.Contains("пакет"))
-            return "tool";
-
-        if (text.Contains("postmortem") || text.Contains("post-mortem") ||
-            text.Contains("постмортем") || text.Contains("как мы делали"))
+        if (ContainsAny(text, "tutorial", "how to", "guide", "урок", "гайд", "туториал", "как сделать"))
+            return "tutorial";
+        if (ContainsAny(text, "postmortem", "post-mortem", "shipped", "released", "вышла", "запустили"))
             return "postmortem";
-
-        if (text.Contains("docs") || text.Contains("documentation") || text.Contains("api reference") ||
-            text.Contains("документация") || text.Contains("справочник"))
+        if (ContainsAny(text, "tool", "plugin", "asset", "package", "инструмент", "плагин", "ассет"))
+            return "tool";
+        if (ContainsAny(text, "docs", "documentation", "api reference", "документация"))
             return "docs";
-
         return "news";
     }
+
+    private static bool ContainsAny(string s, params string[] words)
+        => words.Any(s.Contains);
 
     private static string StripHtml(string html)
     {

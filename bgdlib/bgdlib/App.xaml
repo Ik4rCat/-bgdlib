@@ -13,6 +13,8 @@
             </ResourceDictionary.MergedDictionaries>
             <converters:InvertBoolConverter x:Key="InvertBoolConverter"/>
             <converters:NotEmptyConverter x:Key="NotEmptyConverter"/>
+            <converters:BoolToAccentConverter x:Key="BoolToAccent"/>
+            <converters:BoolToAccentInvConverter x:Key="BoolToAccentInv"/>
             <svc:LocalizationService x:Key="Loc"/>
         </ResourceDictionary>
     </Application.Resources>

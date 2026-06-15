@@ -121,4 +121,21 @@ public class DatabaseService
         var db = await GetDb();
         await db.InsertOrReplaceAsync(session);
     }
+
+    public async Task ClearSessionAsync()
+    {
+        var db = await GetDb();
+        var session = await db.FindAsync<UserSession>(1);
+        if (session != null)
+        {
+            session.IsGuest = true;
+            session.AccessToken = string.Empty;
+            session.RefreshToken = string.Empty;
+            session.UserId = 0;
+            session.DisplayName = string.Empty;
+            session.Email = string.Empty;
+            session.AvatarUrl = string.Empty;
+            await db.UpdateAsync(session);
+        }
+    }
 }
