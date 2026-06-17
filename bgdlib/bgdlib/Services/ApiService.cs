@@ -7,7 +7,7 @@ namespace bgdlib.Services;
 
 public class ApiService
 {
-    private const string BaseUrl = "http://192.168.0.170:5000";
+    private const string BaseUrl = Constants.ApiBaseUrl;
     private static readonly JsonSerializerOptions _json = new() { PropertyNameCaseInsensitive = true };
     private readonly HttpClient _http;
     private readonly DatabaseService _db;

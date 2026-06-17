@@ -18,7 +18,7 @@
     <Grid RowDefinitions="Auto,Auto,1,*">
 
         <!-- Header -->
-        <Label Grid.Row="0" Text="Поиск"
+        <Label Grid.Row="0" Text="{Binding [Tab_Search], Source={StaticResource Loc}}"
                TextColor="#FFFFFF" FontSize="20" FontAttributes="Bold"
                Margin="16,14,16,8"/>
 
@@ -53,7 +53,7 @@
             <VerticalStackLayout Spacing="0" Padding="0,0,0,16">
 
                 <!-- Направления section header -->
-                <Label Text="НАПРАВЛЕНИЯ"
+                <Label Text="{Binding [Search_Tags], Source={StaticResource Loc}}"
                        TextColor="#555555" FontSize="10"
                        FontAttributes="Bold" CharacterSpacing="1.5"
                        Margin="16,16,16,4"/>
@@ -81,7 +81,7 @@
                 </CollectionView>
 
                 <!-- Жанры section header -->
-                <Label Text="ЖАНРЫ"
+                <Label Text="{Binding [Search_Categories], Source={StaticResource Loc}}"
                        TextColor="#555555" FontSize="10"
                        FontAttributes="Bold" CharacterSpacing="1.5"
                        Margin="16,20,16,10"/>
