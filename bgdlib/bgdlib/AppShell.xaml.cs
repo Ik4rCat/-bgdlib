@@ -26,7 +26,7 @@ public partial class AppShell : Shell
         var L = LocalizationService.Instance;
         TabMain.Title    = L["Tab_Main"];
         TabRss.Title     = L["Tab_Feed"];
-        TabJobs.Title    = L["Tab_Jobs"];
+        TabFavs.Title    = L["Tab_Saved"];
         TabProfile.Title = L["Tab_Profile"];
     }
 }

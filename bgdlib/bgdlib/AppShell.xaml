@@ -18,24 +18,36 @@
     </Shell.Resources>
 
     <TabBar>
-        <ShellContent x:Name="TabMain" ContentTemplate="{DataTemplate views:MainRibbonPage}" Route="MainRibbonPage">
+        <ShellContent x:Name="TabMain"
+                      Title="Лента"
+                      ContentTemplate="{DataTemplate views:MainRibbonPage}"
+                      Route="MainRibbonPage">
             <ShellContent.Icon>
-                <FontImageSource FontFamily="MaterialIcons" Glyph="&#xe7ef;" Color="White" Size="24"/>
+                <FontImageSource FontFamily="MaterialIcons" Glyph="&#xe7ef;" Size="24"/>
             </ShellContent.Icon>
         </ShellContent>
-        <ShellContent x:Name="TabRss" ContentTemplate="{DataTemplate views:FeedPage}" Route="FeedPage">
+        <ShellContent x:Name="TabRss"
+                      Title="Новости"
+                      ContentTemplate="{DataTemplate views:FeedPage}"
+                      Route="FeedPage">
             <ShellContent.Icon>
-                <FontImageSource FontFamily="MaterialIcons" Glyph="&#xe88a;" Color="White" Size="24"/>
+                <FontImageSource FontFamily="MaterialIcons" Glyph="&#xe88a;" Size="24"/>
             </ShellContent.Icon>
         </ShellContent>
-        <ShellContent x:Name="TabJobs" ContentTemplate="{DataTemplate views:JobsPage}" Route="JobsPage">
+        <ShellContent x:Name="TabFavs"
+                      Title="Сохранено"
+                      ContentTemplate="{DataTemplate views:FavoritesPage}"
+                      Route="FavoritesPage">
             <ShellContent.Icon>
-                <FontImageSource FontFamily="MaterialIcons" Glyph="&#xe8f9;" Color="White" Size="24"/>
+                <FontImageSource FontFamily="MaterialIcons" Glyph="&#xe87d;" Size="24"/>
             </ShellContent.Icon>
         </ShellContent>
-        <ShellContent x:Name="TabProfile" ContentTemplate="{DataTemplate views:ProfilePage}" Route="ProfilePage">
+        <ShellContent x:Name="TabProfile"
+                      Title="Профиль"
+                      ContentTemplate="{DataTemplate views:ProfilePage}"
+                      Route="ProfilePage">
             <ShellContent.Icon>
-                <FontImageSource FontFamily="MaterialIcons" Glyph="&#xe8b8;" Color="White" Size="24"/>
+                <FontImageSource FontFamily="MaterialIcons" Glyph="&#xe8b8;" Size="24"/>
             </ShellContent.Icon>
         </ShellContent>
     </TabBar>

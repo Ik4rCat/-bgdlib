@@ -22,26 +22,28 @@
     <Grid RowDefinitions="Auto,Auto,Auto,*">
 
         <!-- Header -->
-        <Grid Grid.Row="0" ColumnDefinitions="*,Auto,Auto" Padding="16,12,16,4">
+        <Grid Grid.Row="0" ColumnDefinitions="*,Auto" Padding="16,14,16,8">
             <Label Grid.Column="0" VerticalOptions="Center">
                 <Label.FormattedText>
                     <FormattedString>
-                        <Span Text="BGD" TextColor="#FFFFFF" FontSize="22" FontAttributes="Bold"/>
-                        <Span Text="lib" TextColor="#E53935" FontSize="22" FontAttributes="Bold"/>
+                        <Span Text="RSS " TextColor="#FFFFFF" FontSize="20" FontAttributes="Bold"/>
+                        <Span Text="Лента" TextColor="#E53935" FontSize="20" FontAttributes="Bold"/>
                     </FormattedString>
                 </Label.FormattedText>
             </Label>
-            <Label Grid.Column="1" Text="&#xe7f5;" FontFamily="MaterialIcons"
-                   FontSize="24" TextColor="#9E9E9E" VerticalOptions="Center" Margin="0,0,12,0"/>
-            <Label Grid.Column="2" Text="&#xe7fd;" FontFamily="MaterialIcons"
-                   FontSize="24" TextColor="#9E9E9E" VerticalOptions="Center"/>
+            <Border Grid.Column="1" BackgroundColor="#E53935"
+                    StrokeShape="RoundRectangle 10" StrokeThickness="0" Padding="10,4"
+                    VerticalOptions="Center"
+                    IsVisible="{Binding StatusText, Converter={StaticResource NotEmpty}}">
+                <Label Text="{Binding StatusText}" TextColor="#FFFFFF" FontSize="11" FontAttributes="Bold"/>
+            </Border>
         </Grid>
 
-        <!-- Engine filter chips -->
+        <!-- Engine/source filter chips -->
         <ScrollView Grid.Row="1" Orientation="Horizontal" HorizontalScrollBarVisibility="Never">
-            <HorizontalStackLayout Spacing="8" Padding="12,6">
+            <HorizontalStackLayout Spacing="6" Padding="12,0,12,8">
                 <Border BackgroundColor="{Binding SelectedEngine, Converter={StaticResource ChipSelected}, ConverterParameter='ALL'}"
-                        StrokeShape="RoundRectangle 20" StrokeThickness="0" Padding="0">
+                        StrokeShape="RoundRectangle 6" StrokeThickness="0" Padding="0">
                     <Label Text="{Binding [Filter_All], Source={StaticResource Loc}}" FontSize="12" Padding="14,7"
                            TextColor="{Binding SelectedEngine, Converter={StaticResource ChipText}, ConverterParameter='ALL'}">
                         <Label.GestureRecognizers>
@@ -50,7 +52,7 @@
                     </Label>
                 </Border>
                 <Border BackgroundColor="{Binding SelectedEngine, Converter={StaticResource ChipSelected}, ConverterParameter='Unity'}"
-                        StrokeShape="RoundRectangle 20" StrokeThickness="0" Padding="0">
+                        StrokeShape="RoundRectangle 6" StrokeThickness="0" Padding="0">
                     <Label Text="Unity" FontSize="12" Padding="14,7"
                            TextColor="{Binding SelectedEngine, Converter={StaticResource ChipText}, ConverterParameter='Unity'}">
                         <Label.GestureRecognizers>
@@ -59,7 +61,7 @@
                     </Label>
                 </Border>
                 <Border BackgroundColor="{Binding SelectedEngine, Converter={StaticResource ChipSelected}, ConverterParameter='Godot'}"
-                        StrokeShape="RoundRectangle 20" StrokeThickness="0" Padding="0">
+                        StrokeShape="RoundRectangle 6" StrokeThickness="0" Padding="0">
                     <Label Text="Godot" FontSize="12" Padding="14,7"
                            TextColor="{Binding SelectedEngine, Converter={StaticResource ChipText}, ConverterParameter='Godot'}">
                         <Label.GestureRecognizers>
@@ -68,7 +70,7 @@
                     </Label>
                 </Border>
                 <Border BackgroundColor="{Binding SelectedEngine, Converter={StaticResource ChipSelected}, ConverterParameter='Unreal'}"
-                        StrokeShape="RoundRectangle 20" StrokeThickness="0" Padding="0">
+                        StrokeShape="RoundRectangle 6" StrokeThickness="0" Padding="0">
                     <Label Text="Unreal" FontSize="12" Padding="14,7"
                            TextColor="{Binding SelectedEngine, Converter={StaticResource ChipText}, ConverterParameter='Unreal'}">
                         <Label.GestureRecognizers>
@@ -77,7 +79,7 @@
                     </Label>
                 </Border>
                 <Border BackgroundColor="{Binding SelectedEngine, Converter={StaticResource ChipSelected}, ConverterParameter='Other'}"
-                        StrokeShape="RoundRectangle 20" StrokeThickness="0" Padding="0">
+                        StrokeShape="RoundRectangle 6" StrokeThickness="0" Padding="0">
                     <Label Text="{Binding [Cat_Other], Source={StaticResource Loc}}" FontSize="12" Padding="14,7"
                            TextColor="{Binding SelectedEngine, Converter={StaticResource ChipText}, ConverterParameter='Other'}">
                         <Label.GestureRecognizers>
@@ -88,13 +90,10 @@
             </HorizontalStackLayout>
         </ScrollView>
 
-        <!-- Status -->
-        <Label Grid.Row="2" Text="{Binding StatusText}"
-               TextColor="#555555" FontSize="11"
-               Padding="12,0,12,4"
-               IsVisible="{Binding StatusText, Converter={StaticResource NotEmpty}}"/>
+        <!-- Divider -->
+        <BoxView Grid.Row="2" HeightRequest="1" BackgroundColor="#1a1a1a"/>
 
-        <!-- 2-column grid feed with pull-to-refresh -->
+        <!-- News list -->
         <RefreshView Grid.Row="3"
                      Command="{Binding LoadCommand}"
                      IsRefreshing="{Binding IsLoading}"
@@ -102,97 +101,81 @@
             <CollectionView ItemsSource="{Binding Items}"
                             SelectionMode="Single"
                             SelectionChanged="OnArticleSelected">
-                <CollectionView.ItemsLayout>
-                    <GridItemsLayout Orientation="Vertical" Span="2"
-                                     HorizontalItemSpacing="6" VerticalItemSpacing="6"/>
-                </CollectionView.ItemsLayout>
                 <CollectionView.EmptyView>
                     <Label Text="{Binding [Feed_Empty], Source={StaticResource Loc}}"
                            TextColor="#555555" HorizontalOptions="Center"
                            VerticalOptions="Center" HorizontalTextAlignment="Center"
-                           Margin="24,40"/>
+                           Margin="24,48"/>
                 </CollectionView.EmptyView>
+                <CollectionView.Footer>
+                    <BoxView HeightRequest="8" Color="Transparent"/>
+                </CollectionView.Footer>
                 <CollectionView.ItemTemplate>
                     <DataTemplate x:DataType="models:FeedItem">
-                        <Border Margin="4" BackgroundColor="#1a1a1a"
-                                StrokeShape="RoundRectangle 12" StrokeThickness="0" Padding="0">
-                            <Grid RowDefinitions="120,Auto,Auto,Auto" RowSpacing="0">
+                        <Grid Padding="16,10" ColumnDefinitions="36,*,Auto" ColumnSpacing="12">
 
-                                <!-- Image / placeholder -->
-                                <Grid Grid.Row="0">
-                                    <Border IsVisible="{Binding ImageUrl, Converter={StaticResource NotEmpty}}"
-                                            BackgroundColor="Transparent"
-                                            StrokeShape="RoundRectangle 12,12,0,0"
-                                            StrokeThickness="0" Padding="0">
-                                        <Image Source="{Binding ImageUrl}"
-                                               Aspect="AspectFill"
-                                               HeightRequest="120"/>
-                                    </Border>
-                                    <Border IsVisible="{Binding ImageUrl, Converter={StaticResource IsEmpty}}"
-                                            BackgroundColor="{Binding Engine, Converter={StaticResource EngineColor}}"
-                                            StrokeShape="RoundRectangle 12,12,0,0"
-                                            StrokeThickness="0"
-                                            HeightRequest="120">
-                                        <Label Text="{Binding Engine, Converter={StaticResource EngineLetter}}"
-                                               HorizontalOptions="Center" VerticalOptions="Center"
-                                               FontSize="32" FontAttributes="Bold"
-                                               TextColor="#1a1a1a"/>
-                                    </Border>
-                                    <!-- Favorite button over image -->
-                                    <Label HorizontalOptions="End" VerticalOptions="Start"
-                                           Margin="0,6,8,0"
-                                           IsVisible="{Binding IsFavorite, Converter={StaticResource InvertBool}}"
-                                           Text="&#xe87e;" FontFamily="MaterialIcons"
-                                           FontSize="20" TextColor="#FFFFFF">
-                                        <Label.GestureRecognizers>
-                                            <TapGestureRecognizer
-                                                Command="{Binding Source={x:Reference FeedPageRoot}, Path=BindingContext.ToggleFavoriteCommand}"
-                                                CommandParameter="{Binding .}"/>
-                                        </Label.GestureRecognizers>
-                                    </Label>
-                                    <Label HorizontalOptions="End" VerticalOptions="Start"
-                                           Margin="0,6,8,0"
-                                           IsVisible="{Binding IsFavorite}"
-                                           Text="&#xe87d;" FontFamily="MaterialIcons"
-                                           FontSize="20" TextColor="#E53935">
-                                        <Label.GestureRecognizers>
-                                            <TapGestureRecognizer
-                                                Command="{Binding Source={x:Reference FeedPageRoot}, Path=BindingContext.ToggleFavoriteCommand}"
-                                                CommandParameter="{Binding .}"/>
-                                        </Label.GestureRecognizers>
-                                    </Label>
-                                </Grid>
+                            <!-- Source badge -->
+                            <Border Grid.Column="0"
+                                    BackgroundColor="{Binding Engine, Converter={StaticResource EngineColor}}"
+                                    StrokeShape="RoundRectangle 6" StrokeThickness="0"
+                                    HeightRequest="36" WidthRequest="36" VerticalOptions="Start">
+                                <Label Text="{Binding Engine, Converter={StaticResource EngineLetter}}"
+                                       HorizontalOptions="Center" VerticalOptions="Center"
+                                       FontSize="11" FontAttributes="Bold" TextColor="#0f0f0f"/>
+                            </Border>
 
-                                <!-- Category badge -->
-                                <Label Grid.Row="1"
-                                       TextColor="#E53935" FontSize="9"
-                                       FontAttributes="Bold" CharacterSpacing="0.8"
-                                       Margin="10,8,10,2">
+                            <!-- Content -->
+                            <VerticalStackLayout Grid.Column="1" Spacing="4">
+                                <!-- Engine · Category -->
+                                <Label TextColor="#E53935" FontSize="9" FontAttributes="Bold" CharacterSpacing="0.5">
                                     <Label.FormattedText>
                                         <FormattedString>
                                             <Span Text="{Binding Engine}" TextColor="#E53935"/>
-                                            <Span Text=" • " TextColor="#555555"/>
-                                            <Span Text="{Binding Category}" TextColor="#E53935"/>
+                                            <Span Text=" · " TextColor="#444444"/>
+                                            <Span Text="{Binding Category}" TextColor="#888888"/>
                                         </FormattedString>
                                     </Label.FormattedText>
                                 </Label>
-
                                 <!-- Title -->
-                                <Label Grid.Row="2" Text="{Binding Title}"
-                                       TextColor="#FFFFFF" FontSize="13" FontAttributes="Bold"
-                                       MaxLines="2" LineBreakMode="WordWrap"
-                                       Margin="10,0,10,6"/>
-
-                                <!-- Source -->
-                                <HorizontalStackLayout Grid.Row="3" Spacing="4" Margin="10,0,10,10">
-                                    <Label Text="{Binding Source}" TextColor="#9E9E9E" FontSize="10"/>
-                                    <Label Text=" • " TextColor="#555555" FontSize="10"/>
+                                <Label Text="{Binding Title}"
+                                       TextColor="#FFFFFF" FontSize="14" FontAttributes="Bold"
+                                       MaxLines="2" LineBreakMode="WordWrap"/>
+                                <!-- Source · Time -->
+                                <HorizontalStackLayout Spacing="4">
+                                    <Label Text="{Binding Source}" TextColor="#555555" FontSize="11"/>
+                                    <Label Text="·" TextColor="#333333" FontSize="11"/>
                                     <Label Text="{Binding PublishedAt, StringFormat='{0:dd MMM}'}"
-                                           TextColor="#555555" FontSize="10"/>
+                                           TextColor="#555555" FontSize="11"/>
                                 </HorizontalStackLayout>
+                            </VerticalStackLayout>
 
-                            </Grid>
-                        </Border>
+                            <!-- Favorite -->
+                            <VerticalStackLayout Grid.Column="2" VerticalOptions="Center">
+                                <Label IsVisible="{Binding IsFavorite, Converter={StaticResource InvertBool}}"
+                                       Text="&#xe87e;" FontFamily="MaterialIcons"
+                                       FontSize="20" TextColor="#333333">
+                                    <Label.GestureRecognizers>
+                                        <TapGestureRecognizer
+                                            Command="{Binding Source={x:Reference FeedPageRoot}, Path=BindingContext.ToggleFavoriteCommand}"
+                                            CommandParameter="{Binding .}"/>
+                                    </Label.GestureRecognizers>
+                                </Label>
+                                <Label IsVisible="{Binding IsFavorite}"
+                                       Text="&#xe87d;" FontFamily="MaterialIcons"
+                                       FontSize="20" TextColor="#E53935">
+                                    <Label.GestureRecognizers>
+                                        <TapGestureRecognizer
+                                            Command="{Binding Source={x:Reference FeedPageRoot}, Path=BindingContext.ToggleFavoriteCommand}"
+                                            CommandParameter="{Binding .}"/>
+                                    </Label.GestureRecognizers>
+                                </Label>
+                            </VerticalStackLayout>
+
+                            <!-- Bottom divider -->
+                            <BoxView Grid.Column="0" Grid.ColumnSpan="3"
+                                     HeightRequest="1" BackgroundColor="#1a1a1a"
+                                     VerticalOptions="End" Margin="0,10,0,-10"/>
+                        </Grid>
                     </DataTemplate>
                 </CollectionView.ItemTemplate>
             </CollectionView>

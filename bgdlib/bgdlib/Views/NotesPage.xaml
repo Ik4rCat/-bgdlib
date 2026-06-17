@@ -4,7 +4,7 @@
              xmlns:models="clr-namespace:bgdlib.Models"
              x:Class="bgdlib.Views.NotesPage"
              Title="Заметки"
-             BackgroundColor="#1e1e2e">
+             BackgroundColor="#0f0f0f">
 
     <ContentPage.ToolbarItems>
         <ToolbarItem Text="+" Clicked="OnNewNoteClicked" Order="Primary"/>
@@ -12,21 +12,34 @@
 
     <Grid RowDefinitions="Auto,*">
 
-        <SearchBar Grid.Row="0"
-                   Text="{Binding SearchQuery}"
-                   Placeholder="Поиск по заметкам и тегам..."
-                   BackgroundColor="#313244" TextColor="#cdd6f4"
-                   PlaceholderColor="#6c7086" Margin="8"/>
+        <Border Grid.Row="0" BackgroundColor="#1a1a1a"
+                StrokeThickness="0" 
+                StrokeShape="RoundRectangle 14" Margin="16,8,16,4">
+            <Grid ColumnDefinitions="Auto,*" Padding="12,0">
+                <Label Grid.Column="0" Text="&#xe8b6;" FontFamily="MaterialIcons"
+                       FontSize="20" TextColor="#555555" VerticalOptions="Center"/>
+                <Entry Grid.Column="1" Text="{Binding SearchQuery}"
+                       Placeholder="Поиск по заметкам и тегам..."
+                       BackgroundColor="Transparent" TextColor="#FFFFFF"
+                       PlaceholderColor="#555555" FontSize="14" Margin="10,0,0,0"/>
+            </Grid>
+        </Border>
 
         <CollectionView Grid.Row="1"
                         ItemsSource="{Binding Notes}"
                         SelectionMode="Single"
                         SelectionChanged="OnNoteSelected">
             <CollectionView.EmptyView>
-                <Label Text="Нет заметок. Нажми + чтобы создать."
-                       TextColor="#6c7086" HorizontalOptions="Center"
-                       VerticalOptions="Center" Margin="0,40"/>
+                <VerticalStackLayout HorizontalOptions="Center" VerticalOptions="Center" Spacing="12">
+                    <Label Text="&#xe3f4;" FontFamily="MaterialIcons"
+                           FontSize="48" TextColor="#333333" HorizontalOptions="Center"/>
+                    <Label Text="Нет заметок. Нажми + чтобы создать."
+                           TextColor="#555555" HorizontalTextAlignment="Center"/>
+                </VerticalStackLayout>
             </CollectionView.EmptyView>
+            <CollectionView.Footer>
+                <BoxView HeightRequest="12" Color="Transparent"/>
+            </CollectionView.Footer>
             <CollectionView.ItemTemplate>
                 <DataTemplate x:DataType="models:Note">
                     <SwipeView>
@@ -37,15 +50,17 @@
                                            CommandParameter="{Binding .}"/>
                             </SwipeItems>
                         </SwipeView.RightItems>
-                        <Border Margin="12,4" Padding="12" BackgroundColor="#313244"
-                                StrokeShape="RoundRectangle 8">
-                            <Grid RowDefinitions="Auto,Auto">
-                                <Label Text="{Binding Title}" TextColor="#cdd6f4"
+                        <Border Margin="16,4" Padding="14" BackgroundColor="#1a1a1a"
+                                StrokeThickness="0" 
+                                StrokeShape="RoundRectangle 14">
+                            <Grid RowDefinitions="Auto,Auto" RowSpacing="6">
+                                <Label Text="{Binding Title}" TextColor="#FFFFFF"
                                        FontSize="15" FontAttributes="Bold"/>
-                                <HorizontalStackLayout Grid.Row="1" Spacing="6" Margin="0,4,0,0">
-                                    <Label Text="{Binding Tags}" TextColor="#89b4fa" FontSize="11"/>
+                                <HorizontalStackLayout Grid.Row="1" Spacing="8">
+                                    <Label Text="{Binding Tags}" TextColor="#E53935" FontSize="11"/>
+                                    <Label Text="·" TextColor="#333333" FontSize="11"/>
                                     <Label Text="{Binding UpdatedAt, StringFormat='{0:dd.MM.yy}'}"
-                                           TextColor="#6c7086" FontSize="11"/>
+                                           TextColor="#555555" FontSize="11"/>
                                 </HorizontalStackLayout>
                             </Grid>
                         </Border>

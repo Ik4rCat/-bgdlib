@@ -87,7 +87,7 @@ public class ChipSelectedConverter : IValueConverter
             bool b when parameter is string p   => b && p == "True",
             _ => false
         };
-        return selected ? Color.FromArgb("#89b4fa") : Color.FromArgb("#313244");
+        return selected ? Color.FromArgb("#E53935") : Color.FromArgb("#1a1a1a");
     }
 
     public object? ConvertBack(object? value, Type targetType, object? parameter, CultureInfo culture)
@@ -104,7 +104,7 @@ public class ChipTextColorConverter : IValueConverter
             bool b when parameter is string p   => b && p == "True",
             _ => false
         };
-        return selected ? Color.FromArgb("#1e1e2e") : Color.FromArgb("#cdd6f4");
+        return selected ? Color.FromArgb("#FFFFFF") : Color.FromArgb("#888888");
     }
 
     public object? ConvertBack(object? value, Type targetType, object? parameter, CultureInfo culture)

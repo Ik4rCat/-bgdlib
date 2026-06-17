@@ -17,6 +17,11 @@ public partial class ProfileViewModel : ObservableObject
     [ObservableProperty] private string _cacheSize = "0 KB";
     [ObservableProperty] private string _currentLang = LocalizationService.Instance.CurrentLanguage;
 
+    public string Initials => string.IsNullOrEmpty(DisplayName)
+        ? "?"
+        : string.Concat(DisplayName.Split(' ', StringSplitOptions.RemoveEmptyEntries)
+            .Take(2).Select(w => char.ToUpper(w[0]).ToString()));
+
     public ProfileViewModel(DatabaseService db, ApiService api) { _db = db; _api = api; }
 
     [RelayCommand]
@@ -66,6 +71,11 @@ public partial class ProfileViewModel : ObservableObject
 
     [RelayCommand]
     public async Task GoToNotes() => await Shell.Current.GoToAsync(nameof(NotesPage));
+
+    [RelayCommand]
+    public async Task GoToFavorites() => await Shell.Current.GoToAsync(nameof(FavoritesPage));
+
+    partial void OnDisplayNameChanged(string value) => OnPropertyChanged(nameof(Initials));
 
     private async Task RefreshCacheSizeAsync()
     {

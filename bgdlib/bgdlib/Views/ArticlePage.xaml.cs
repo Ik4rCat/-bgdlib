@@ -24,6 +24,11 @@ public partial class ArticlePage : ContentPage
         ArticleWebView.Source = new UrlWebViewSource { Url = Url };
     }
 
+    private async void OnBackTapped(object sender, EventArgs e)
+    {
+        await Shell.Current.GoToAsync("..");
+    }
+
     private async void OnFavoriteClicked(object sender, EventArgs e)
     {
         if (await _db.IsFavoriteAsync(Url))

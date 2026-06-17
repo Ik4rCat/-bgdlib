@@ -2,12 +2,42 @@
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="bgdlib.Views.ArticlePage"
-             BackgroundColor="#1e1e2e">
-    <Grid RowDefinitions="*,Auto">
-        <WebView x:Name="ArticleWebView" Grid.Row="0"/>
-        <Button Grid.Row="1" Text="★ В избранное"
-                Clicked="OnFavoriteClicked"
-                BackgroundColor="#313244" TextColor="#f9e2af"
-                Margin="12,4"/>
+             BackgroundColor="#0f0f0f">
+    <Grid RowDefinitions="Auto,*,Auto">
+
+        <!-- Top bar -->
+        <Grid Grid.Row="0" ColumnDefinitions="Auto,*" Padding="12,10" BackgroundColor="#181825">
+            <Border Grid.Column="0" BackgroundColor="#1a1a1a"
+                    StrokeShape="RoundRectangle 10" StrokeThickness="0"
+                    Padding="8" WidthRequest="36" HeightRequest="36">
+                <Label Text="&#xe5c4;" FontFamily="MaterialIcons"
+                       FontSize="18" TextColor="#888888"
+                       HorizontalOptions="Center" VerticalOptions="Center">
+                    <Label.GestureRecognizers>
+                        <TapGestureRecognizer Tapped="OnBackTapped"/>
+                    </Label.GestureRecognizers>
+                </Label>
+            </Border>
+            <Label Grid.Column="1" Text="Статья"
+                   TextColor="#888888" FontSize="15" FontAttributes="Bold"
+                   VerticalOptions="Center" Margin="12,0,0,0"/>
+        </Grid>
+
+        <WebView x:Name="ArticleWebView" Grid.Row="1"/>
+
+        <!-- Favorite button -->
+        <Border Grid.Row="2" BackgroundColor="#E53935"
+                StrokeShape="RoundRectangle 14" StrokeThickness="0"
+                Margin="16,8" Padding="0">
+            <Label x:Name="FavoriteLabel"
+                   Text="&#xe87e;  В избранное" FontFamily="OpenSansRegular"
+                   TextColor="#1e1e2e" FontSize="15" FontAttributes="Bold"
+                   HorizontalOptions="Center" Padding="0,14">
+                <Label.GestureRecognizers>
+                    <TapGestureRecognizer Tapped="OnFavoriteClicked"/>
+                </Label.GestureRecognizers>
+            </Label>
+        </Border>
+
     </Grid>
 </ContentPage>
