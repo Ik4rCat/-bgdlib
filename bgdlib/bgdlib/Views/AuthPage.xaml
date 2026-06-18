@@ -17,17 +17,14 @@
         <VerticalStackLayout Padding="24" Spacing="16" VerticalOptions="Center">
 
             <!-- Logo -->
-            <Label Margin="0,48,0,24" HorizontalOptions="Center">
-                <Label.FormattedText>
-                    <FormattedString>
-                        <Span Text="BGD" TextColor="#FFFFFF" FontSize="36" FontAttributes="Bold"/>
-                        <Span Text="lib" TextColor="#E53935" FontSize="36" FontAttributes="Bold"/>
-                    </FormattedString>
-                </Label.FormattedText>
-            </Label>
-            <Label Text="Геймдев-платформа для разработчиков"
+            <Image Source="logo.jpg"
+                   HorizontalOptions="Center"
+                   HeightRequest="160"
+                   Aspect="AspectFit"
+                   Margin="0,40,0,4"/>
+            <Label Text="{Binding [Auth_Subtitle], Source={StaticResource Loc}}"
                    TextColor="#555555" FontSize="13"
-                   HorizontalOptions="Center" Margin="0,-20,0,16"/>
+                   HorizontalOptions="Center" Margin="0,0,0,16"/>
 
             <!-- Login / Register toggle -->
             <Border BackgroundColor="#1a1a1a" StrokeThickness="0" 
@@ -92,6 +89,22 @@
                         <TapGestureRecognizer Command="{Binding SubmitCommand}"/>
                     </Label.GestureRecognizers>
                 </Label>
+            </Border>
+
+            <!-- Google sign-in -->
+            <Border BackgroundColor="#1a1a1a" StrokeShape="RoundRectangle 14" StrokeThickness="1"
+                    Stroke="#2a2a2a"
+                    IsEnabled="{Binding IsBusy, Converter={StaticResource InvertBool}}" Padding="0">
+                <Grid ColumnDefinitions="Auto,*" Padding="14,0">
+                    <Label Grid.Column="0" Text="G" TextColor="#E53935" FontSize="18" FontAttributes="Bold"
+                           VerticalOptions="Center" Margin="0,0,10,0"/>
+                    <Label Grid.Column="1" Text="{Binding [Auth_LoginGoogle], Source={StaticResource Loc}}"
+                           TextColor="#FFFFFF" FontSize="15" HorizontalOptions="Start" Padding="0,16">
+                        <Label.GestureRecognizers>
+                            <TapGestureRecognizer Command="{Binding LoginGoogleCommand}"/>
+                        </Label.GestureRecognizers>
+                    </Label>
+                </Grid>
             </Border>
 
             <!-- Guest mode -->

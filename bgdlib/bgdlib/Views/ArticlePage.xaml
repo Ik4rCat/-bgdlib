@@ -18,7 +18,7 @@
                     </Label.GestureRecognizers>
                 </Label>
             </Border>
-            <Label Grid.Column="1" Text="Статья"
+            <Label Grid.Column="1" Text="{Binding [Article_Title], Source={StaticResource Loc}}"
                    TextColor="#888888" FontSize="15" FontAttributes="Bold"
                    VerticalOptions="Center" Margin="12,0,0,0"/>
         </Grid>
@@ -30,7 +30,7 @@
                 StrokeShape="RoundRectangle 14" StrokeThickness="0"
                 Margin="16,8" Padding="0">
             <Label x:Name="FavoriteLabel"
-                   Text="&#xe87e;  В избранное" FontFamily="OpenSansRegular"
+                   Text="{Binding [Article_AddFavorite], Source={StaticResource Loc}}"
                    TextColor="#1e1e2e" FontSize="15" FontAttributes="Bold"
                    HorizontalOptions="Center" Padding="0,14">
                 <Label.GestureRecognizers>

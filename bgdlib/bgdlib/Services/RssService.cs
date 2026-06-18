@@ -64,16 +64,28 @@ public class RssService
     private static string GuessCategory(string title, string desc)
     {
         var text = (title + " " + desc).ToLowerInvariant();
-        if (ContainsAny(text, "hiring", "job", "vacancy", "вакансия", "ищем", "требуется"))
+
+        if (ContainsAny(text, "hiring", "job", "vacancy", "вакансия", "ищем", "требуется",
+                        "we're looking", "open position", "join our team", "apply now"))
             return "job";
-        if (ContainsAny(text, "tutorial", "how to", "guide", "урок", "гайд", "туториал", "как сделать"))
+
+        if (ContainsAny(text, "tutorial", "how to", "guide", "урок", "гайд", "туториал",
+                        "как сделать", "step by step", "learn", "getting started", "introduction to",
+                        "beginner", "walkthrough", "tips and tricks"))
             return "tutorial";
-        if (ContainsAny(text, "postmortem", "post-mortem", "shipped", "released", "вышла", "запустили"))
-            return "postmortem";
-        if (ContainsAny(text, "tool", "plugin", "asset", "package", "инструмент", "плагин", "ассет"))
+
+        if (ContainsAny(text, "tool", "plugin", "asset", "package", "инструмент", "плагин", "ассет",
+                        "extension", "library", "sdk", "framework", "addon", "utility"))
             return "tool";
-        if (ContainsAny(text, "docs", "documentation", "api reference", "документация"))
+
+        if (ContainsAny(text, "postmortem", "post-mortem", "shipped", "released", "вышла", "запустили",
+                        "launched", "we made", "devlog", "development log", "behind the scenes"))
+            return "postmortem";
+
+        if (ContainsAny(text, "docs", "documentation", "api reference", "документация",
+                        "reference", "changelog", "release notes", "patch notes", "update notes"))
             return "docs";
+
         return "news";
     }
 

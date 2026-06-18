@@ -2,6 +2,7 @@ using System.Net.Http.Headers;
 using System.Net.Http.Json;
 using System.Text.Json;
 using bgdlib.Models;
+using System.Text.Json.Nodes;
 
 namespace bgdlib.Services;
 
@@ -56,6 +57,39 @@ public class ApiService
         var resp = await _http.PostAsJsonAsync("/api/auth/login", new { email, password });
         if (!resp.IsSuccessStatusCode) return null;
         return await resp.Content.ReadFromJsonAsync<AuthResponse>(_json);
+    }
+
+    public async Task<AuthResponse?> LoginGoogleWithCodeAsync(string code, string codeVerifier)
+    {
+        try
+        {
+            var formParams = new Dictionary<string, string>
+            {
+                ["code"] = code,
+                ["client_id"] = Constants.GoogleClientId,
+                ["code_verifier"] = codeVerifier,
+                ["redirect_uri"] = Constants.GoogleRedirectUri,
+                ["grant_type"] = "authorization_code",
+            };
+            if (!string.IsNullOrEmpty(Constants.GoogleClientSecret))
+                formParams["client_secret"] = Constants.GoogleClientSecret;
+
+            using var googleHttp = new HttpClient();
+            var tokenResp = await googleHttp.PostAsync(
+                "https://oauth2.googleapis.com/token",
+                new FormUrlEncodedContent(formParams));
+
+            if (!tokenResp.IsSuccessStatusCode) return null;
+
+            var tokenJson = JsonNode.Parse(await tokenResp.Content.ReadAsStringAsync());
+            var idToken = tokenJson?["id_token"]?.GetValue<string>();
+            if (string.IsNullOrEmpty(idToken)) return null;
+
+            var resp = await _http.PostAsJsonAsync("/api/auth/google", new { idToken });
+            if (!resp.IsSuccessStatusCode) return null;
+            return await resp.Content.ReadFromJsonAsync<AuthResponse>(_json);
+        }
+        catch { return null; }
     }
 
     public async Task LogoutAsync(string refreshToken)

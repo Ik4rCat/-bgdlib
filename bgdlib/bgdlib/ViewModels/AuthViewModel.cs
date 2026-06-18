@@ -1,3 +1,4 @@
+using System.Security.Cryptography;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using bgdlib.Models;
@@ -27,6 +28,11 @@ public partial class AuthViewModel : ObservableObject
     {
         _api = api;
         _db = db;
+        LocalizationService.Instance.PropertyChanged += (_, e) =>
+        {
+            if (e.PropertyName == "Item[]")
+                OnPropertyChanged(nameof(SubmitLabel));
+        };
     }
 
     [RelayCommand] public void SwitchToLogin() => IsLogin = true;
@@ -63,6 +69,53 @@ public partial class AuthViewModel : ObservableObject
     }
 
     [RelayCommand]
+    public async Task LoginGoogleAsync()
+    {
+        var L = LocalizationService.Instance;
+        if (string.IsNullOrEmpty(Constants.GoogleClientId))
+        {
+            ShowError(L["Auth_GoogleNotConfigured"]);
+            return;
+        }
+        try
+        {
+            IsBusy = true;
+            HasError = false;
+
+            var verifier = GenerateCodeVerifier();
+            var challenge = GenerateCodeChallenge(verifier);
+            var nonce = Guid.NewGuid().ToString("N");
+
+            var authUrl = new Uri(
+                "https://accounts.google.com/o/oauth2/v2/auth" +
+                $"?client_id={Uri.EscapeDataString(Constants.GoogleClientId)}" +
+                $"&redirect_uri={Uri.EscapeDataString(Constants.GoogleRedirectUri)}" +
+                "&response_type=code" +
+                "&scope=openid%20email%20profile" +
+                $"&code_challenge={challenge}" +
+                "&code_challenge_method=S256" +
+                $"&nonce={nonce}");
+
+            var result = await WebAuthenticator.Default.AuthenticateAsync(authUrl, new Uri(Constants.GoogleRedirectUri));
+
+            if (!result.Properties.TryGetValue("code", out var code) || string.IsNullOrEmpty(code))
+            {
+                ShowError(L["Auth_Error"]);
+                return;
+            }
+
+            var auth = await _api.LoginGoogleWithCodeAsync(code, verifier);
+            if (auth == null) { ShowError(L["Auth_Error"]); return; }
+
+            await SaveSessionAsync(auth);
+            await Shell.Current.GoToAsync("//MainRibbonPage");
+        }
+        catch (TaskCanceledException) { }
+        catch { ShowError(LocalizationService.Instance["Auth_Error"]); }
+        finally { IsBusy = false; }
+    }
+
+    [RelayCommand]
     public async Task GuestAsync()
     {
         var session = new UserSession { IsGuest = true };
@@ -71,6 +124,19 @@ public partial class AuthViewModel : ObservableObject
     }
 
     private void ShowError(string msg) { ErrorMessage = msg; HasError = true; }
+
+    private static string GenerateCodeVerifier()
+    {
+        var bytes = new byte[32];
+        RandomNumberGenerator.Fill(bytes);
+        return Convert.ToBase64String(bytes).TrimEnd('=').Replace('+', '-').Replace('/', '_');
+    }
+
+    private static string GenerateCodeChallenge(string verifier)
+    {
+        var hash = SHA256.HashData(System.Text.Encoding.ASCII.GetBytes(verifier));
+        return Convert.ToBase64String(hash).TrimEnd('=').Replace('+', '-').Replace('/', '_');
+    }
 
     private async Task SaveSessionAsync(AuthResponse auth)
     {

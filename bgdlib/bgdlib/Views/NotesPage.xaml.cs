@@ -1,4 +1,5 @@
 using bgdlib.Models;
+using bgdlib.Services;
 using bgdlib.ViewModels;
 
 namespace bgdlib.Views;
@@ -17,6 +18,7 @@ public partial class NotesPage : ContentPage
     protected override async void OnAppearing()
     {
         base.OnAppearing();
+        Title = LocalizationService.Instance["Notes_Title"];
         await _vm.LoadCommand.ExecuteAsync(null);
     }
 

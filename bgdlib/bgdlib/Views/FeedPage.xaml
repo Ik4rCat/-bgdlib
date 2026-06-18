@@ -27,7 +27,7 @@
                 <Label.FormattedText>
                     <FormattedString>
                         <Span Text="RSS " TextColor="#FFFFFF" FontSize="20" FontAttributes="Bold"/>
-                        <Span Text="Лента" TextColor="#E53935" FontSize="20" FontAttributes="Bold"/>
+                        <Span Text="{Binding [Feed_RibbonWord], Source={StaticResource Loc}}" TextColor="#E53935" FontSize="20" FontAttributes="Bold"/>
                     </FormattedString>
                 </Label.FormattedText>
             </Label>

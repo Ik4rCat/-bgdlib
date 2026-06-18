@@ -31,12 +31,13 @@ public partial class ArticlePage : ContentPage
 
     private async void OnFavoriteClicked(object sender, EventArgs e)
     {
+        var loc = LocalizationService.Instance;
         if (await _db.IsFavoriteAsync(Url))
         {
-            await DisplayAlert("Уже в избранном", "Эта статья уже сохранена", "OK");
+            await DisplayAlert(loc["Article_AlreadySaved"], loc["Article_AlreadySavedMsg"], loc["OK"]);
             return;
         }
         await _db.AddFavoriteAsync(new FavoriteItem { Title = ArticleTitle, Url = Url });
-        await DisplayAlert("Сохранено", "Статья добавлена в избранное", "OK");
+        await DisplayAlert(loc["Article_Saved"], loc["Article_SavedMsg"], loc["OK"]);
     }
 }

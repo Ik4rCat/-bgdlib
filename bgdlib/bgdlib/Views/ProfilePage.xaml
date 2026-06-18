@@ -20,7 +20,7 @@
             <Grid ColumnDefinitions="Auto,*" Padding="16,14,16,0">
                 <Label Grid.Column="0" Text="&#xe5c4;" FontFamily="MaterialIcons"
                        FontSize="22" TextColor="#555555" VerticalOptions="Center" Margin="0,0,12,0"/>
-                <Label Grid.Column="1" Text="Профиль"
+                <Label Grid.Column="1" Text="{Binding [Profile_Title], Source={StaticResource Loc}}"
                        TextColor="#FFFFFF" FontSize="18" FontAttributes="Bold" VerticalOptions="Center"/>
             </Grid>
 
@@ -53,17 +53,17 @@
                   IsVisible="{Binding IsGuest, Converter={StaticResource InvertBool}}">
                 <VerticalStackLayout Grid.Column="0" HorizontalOptions="Center" Spacing="2">
                     <Label Text="0" TextColor="#FFFFFF" FontSize="22" FontAttributes="Bold" HorizontalOptions="Center"/>
-                    <Label Text="Постов" TextColor="#555555" FontSize="11" HorizontalOptions="Center"/>
+                    <Label Text="{Binding [Profile_Posts], Source={StaticResource Loc}}" TextColor="#555555" FontSize="11" HorizontalOptions="Center"/>
                 </VerticalStackLayout>
                 <BoxView Grid.Column="1" BackgroundColor="#1a1a1a" WidthRequest="1"/>
                 <VerticalStackLayout Grid.Column="2" HorizontalOptions="Center" Spacing="2">
                     <Label Text="0" TextColor="#FFFFFF" FontSize="22" FontAttributes="Bold" HorizontalOptions="Center"/>
-                    <Label Text="Прочитано" TextColor="#555555" FontSize="11" HorizontalOptions="Center"/>
+                    <Label Text="{Binding [Profile_Read], Source={StaticResource Loc}}" TextColor="#555555" FontSize="11" HorizontalOptions="Center"/>
                 </VerticalStackLayout>
                 <BoxView Grid.Column="3" BackgroundColor="#1a1a1a" WidthRequest="1"/>
                 <VerticalStackLayout Grid.Column="4" HorizontalOptions="Center" Spacing="2">
                     <Label Text="0" TextColor="#FFFFFF" FontSize="22" FontAttributes="Bold" HorizontalOptions="Center"/>
-                    <Label Text="Тэги" TextColor="#555555" FontSize="11" HorizontalOptions="Center"/>
+                    <Label Text="{Binding [Profile_Tags], Source={StaticResource Loc}}" TextColor="#555555" FontSize="11" HorizontalOptions="Center"/>
                 </VerticalStackLayout>
             </Grid>
 
@@ -87,8 +87,8 @@
                 <Label Grid.Column="0" Text="&#xe87d;" FontFamily="MaterialIcons"
                        FontSize="20" TextColor="#E53935" VerticalOptions="Center" Margin="0,0,14,0"/>
                 <VerticalStackLayout Grid.Column="1" VerticalOptions="Center" Spacing="2">
-                    <Label Text="Избранное" TextColor="#FFFFFF" FontSize="15"/>
-                    <Label Text="Сохранённые материалы" TextColor="#555555" FontSize="12"/>
+                    <Label Text="{Binding [Profile_Favorites], Source={StaticResource Loc}}" TextColor="#FFFFFF" FontSize="15"/>
+                    <Label Text="{Binding [Profile_FavoritesDesc], Source={StaticResource Loc}}" TextColor="#555555" FontSize="12"/>
                 </VerticalStackLayout>
                 <Label Grid.Column="2" Text="&#xe5c8;" FontFamily="MaterialIcons"
                        FontSize="18" TextColor="#333333" VerticalOptions="Center"/>
@@ -104,7 +104,7 @@
                        FontSize="20" TextColor="#888888" VerticalOptions="Center" Margin="0,0,14,0"/>
                 <VerticalStackLayout Grid.Column="1" VerticalOptions="Center" Spacing="2">
                     <Label Text="{Binding [Tab_Docs], Source={StaticResource Loc}}" TextColor="#FFFFFF" FontSize="15"/>
-                    <Label Text="Документации движков" TextColor="#555555" FontSize="12"/>
+                    <Label Text="{Binding [Profile_DocsDesc], Source={StaticResource Loc}}" TextColor="#555555" FontSize="12"/>
                 </VerticalStackLayout>
                 <Label Grid.Column="2" Text="&#xe5c8;" FontFamily="MaterialIcons"
                        FontSize="18" TextColor="#333333" VerticalOptions="Center"/>
@@ -120,7 +120,7 @@
                        FontSize="20" TextColor="#888888" VerticalOptions="Center" Margin="0,0,14,0"/>
                 <VerticalStackLayout Grid.Column="1" VerticalOptions="Center" Spacing="2">
                     <Label Text="{Binding [Tab_Notes], Source={StaticResource Loc}}" TextColor="#FFFFFF" FontSize="15"/>
-                    <Label Text="Персональные заметки" TextColor="#555555" FontSize="12"/>
+                    <Label Text="{Binding [Profile_NotesDesc], Source={StaticResource Loc}}" TextColor="#555555" FontSize="12"/>
                 </VerticalStackLayout>
                 <Label Grid.Column="2" Text="&#xe5c8;" FontFamily="MaterialIcons"
                        FontSize="18" TextColor="#333333" VerticalOptions="Center"/>

@@ -13,6 +13,7 @@
         <conv:ChipSelectedConverter x:Key="ChipSelected"/>
         <conv:ChipTextColorConverter x:Key="ChipText"/>
         <conv:NotEmptyConverter x:Key="NotEmpty"/>
+        <conv:InvertBoolConverter x:Key="InvertBool"/>
     </ContentPage.Resources>
 
     <Grid RowDefinitions="Auto,Auto,1,*,Auto">
@@ -30,7 +31,8 @@
             <Label Grid.Column="1" Text="&#xe8b6;" FontFamily="MaterialIcons"
                    FontSize="22" TextColor="#555555" VerticalOptions="Center" Margin="0,0,16,0"/>
             <Label Grid.Column="2" Text="&#xe145;" FontFamily="MaterialIcons"
-                   FontSize="24" TextColor="#E53935" VerticalOptions="Center">
+                   FontSize="24" TextColor="#E53935" VerticalOptions="Center"
+                   IsVisible="{Binding IsGuest, Converter={StaticResource InvertBool}}">
                 <Label.GestureRecognizers>
                     <TapGestureRecognizer Command="{Binding CreatePostCommand}"/>
                 </Label.GestureRecognizers>
@@ -82,7 +84,10 @@
         <BoxView Grid.Row="2" HeightRequest="1" BackgroundColor="#1a1a1a"/>
 
         <!-- Posts list -->
-        <CollectionView Grid.Row="3" ItemsSource="{Binding Posts}" RemainingItemsThreshold="3"
+        <RefreshView Grid.Row="3"
+                     IsRefreshing="{Binding IsRefreshing}"
+                     Command="{Binding RefreshCommand}">
+        <CollectionView ItemsSource="{Binding Posts}" RemainingItemsThreshold="3"
                         RemainingItemsThresholdReachedCommand="{Binding LoadMoreCommand}">
             <CollectionView.EmptyView>
                 <Label Text="{Binding [Ribbon_Empty], Source={StaticResource Loc}}"
@@ -161,6 +166,7 @@
                 </DataTemplate>
             </CollectionView.ItemTemplate>
         </CollectionView>
+        </RefreshView>
 
         <!-- Loading -->
         <ActivityIndicator Grid.Row="4" IsRunning="{Binding IsLoading}" IsVisible="{Binding IsLoading}"

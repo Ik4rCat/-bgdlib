@@ -22,7 +22,7 @@
             <VerticalStackLayout Spacing="2">
                 <Label Text="{Binding [Docs_Title], Source={StaticResource Loc}}"
                        FontSize="24" FontAttributes="Bold" TextColor="#FFFFFF"/>
-                <Label Text="Документации и ресурсы" TextColor="#555555" FontSize="12"/>
+                <Label Text="{Binding [Docs_Subtitle], Source={StaticResource Loc}}" TextColor="#555555" FontSize="12"/>
             </VerticalStackLayout>
         </Grid>
 

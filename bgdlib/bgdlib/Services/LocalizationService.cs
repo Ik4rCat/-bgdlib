@@ -15,7 +15,7 @@ public class LocalizationService : INotifyPropertyChanged
         ["en"] = new()
         {
             // Tabs
-            ["Tab_Feed"]    = "Feed",
+            ["Tab_Feed"]    = "News",
             ["Tab_Search"]  = "Search",
             ["Tab_Saved"]   = "Saved",
             ["Tab_Jobs"]    = "Jobs",
@@ -82,6 +82,8 @@ public class LocalizationService : INotifyPropertyChanged
             ["Auth_Name"]     = "Display Name",
             ["Auth_GuestMode"] = "Continue as guest",
             ["Auth_Error"]    = "Error. Check your details.",
+            ["Auth_GoogleNotConfigured"] = "Google Sign-In is not configured",
+            ["Auth_LoginGoogle"] = "Continue with Google",
             // Post
             ["Post_Title"]      = "Title",
             ["Post_Body"]       = "Content (Markdown)",
@@ -94,11 +96,36 @@ public class LocalizationService : INotifyPropertyChanged
             ["Profile_Logout"]          = "Sign Out",
             ["Profile_SectionContent"]  = "CONTENT",
             ["Profile_SectionSettings"] = "SETTINGS",
+            ["Profile_Title"]           = "Profile",
+            ["Profile_Posts"]           = "Posts",
+            ["Profile_Read"]            = "Read",
+            ["Profile_Tags"]            = "Tags",
+            ["Profile_Favorites"]       = "Favorites",
+            ["Profile_FavoritesDesc"]   = "Saved articles",
+            ["Profile_DocsDesc"]        = "Engine documentation",
+            ["Profile_NotesDesc"]       = "Personal notes",
+            // Auth
+            ["Auth_Subtitle"]           = "Game dev platform for developers",
+            // Feed
+            ["Feed_RibbonWord"]         = "Feed",
+            // Docs
+            ["Docs_Subtitle"]           = "Documentation and resources",
+            // Notes
+            ["Notes_Title"]             = "Notes",
+            ["Notes_Search"]            = "Search notes and tags...",
+            ["Notes_Empty"]             = "No notes. Tap + to create.",
+            // Article
+            ["Article_Title"]           = "Article",
+            ["Article_AddFavorite"]     = "Add to Favorites",
+            ["Article_AlreadySaved"]    = "Already saved",
+            ["Article_AlreadySavedMsg"] = "This article is already saved",
+            ["Article_Saved"]           = "Saved",
+            ["Article_SavedMsg"]        = "Article added to favorites",
         },
         ["ru"] = new()
         {
             // Tabs
-            ["Tab_Feed"]    = "Лента",
+            ["Tab_Feed"]    = "Новости",
             ["Tab_Search"]  = "Поиск",
             ["Tab_Saved"]   = "Сохранено",
             ["Tab_Jobs"]    = "Вакансии",
@@ -165,6 +192,8 @@ public class LocalizationService : INotifyPropertyChanged
             ["Auth_Name"]     = "Имя",
             ["Auth_GuestMode"] = "Продолжить как гость",
             ["Auth_Error"]    = "Ошибка. Проверьте данные.",
+            ["Auth_GoogleNotConfigured"] = "Google Sign-In не настроен",
+            ["Auth_LoginGoogle"] = "Войти через Google",
             // Post
             ["Post_Title"]      = "Заголовок",
             ["Post_Body"]       = "Содержание (Markdown)",
@@ -177,6 +206,31 @@ public class LocalizationService : INotifyPropertyChanged
             ["Profile_Logout"]          = "Выйти",
             ["Profile_SectionContent"]  = "КОНТЕНТ",
             ["Profile_SectionSettings"] = "НАСТРОЙКИ",
+            ["Profile_Title"]           = "Профиль",
+            ["Profile_Posts"]           = "Постов",
+            ["Profile_Read"]            = "Прочитано",
+            ["Profile_Tags"]            = "Тэги",
+            ["Profile_Favorites"]       = "Избранное",
+            ["Profile_FavoritesDesc"]   = "Сохранённые материалы",
+            ["Profile_DocsDesc"]        = "Документации движков",
+            ["Profile_NotesDesc"]       = "Персональные заметки",
+            // Auth
+            ["Auth_Subtitle"]           = "Геймдев-платформа для разработчиков",
+            // Feed
+            ["Feed_RibbonWord"]         = "Лента",
+            // Docs
+            ["Docs_Subtitle"]           = "Документации и ресурсы",
+            // Notes
+            ["Notes_Title"]             = "Заметки",
+            ["Notes_Search"]            = "Поиск по заметкам и тегам...",
+            ["Notes_Empty"]             = "Нет заметок. Нажми + чтобы создать.",
+            // Article
+            ["Article_Title"]           = "Статья",
+            ["Article_AddFavorite"]     = "В избранное",
+            ["Article_AlreadySaved"]    = "Уже в избранном",
+            ["Article_AlreadySavedMsg"] = "Эта статья уже сохранена",
+            ["Article_Saved"]           = "Сохранено",
+            ["Article_SavedMsg"]        = "Статья добавлена в избранное",
         }
     };
 

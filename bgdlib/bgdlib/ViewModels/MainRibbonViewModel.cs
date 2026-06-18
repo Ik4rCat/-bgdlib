@@ -10,21 +10,30 @@ namespace bgdlib.ViewModels;
 public partial class MainRibbonViewModel : ObservableObject
 {
     private readonly ApiService _api;
+    private readonly DatabaseService _db;
     private int _page = 1;
     private int _total = 0;
 
     [ObservableProperty] private string _selectedEngine = "ALL";
     [ObservableProperty] private bool _isLoading;
+    [ObservableProperty] private bool _isRefreshing;
+    [ObservableProperty] private bool _isGuest = true;
 
     public ObservableCollection<CommunityPost> Posts { get; } = [];
 
-    public MainRibbonViewModel(ApiService api) => _api = api;
+    public MainRibbonViewModel(ApiService api, DatabaseService db)
+    {
+        _api = api;
+        _db = db;
+    }
 
     public async Task LoadAsync()
     {
         IsLoading = true;
         _page = 1;
         Posts.Clear();
+        var session = await _db.GetSessionAsync();
+        IsGuest = session.IsGuest;
         try
         {
             var page = await _api.GetPostsAsync(1, SelectedEngine == "ALL" ? null : SelectedEngine);
@@ -35,6 +44,14 @@ public partial class MainRibbonViewModel : ObservableObject
             }
         }
         finally { IsLoading = false; }
+    }
+
+    [RelayCommand]
+    public async Task RefreshAsync()
+    {
+        IsRefreshing = true;
+        await LoadAsync();
+        IsRefreshing = false;
     }
 
     [RelayCommand]
