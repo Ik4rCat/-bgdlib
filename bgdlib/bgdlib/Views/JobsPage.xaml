@@ -6,34 +6,45 @@
              xmlns:conv="clr-namespace:bgdlib.Converters"
              x:Class="bgdlib.Views.JobsPage"
              x:DataType="vm:JobsViewModel"
-             BackgroundColor="{StaticResource Bg}">
+             x:Name="JobsRoot"
+             BackgroundColor="#0f0f0f"
+             Shell.NavBarIsVisible="False">
 
     <ContentPage.Resources>
+        <conv:InvertBoolConverter x:Key="InvertBool"/>
         <conv:ChipSelectedConverter x:Key="ChipSelected"/>
         <conv:ChipTextColorConverter x:Key="ChipText"/>
         <conv:EngineColorConverter x:Key="EngineColor"/>
         <conv:EngineLetterConverter x:Key="EngineLetter"/>
     </ContentPage.Resources>
 
-    <Grid RowDefinitions="Auto,Auto,*">
+    <Grid RowDefinitions="Auto,Auto,Auto,1,*">
 
-        <!-- Header -->
-        <Grid Grid.Row="0" BackgroundColor="{StaticResource Surface}" Padding="20,16,20,16">
-            <VerticalStackLayout Spacing="2">
-                <Label Text="{Binding [Jobs_Title], Source={StaticResource Loc}}"
-                       FontSize="24" FontAttributes="Bold" TextColor="{StaticResource TextPrimary}"/>
-                <Label Text="Gamedev вакансии" TextColor="{StaticResource TextMuted}" FontSize="12"/>
-            </VerticalStackLayout>
+        <!-- AppBar -->
+        <Grid Grid.Row="0" ColumnDefinitions="Auto,*"
+              BackgroundColor="#1a1a1a" Padding="10,13">
+            <Label Grid.Column="0" Text="&#xe5c4;" FontFamily="MaterialIcons"
+                   FontSize="24" TextColor="#F5F5F5" VerticalOptions="Center" Margin="8,0,4,0">
+                <Label.GestureRecognizers>
+                    <TapGestureRecognizer Command="{Binding GoBackCommand}"/>
+                </Label.GestureRecognizers>
+            </Label>
+            <HorizontalStackLayout Grid.Column="1" Spacing="4"
+                                   VerticalOptions="Center" Margin="8,0,0,0">
+                <Label Text="Gamedev" FontFamily="OpenSansSemibold" FontSize="17"
+                       TextColor="#F5F5F5" VerticalOptions="Center"/>
+                <Label Text="Jobs" FontFamily="OpenSansSemibold" FontSize="17"
+                       TextColor="#E53935" VerticalOptions="Center"/>
+            </HorizontalStackLayout>
         </Grid>
 
-        <!-- Filter chips -->
+        <!-- Level chips -->
         <ScrollView Grid.Row="1" Orientation="Horizontal"
-                    BackgroundColor="{StaticResource Surface}" HorizontalScrollBarVisibility="Never">
-            <HorizontalStackLayout Spacing="8" Padding="16,4,16,12">
+                    BackgroundColor="#1a1a1a" HorizontalScrollBarVisibility="Never">
+            <HorizontalStackLayout Spacing="6" Padding="12,8,12,4">
                 <Border BackgroundColor="{Binding SelectedLevel, Converter={StaticResource ChipSelected}, ConverterParameter='ALL'}"
-                        StrokeThickness="0"
-                        StrokeShape="RoundRectangle 20" Padding="0">
-                    <Label Text="{Binding [Filter_AllLevels], Source={StaticResource Loc}}" FontSize="12" Padding="16,8"
+                        StrokeThickness="0" StrokeShape="RoundRectangle 16" Padding="0">
+                    <Label Text="Все уровни" FontSize="13" Padding="14,6"
                            TextColor="{Binding SelectedLevel, Converter={StaticResource ChipText}, ConverterParameter='ALL'}">
                         <Label.GestureRecognizers>
                             <TapGestureRecognizer Command="{Binding SetLevelCommand}" CommandParameter="ALL"/>
@@ -41,9 +52,8 @@
                     </Label>
                 </Border>
                 <Border BackgroundColor="{Binding SelectedLevel, Converter={StaticResource ChipSelected}, ConverterParameter='Junior'}"
-                        StrokeThickness="0"
-                        StrokeShape="RoundRectangle 20" Padding="0">
-                    <Label Text="Junior" FontSize="12" Padding="16,8"
+                        StrokeThickness="0" StrokeShape="RoundRectangle 16" Padding="0">
+                    <Label Text="Junior" FontSize="13" Padding="14,6"
                            TextColor="{Binding SelectedLevel, Converter={StaticResource ChipText}, ConverterParameter='Junior'}">
                         <Label.GestureRecognizers>
                             <TapGestureRecognizer Command="{Binding SetLevelCommand}" CommandParameter="Junior"/>
@@ -51,9 +61,8 @@
                     </Label>
                 </Border>
                 <Border BackgroundColor="{Binding SelectedLevel, Converter={StaticResource ChipSelected}, ConverterParameter='Middle'}"
-                        StrokeThickness="0"
-                        StrokeShape="RoundRectangle 20" Padding="0">
-                    <Label Text="Middle" FontSize="12" Padding="16,8"
+                        StrokeThickness="0" StrokeShape="RoundRectangle 16" Padding="0">
+                    <Label Text="Middle" FontSize="13" Padding="14,6"
                            TextColor="{Binding SelectedLevel, Converter={StaticResource ChipText}, ConverterParameter='Middle'}">
                         <Label.GestureRecognizers>
                             <TapGestureRecognizer Command="{Binding SetLevelCommand}" CommandParameter="Middle"/>
@@ -61,20 +70,34 @@
                     </Label>
                 </Border>
                 <Border BackgroundColor="{Binding SelectedLevel, Converter={StaticResource ChipSelected}, ConverterParameter='Senior'}"
-                        StrokeThickness="0"
-                        StrokeShape="RoundRectangle 20" Padding="0">
-                    <Label Text="Senior" FontSize="12" Padding="16,8"
+                        StrokeThickness="0" StrokeShape="RoundRectangle 16" Padding="0">
+                    <Label Text="Senior" FontSize="13" Padding="14,6"
                            TextColor="{Binding SelectedLevel, Converter={StaticResource ChipText}, ConverterParameter='Senior'}">
                         <Label.GestureRecognizers>
                             <TapGestureRecognizer Command="{Binding SetLevelCommand}" CommandParameter="Senior"/>
                         </Label.GestureRecognizers>
                     </Label>
                 </Border>
-                <BoxView WidthRequest="1" HeightRequest="20" Color="{StaticResource Border}" VerticalOptions="Center"/>
+            </HorizontalStackLayout>
+        </ScrollView>
+
+        <!-- Remote toggle + Engine chips -->
+        <ScrollView Grid.Row="2" Orientation="Horizontal"
+                    BackgroundColor="#1a1a1a" HorizontalScrollBarVisibility="Never">
+            <HorizontalStackLayout Spacing="6" Padding="12,4,12,8">
+                <!-- Remote toggle chip -->
+                <Border BackgroundColor="{Binding RemoteOnly, Converter={StaticResource ChipSelected}, ConverterParameter='True'}"
+                        StrokeThickness="0" StrokeShape="RoundRectangle 16" Padding="0">
+                    <Label Text="Удалённо" FontSize="13" Padding="14,6"
+                           TextColor="{Binding RemoteOnly, Converter={StaticResource ChipText}, ConverterParameter='True'}">
+                        <Label.GestureRecognizers>
+                            <TapGestureRecognizer Command="{Binding ToggleRemoteCommand}"/>
+                        </Label.GestureRecognizers>
+                    </Label>
+                </Border>
                 <Border BackgroundColor="{Binding SelectedEngine, Converter={StaticResource ChipSelected}, ConverterParameter='ALL'}"
-                        StrokeThickness="0"
-                        StrokeShape="RoundRectangle 20" Padding="0">
-                    <Label Text="{Binding [Filter_AllEngines], Source={StaticResource Loc}}" FontSize="12" Padding="16,8"
+                        StrokeThickness="0" StrokeShape="RoundRectangle 16" Padding="0">
+                    <Label Text="Все движки" FontSize="13" Padding="14,6"
                            TextColor="{Binding SelectedEngine, Converter={StaticResource ChipText}, ConverterParameter='ALL'}">
                         <Label.GestureRecognizers>
                             <TapGestureRecognizer Command="{Binding SetEngineCommand}" CommandParameter="ALL"/>
@@ -82,9 +105,8 @@
                     </Label>
                 </Border>
                 <Border BackgroundColor="{Binding SelectedEngine, Converter={StaticResource ChipSelected}, ConverterParameter='Unity'}"
-                        StrokeThickness="0"
-                        StrokeShape="RoundRectangle 20" Padding="0">
-                    <Label Text="Unity" FontSize="12" Padding="16,8"
+                        StrokeThickness="0" StrokeShape="RoundRectangle 16" Padding="0">
+                    <Label Text="Unity" FontSize="13" Padding="14,6"
                            TextColor="{Binding SelectedEngine, Converter={StaticResource ChipText}, ConverterParameter='Unity'}">
                         <Label.GestureRecognizers>
                             <TapGestureRecognizer Command="{Binding SetEngineCommand}" CommandParameter="Unity"/>
@@ -92,9 +114,8 @@
                     </Label>
                 </Border>
                 <Border BackgroundColor="{Binding SelectedEngine, Converter={StaticResource ChipSelected}, ConverterParameter='Godot'}"
-                        StrokeThickness="0"
-                        StrokeShape="RoundRectangle 20" Padding="0">
-                    <Label Text="Godot" FontSize="12" Padding="16,8"
+                        StrokeThickness="0" StrokeShape="RoundRectangle 16" Padding="0">
+                    <Label Text="Godot" FontSize="13" Padding="14,6"
                            TextColor="{Binding SelectedEngine, Converter={StaticResource ChipText}, ConverterParameter='Godot'}">
                         <Label.GestureRecognizers>
                             <TapGestureRecognizer Command="{Binding SetEngineCommand}" CommandParameter="Godot"/>
@@ -102,77 +123,60 @@
                     </Label>
                 </Border>
                 <Border BackgroundColor="{Binding SelectedEngine, Converter={StaticResource ChipSelected}, ConverterParameter='Unreal'}"
-                        StrokeThickness="0"
-                        StrokeShape="RoundRectangle 20" Padding="0">
-                    <Label Text="Unreal" FontSize="12" Padding="16,8"
+                        StrokeThickness="0" StrokeShape="RoundRectangle 16" Padding="0">
+                    <Label Text="Unreal" FontSize="13" Padding="14,6"
                            TextColor="{Binding SelectedEngine, Converter={StaticResource ChipText}, ConverterParameter='Unreal'}">
                         <Label.GestureRecognizers>
                             <TapGestureRecognizer Command="{Binding SetEngineCommand}" CommandParameter="Unreal"/>
                         </Label.GestureRecognizers>
                     </Label>
                 </Border>
-                <BoxView WidthRequest="1" HeightRequest="20" Color="{StaticResource Border}" VerticalOptions="Center"/>
-                <Border StrokeShape="RoundRectangle 20" Padding="0"
-                        StrokeThickness="0"
-                        BackgroundColor="{Binding RemoteOnly, Converter={StaticResource ChipSelected}, ConverterParameter='True'}">
-                    <HorizontalStackLayout Padding="14,8" Spacing="6">
-                        <Label Text="&#xe8f9;" FontFamily="MaterialIcons" FontSize="14"
-                               TextColor="{StaticResource TextSecondary}" VerticalOptions="Center"/>
-                        <Label Text="{Binding [Jobs_Remote], Source={StaticResource Loc}}"
-                               FontSize="12" TextColor="{StaticResource TextSecondary}" VerticalOptions="Center">
-                            <Label.GestureRecognizers>
-                                <TapGestureRecognizer Command="{Binding ToggleRemoteCommand}"/>
-                            </Label.GestureRecognizers>
-                        </Label>
-                    </HorizontalStackLayout>
-                </Border>
             </HorizontalStackLayout>
         </ScrollView>
 
-        <!-- Jobs list -->
-        <CollectionView Grid.Row="2" ItemsSource="{Binding Jobs}">
-            <CollectionView.EmptyView>
-                <Label Text="{Binding [Jobs_Empty], Source={StaticResource Loc}}"
-                       TextColor="{StaticResource TextMuted}"
-                       HorizontalOptions="Center" VerticalOptions="Center"
-                       HorizontalTextAlignment="Center" Margin="0,48"/>
-            </CollectionView.EmptyView>
-            <CollectionView.Footer>
-                <BoxView HeightRequest="12" Color="Transparent"/>
-            </CollectionView.Footer>
-            <CollectionView.ItemTemplate>
-                <DataTemplate x:DataType="models:FeedItem">
-                    <Border Margin="16,4" Padding="14" BackgroundColor="{StaticResource Surface}"
-                            StrokeShape="RoundRectangle 12"
-                            Stroke="{StaticResource Border}"
-                            StrokeThickness="1">
-                        <Grid ColumnDefinitions="46,*" ColumnSpacing="14">
-                            <Border Grid.Column="0"
-                                    BackgroundColor="{Binding Engine, Converter={StaticResource EngineColor}}"
-                                    StrokeShape="RoundRectangle 12" StrokeThickness="0"
-                                    HeightRequest="46" WidthRequest="46" VerticalOptions="Start">
-                                <Label Text="{Binding Engine, Converter={StaticResource EngineLetter}}"
-                                       HorizontalOptions="Center" VerticalOptions="Center"
-                                       FontSize="14" FontAttributes="Bold" TextColor="{StaticResource Bg}"/>
-                            </Border>
-                            <Grid Grid.Column="1" RowDefinitions="Auto,Auto,Auto" RowSpacing="4">
-                                <Label Grid.Row="0" Text="{Binding Title}"
-                                       TextColor="{StaticResource TextPrimary}" FontSize="14" FontAttributes="Bold"
-                                       MaxLines="2" LineBreakMode="WordWrap"/>
-                                <HorizontalStackLayout Grid.Row="1" Spacing="6">
-                                    <Label Text="{Binding Source}" TextColor="{StaticResource Accent}" FontSize="11"/>
-                                    <Label Text="·" TextColor="{StaticResource TextDisabled}" FontSize="11"/>
-                                    <Label Text="{Binding Engine}" TextColor="{StaticResource TextMuted}" FontSize="11"/>
-                                </HorizontalStackLayout>
-                                <Label Grid.Row="2"
-                                       Text="{Binding PublishedAt, StringFormat='{0:dd MMM yyyy}'}"
-                                       TextColor="{StaticResource TextMuted}" FontSize="10"/>
+        <BoxView Grid.Row="3" BackgroundColor="#2a2a2a"/>
+
+        <!-- Jobs list / empty -->
+        <Grid Grid.Row="4">
+            <VerticalStackLayout HorizontalOptions="Center" VerticalOptions="Center"
+                                 Spacing="14" IsVisible="{Binding IsEmpty}">
+                <Label Text="&#xe8f9;" FontFamily="MaterialIcons" FontSize="64"
+                       TextColor="#2a2a2a" HorizontalOptions="Center"/>
+                <Label Text="Вакансий не найдено" TextColor="#888888"
+                       FontSize="15" HorizontalOptions="Center"/>
+            </VerticalStackLayout>
+
+            <CollectionView ItemsSource="{Binding Jobs}" SelectionMode="None"
+                            IsVisible="{Binding IsEmpty, Converter={StaticResource InvertBool}}">
+                <CollectionView.ItemTemplate>
+                    <DataTemplate x:DataType="models:FeedItem">
+                        <VerticalStackLayout>
+                            <Grid ColumnDefinitions="Auto,*" ColumnSpacing="12" Padding="16,14">
+                                <!-- Engine avatar -->
+                                <Border Grid.Column="0"
+                                        BackgroundColor="{Binding Engine, Converter={StaticResource EngineColor}}"
+                                        StrokeThickness="0" StrokeShape="RoundRectangle 10"
+                                        WidthRequest="44" HeightRequest="44" VerticalOptions="Center">
+                                    <Label Text="{Binding Engine, Converter={StaticResource EngineLetter}}"
+                                           FontFamily="OpenSansSemibold" FontSize="14"
+                                           TextColor="#0f0f0f"
+                                           HorizontalOptions="Center" VerticalOptions="Center"/>
+                                </Border>
+                                <!-- Content -->
+                                <VerticalStackLayout Grid.Column="1" Spacing="3" VerticalOptions="Center">
+                                    <Label Text="{Binding Title}" FontFamily="OpenSansSemibold"
+                                           FontSize="14" TextColor="#F5F5F5"
+                                           MaxLines="2" LineBreakMode="TailTruncation"/>
+                                    <Label Text="{Binding Source}" FontSize="12" TextColor="#E53935"/>
+                                    <Label Text="{Binding Engine}" FontSize="11" TextColor="#555555"/>
+                                </VerticalStackLayout>
                             </Grid>
-                        </Grid>
-                    </Border>
-                </DataTemplate>
-            </CollectionView.ItemTemplate>
-        </CollectionView>
+                            <BoxView HeightRequest="1" BackgroundColor="#1a1a1a"/>
+                        </VerticalStackLayout>
+                    </DataTemplate>
+                </CollectionView.ItemTemplate>
+            </CollectionView>
+        </Grid>
 
     </Grid>
 </ContentPage>

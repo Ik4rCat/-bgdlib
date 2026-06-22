@@ -16,8 +16,9 @@
              Shell.NavBarIsVisible="False">
 
     <ContentPage.Resources>
-        <conv:InvertBoolConverter x:Key="InvertBool"/>
-        <conv:NotEmptyConverter   x:Key="NotEmpty"/>
+        <conv:InvertBoolConverter    x:Key="InvertBool"/>
+        <conv:NotEmptyConverter      x:Key="NotEmpty"/>
+        <conv:ChipTextColorConverter x:Key="ChipText"/>
     </ContentPage.Resources>
 
     <Grid RowDefinitions="Auto,*,Auto">
@@ -160,7 +161,6 @@
                               IndentPx comes from FlatComment.Depth * 14.
                             -->
                             <Grid ColumnDefinitions="Auto,Auto,*"
-                                  Padding="{Binding IndentPx, StringFormat='0,0,0,0'}"
                                   Margin="{Binding IndentPx, StringFormat='{0},0,0,0'}">
 
                                 <!-- Thread rail (visible for depth > 0) -->

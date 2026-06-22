@@ -40,6 +40,9 @@ public partial class JobsViewModel : ObservableObject
     [RelayCommand]
     public void ToggleRemote() { RemoteOnly = !RemoteOnly; ApplyFilters(); }
 
+    [RelayCommand]
+    private async Task GoBack() => await Shell.Current.GoToAsync("..");
+
     private void ApplyFilters()
     {
         var filtered = _allJobs.AsEnumerable();

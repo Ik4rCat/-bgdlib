@@ -5,60 +5,126 @@
              xmlns:conv="clr-namespace:bgdlib.Converters"
              x:Class="bgdlib.Views.CreatePostPage"
              x:DataType="vm:CreatePostViewModel"
-             BackgroundColor="{StaticResource Bg}">
+             BackgroundColor="#0f0f0f"
+             Shell.NavBarIsVisible="False">
 
     <ContentPage.Resources>
-        <conv:InvertBoolConverter x:Key="InvertBool"/>
+        <conv:InvertBoolConverter     x:Key="InvertBool"/>
+        <conv:ChipSelectedConverter   x:Key="ChipSelected"/>
+        <conv:ChipTextColorConverter  x:Key="ChipText"/>
     </ContentPage.Resources>
 
-    <ScrollView>
-        <VerticalStackLayout Padding="16" Spacing="12">
+    <Grid RowDefinitions="Auto,*,Auto">
 
-            <Label Text="{Binding [Ribbon_CreatePost], Source={StaticResource Loc}}"
-                   Style="{StaticResource AppBarTitle}"
-                   Margin="4,12,0,8"/>
-
-            <Border Style="{StaticResource InputBorder}" Padding="14,4">
-                <Entry Placeholder="{Binding [Post_Title], Source={StaticResource Loc}}"
-                       Text="{Binding Title}"/>
-            </Border>
-
-            <Border Style="{StaticResource InputBorder}" Padding="14,8">
-                <Editor Placeholder="{Binding [Post_Body], Source={StaticResource Loc}}"
-                        Text="{Binding Body}" MinimumHeightRequest="140" AutoSize="TextChanges"/>
-            </Border>
-
-            <Border Style="{StaticResource InputBorder}" Padding="14,4">
-                <Entry Placeholder="{Binding [Post_Tags], Source={StaticResource Loc}}"
-                       Text="{Binding TagsRaw}"/>
-            </Border>
-
-            <Border Style="{StaticResource InputBorder}" Padding="14,4">
-                <Picker Title="{Binding [Post_Engine], Source={StaticResource Loc}}"
-                        TextColor="{StaticResource TextPrimary}" TitleColor="{StaticResource TextMuted}"
-                        BackgroundColor="Transparent"
-                        SelectedItem="{Binding Engine}">
-                    <Picker.Items>
-                        <x:String>Unity</x:String>
-                        <x:String>Unreal</x:String>
-                        <x:String>Godot</x:String>
-                        <x:String>Other</x:String>
-                    </Picker.Items>
-                </Picker>
-            </Border>
-
-            <Border Style="{StaticResource PrimaryBtn}"
-                    IsEnabled="{Binding IsBusy, Converter={StaticResource InvertBool}}" Padding="0"
-                    Margin="0,8,0,0">
-                <Label Text="{Binding [Post_Submit], Source={StaticResource Loc}}"
-                       TextColor="{StaticResource TextPrimary}" FontSize="15" FontAttributes="Bold"
-                       HorizontalOptions="Center" Padding="0,16">
+        <!-- AppBar -->
+        <Grid Grid.Row="0" ColumnDefinitions="Auto,*,Auto"
+              BackgroundColor="#1a1a1a" Padding="10,12">
+            <Label Grid.Column="0" Text="&#xe5c4;" FontFamily="MaterialIcons"
+                   FontSize="24" TextColor="#F5F5F5" VerticalOptions="Center" Margin="4,0,8,0">
+                <Label.GestureRecognizers>
+                    <TapGestureRecognizer Command="{Binding GoBackCommand}"/>
+                </Label.GestureRecognizers>
+            </Label>
+            <Label Grid.Column="1" Text="Создать пост"
+                   FontFamily="OpenSansSemibold" FontSize="17"
+                   TextColor="#F5F5F5" VerticalOptions="Center"/>
+            <!-- Publish button -->
+            <Border Grid.Column="2" BackgroundColor="#E53935"
+                    StrokeThickness="0" StrokeShape="RoundRectangle 8"
+                    Padding="16,7" VerticalOptions="Center" Margin="0,0,4,0">
+                <Label Text="Опубликовать" FontFamily="OpenSansSemibold"
+                       FontSize="13" TextColor="#FFFFFF">
                     <Label.GestureRecognizers>
                         <TapGestureRecognizer Command="{Binding SubmitCommand}"/>
                     </Label.GestureRecognizers>
                 </Label>
             </Border>
+        </Grid>
 
-        </VerticalStackLayout>
-    </ScrollView>
+        <!-- Form -->
+        <ScrollView Grid.Row="1">
+            <VerticalStackLayout Padding="16,16" Spacing="14">
+
+                <!-- Engine selector -->
+                <Label Text="ДВИЖОК" Style="{StaticResource SectionLabel}"
+                       Margin="0,0,0,4"/>
+                <HorizontalStackLayout Spacing="8">
+                    <Border BackgroundColor="{Binding Engine, Converter={StaticResource ChipSelected}, ConverterParameter='Unity'}"
+                            StrokeThickness="0" StrokeShape="RoundRectangle 16" Padding="0">
+                        <Label Text="Unity" FontSize="13" Padding="16,7"
+                               TextColor="{Binding Engine, Converter={StaticResource ChipText}, ConverterParameter='Unity'}">
+                            <Label.GestureRecognizers>
+                                <TapGestureRecognizer Command="{Binding SetEngineCommand}" CommandParameter="Unity"/>
+                            </Label.GestureRecognizers>
+                        </Label>
+                    </Border>
+                    <Border BackgroundColor="{Binding Engine, Converter={StaticResource ChipSelected}, ConverterParameter='Godot'}"
+                            StrokeThickness="0" StrokeShape="RoundRectangle 16" Padding="0">
+                        <Label Text="Godot" FontSize="13" Padding="16,7"
+                               TextColor="{Binding Engine, Converter={StaticResource ChipText}, ConverterParameter='Godot'}">
+                            <Label.GestureRecognizers>
+                                <TapGestureRecognizer Command="{Binding SetEngineCommand}" CommandParameter="Godot"/>
+                            </Label.GestureRecognizers>
+                        </Label>
+                    </Border>
+                    <Border BackgroundColor="{Binding Engine, Converter={StaticResource ChipSelected}, ConverterParameter='Unreal'}"
+                            StrokeThickness="0" StrokeShape="RoundRectangle 16" Padding="0">
+                        <Label Text="Unreal" FontSize="13" Padding="16,7"
+                               TextColor="{Binding Engine, Converter={StaticResource ChipText}, ConverterParameter='Unreal'}">
+                            <Label.GestureRecognizers>
+                                <TapGestureRecognizer Command="{Binding SetEngineCommand}" CommandParameter="Unreal"/>
+                            </Label.GestureRecognizers>
+                        </Label>
+                    </Border>
+                    <Border BackgroundColor="{Binding Engine, Converter={StaticResource ChipSelected}, ConverterParameter='Other'}"
+                            StrokeThickness="0" StrokeShape="RoundRectangle 16" Padding="0">
+                        <Label Text="Other" FontSize="13" Padding="16,7"
+                               TextColor="{Binding Engine, Converter={StaticResource ChipText}, ConverterParameter='Other'}">
+                            <Label.GestureRecognizers>
+                                <TapGestureRecognizer Command="{Binding SetEngineCommand}" CommandParameter="Other"/>
+                            </Label.GestureRecognizers>
+                        </Label>
+                    </Border>
+                </HorizontalStackLayout>
+
+                <!-- Title -->
+                <Label Text="ЗАГОЛОВОК" Style="{StaticResource SectionLabel}"
+                       Margin="0,4,0,4"/>
+                <Border BackgroundColor="#1a1a1a" StrokeThickness="1" Stroke="#2a2a2a"
+                        StrokeShape="RoundRectangle 10" Padding="14,4">
+                    <Entry Text="{Binding Title}" Placeholder="Тема поста…"
+                           PlaceholderColor="#555555" TextColor="#F5F5F5"
+                           BackgroundColor="Transparent" FontSize="15"/>
+                </Border>
+
+                <!-- Body -->
+                <Label Text="ТЕКСТ" Style="{StaticResource SectionLabel}"
+                       Margin="0,4,0,4"/>
+                <Border BackgroundColor="#1a1a1a" StrokeThickness="1" Stroke="#2a2a2a"
+                        StrokeShape="RoundRectangle 10" Padding="14,8">
+                    <Editor Text="{Binding Body}" Placeholder="Что хочешь рассказать?"
+                            PlaceholderColor="#555555" TextColor="#E8E8E8"
+                            BackgroundColor="Transparent" FontSize="14"
+                            AutoSize="TextChanges" MinimumHeightRequest="120"/>
+                </Border>
+
+                <!-- Tags -->
+                <Label Text="ТЕГИ (через запятую)" Style="{StaticResource SectionLabel}"
+                       Margin="0,4,0,4"/>
+                <Border BackgroundColor="#1a1a1a" StrokeThickness="1" Stroke="#2a2a2a"
+                        StrokeShape="RoundRectangle 10" Padding="14,4">
+                    <Entry Text="{Binding TagsRaw}" Placeholder="#shaders, #gameplay, #tutorial"
+                           PlaceholderColor="#555555" TextColor="#F5F5F5"
+                           BackgroundColor="Transparent" FontSize="14"/>
+                </Border>
+
+                <!-- Busy indicator -->
+                <ActivityIndicator IsRunning="{Binding IsBusy}" Color="#E53935"
+                                   HeightRequest="28" WidthRequest="28"
+                                   HorizontalOptions="Center"
+                                   IsVisible="{Binding IsBusy}"/>
+            </VerticalStackLayout>
+        </ScrollView>
+
+    </Grid>
 </ContentPage>

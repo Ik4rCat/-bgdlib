@@ -35,6 +35,9 @@ public partial class FavoritesViewModel : ObservableObject
     }
 
     [RelayCommand]
+    private async Task GoBack() => await Shell.Current.GoToAsync("..");
+
+    [RelayCommand]
     public async Task RemoveAsync(FavoriteItem item)
     {
         await _db.RemoveFavoriteAsync(item.Url);

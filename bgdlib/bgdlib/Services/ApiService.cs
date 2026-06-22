@@ -132,10 +132,13 @@ public class ApiService
         return resp.IsSuccessStatusCode;
     }
 
-    public async Task<List<PostComment>?> GetCommentsAsync(int postId)
+    public async Task<List<PostComment>?> GetCommentsAsync(int postId, string? sort = null)
     {
         await AuthorizeAsync();
-        try { return await _http.GetFromJsonAsync<List<PostComment>>($"/api/posts/{postId}/comments", _json); }
+        var query = $"/api/posts/{postId}/comments";
+        if (!string.IsNullOrEmpty(sort) && sort != "best")
+            query += $"?sort={Uri.EscapeDataString(sort)}";
+        try { return await _http.GetFromJsonAsync<List<PostComment>>(query, _json); }
         catch { return null; }
     }
 

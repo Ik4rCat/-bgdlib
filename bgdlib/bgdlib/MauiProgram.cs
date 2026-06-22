@@ -37,15 +37,16 @@ public static class MauiProgram
         builder.Services.AddTransient<MainRibbonViewModel>();
         builder.Services.AddTransient<AuthViewModel>();
         builder.Services.AddTransient<PostDetailViewModel>();
+        builder.Services.AddTransient<ArticleViewModel>();
         builder.Services.AddTransient<CreatePostViewModel>();
 
         // Views
         builder.Services.AddTransient<FeedPage>();
+        builder.Services.AddTransient<ArticlePage>();
         builder.Services.AddTransient<FavoritesPage>();
         builder.Services.AddTransient<NotesPage>();
         builder.Services.AddTransient<NoteEditorPage>();
         builder.Services.AddTransient<ProfilePage>();
-        builder.Services.AddTransient<ArticlePage>();
         builder.Services.AddTransient<SearchPage>();
         builder.Services.AddTransient<JobsPage>();
         builder.Services.AddTransient<DocsPage>();

@@ -6,155 +6,198 @@
              xmlns:conv="clr-namespace:bgdlib.Converters"
              x:Class="bgdlib.Views.SearchPage"
              x:DataType="vm:SearchViewModel"
-             x:Name="SearchPageRoot"
-             BackgroundColor="{StaticResource Bg}">
+             x:Name="SearchRoot"
+             BackgroundColor="#0f0f0f"
+             Shell.NavBarIsVisible="False">
 
     <ContentPage.Resources>
         <conv:InvertBoolConverter x:Key="InvertBool"/>
-        <conv:EngineColorConverter x:Key="EngineColor"/>
-        <conv:EngineLetterConverter x:Key="EngineLetter"/>
+        <conv:CategoryColorConverter x:Key="CatColor"/>
+        <conv:CategoryIconConverter x:Key="CatIcon"/>
+        <conv:ChipSelectedConverter x:Key="ChipSelected"/>
+        <conv:ChipTextColorConverter x:Key="ChipText"/>
     </ContentPage.Resources>
 
-    <Grid RowDefinitions="Auto,Auto,1,*">
+    <Grid RowDefinitions="Auto,Auto,*">
 
-        <!-- Header -->
-        <Grid Grid.Row="0" BackgroundColor="{StaticResource Surface}" Padding="16,14,16,14">
-            <Label Text="{Binding [Tab_Search], Source={StaticResource Loc}}"
-                   Style="{StaticResource AppBarTitle}"/>
-        </Grid>
+        <!-- AppBar + Search -->
+        <VerticalStackLayout Grid.Row="0" BackgroundColor="#1a1a1a" Spacing="0">
+            <Label Text="Поиск" Style="{StaticResource AppBarTitle}" Padding="16,13,16,8"/>
+            <Border BackgroundColor="#242424" StrokeThickness="1" Stroke="#2a2a2a"
+                    StrokeShape="RoundRectangle 10" Margin="12,0,12,12" Padding="0">
+                <Grid ColumnDefinitions="Auto,*,Auto" Padding="12,0">
+                    <Label Grid.Column="0" Text="&#xe8b6;" FontFamily="MaterialIcons"
+                           FontSize="22" TextColor="#555555" VerticalOptions="Center" Margin="0,0,8,0"/>
+                    <Entry Grid.Column="1" Text="{Binding SearchQuery}"
+                           Placeholder="Статьи, движок, тег…"
+                           PlaceholderColor="#555555" TextColor="#F5F5F5"
+                           BackgroundColor="Transparent" FontSize="15"/>
+                    <Label Grid.Column="2" Text="&#xe5cd;" FontFamily="MaterialIcons"
+                           FontSize="20" TextColor="#555555" VerticalOptions="Center"
+                           IsVisible="{Binding ShowResults}">
+                        <Label.GestureRecognizers>
+                            <TapGestureRecognizer Command="{Binding ClearSearchCommand}"/>
+                        </Label.GestureRecognizers>
+                    </Label>
+                </Grid>
+            </Border>
+        </VerticalStackLayout>
 
-        <!-- Search bar -->
-        <Border Grid.Row="1" Style="{StaticResource InputBorder}"
-                Margin="12,0,12,8">
-            <Grid ColumnDefinitions="Auto,*,Auto" Padding="12,0">
-                <Label Grid.Column="0" Text="&#xe8b6;" FontFamily="MaterialIcons"
-                       FontSize="20" TextColor="{StaticResource TextMuted}" VerticalOptions="Center"/>
-                <Entry Grid.Column="1"
-                       Placeholder="{Binding [Search_Placeholder], Source={StaticResource Loc}}"
-                       Text="{Binding SearchQuery}"
-                       FontSize="14" Margin="8,0,0,0"/>
-                <Label Grid.Column="2" Text="&#xe5cd;" FontFamily="MaterialIcons"
-                       FontSize="18" TextColor="{StaticResource TextMuted}" VerticalOptions="Center"
-                       IsVisible="{Binding ShowResults}">
-                    <Label.GestureRecognizers>
-                        <TapGestureRecognizer Command="{Binding ClearSearchCommand}"/>
-                    </Label.GestureRecognizers>
-                </Label>
-            </Grid>
-        </Border>
-
-        <BoxView Grid.Row="2" HeightRequest="1" Color="{StaticResource Border}"/>
-
-        <!-- Default: categories + tags -->
-        <ScrollView Grid.Row="3"
-                    IsVisible="{Binding ShowResults, Converter={StaticResource InvertBool}}">
-            <VerticalStackLayout Spacing="0" Padding="0,0,0,16">
-
-                <Label Text="{Binding [Search_Tags], Source={StaticResource Loc}}"
-                       Style="{StaticResource SectionLabel}"
-                       Margin="16,16,16,4"/>
-
-                <CollectionView ItemsSource="{Binding PopularTags}">
-                    <CollectionView.ItemTemplate>
-                        <DataTemplate x:DataType="x:String">
-                            <Grid Padding="16,12" ColumnDefinitions="*,Auto">
-                                <Grid.GestureRecognizers>
-                                    <TapGestureRecognizer
-                                        Command="{Binding Source={x:Reference SearchPageRoot}, Path=BindingContext.SelectTagCommand}"
-                                        CommandParameter="{Binding .}"/>
-                                </Grid.GestureRecognizers>
-                                <Label Grid.Column="0" Text="{Binding .}"
-                                       TextColor="{StaticResource TextPrimary}" FontSize="15"/>
-                                <Label Grid.Column="1" Text="&#xe5c8;" FontFamily="MaterialIcons"
-                                       FontSize="18" TextColor="{StaticResource TextDisabled}" VerticalOptions="Center"/>
-                                <BoxView Grid.Column="0" Grid.ColumnSpan="2"
-                                         HeightRequest="1" Color="{StaticResource Border}"
-                                         VerticalOptions="End" Margin="0,10,-16,-12"/>
-                            </Grid>
-                        </DataTemplate>
-                    </CollectionView.ItemTemplate>
-                </CollectionView>
-
-                <Label Text="{Binding [Search_Categories], Source={StaticResource Loc}}"
-                       Style="{StaticResource SectionLabel}"
-                       Margin="16,20,16,10"/>
-
-                <CollectionView ItemsSource="{Binding CategoryGrid}" Margin="12,0">
-                    <CollectionView.ItemsLayout>
-                        <GridItemsLayout Orientation="Vertical" Span="3"
-                                         HorizontalItemSpacing="8" VerticalItemSpacing="8"/>
-                    </CollectionView.ItemsLayout>
-                    <CollectionView.ItemTemplate>
-                        <DataTemplate x:DataType="vm:CategoryTile">
-                            <Border BackgroundColor="{StaticResource Surface}"
-                                    StrokeShape="RoundRectangle 12"
-                                    Stroke="{StaticResource Border}"
-                                    StrokeThickness="1" Padding="0" HeightRequest="72">
-                                <Border.GestureRecognizers>
-                                    <TapGestureRecognizer
-                                        Command="{Binding Source={x:Reference SearchPageRoot}, Path=BindingContext.SelectCategoryCommand}"
-                                        CommandParameter="{Binding Filter}"/>
-                                </Border.GestureRecognizers>
-                                <VerticalStackLayout VerticalOptions="Center" HorizontalOptions="Center" Spacing="6">
-                                    <Label Text="{Binding Icon}" FontFamily="MaterialIcons"
-                                           FontSize="22" TextColor="{Binding Color}"
-                                           HorizontalOptions="Center"/>
-                                    <Label Text="{Binding Name}"
-                                           FontSize="12" TextColor="{StaticResource TextPrimary}"
-                                           HorizontalOptions="Center" HorizontalTextAlignment="Center"/>
-                                </VerticalStackLayout>
-                            </Border>
-                        </DataTemplate>
-                    </CollectionView.ItemTemplate>
-                </CollectionView>
-
-            </VerticalStackLayout>
+        <!-- Engine chips -->
+        <ScrollView Grid.Row="1" Orientation="Horizontal"
+                    BackgroundColor="#1a1a1a" HorizontalScrollBarVisibility="Never">
+            <HorizontalStackLayout Spacing="6" Padding="12,0,12,10">
+                <Border BackgroundColor="{Binding SelectedEngine, Converter={StaticResource ChipSelected}, ConverterParameter='ALL'}"
+                        StrokeThickness="0" StrokeShape="RoundRectangle 16" Padding="0">
+                    <Label Text="Все" FontSize="13" Padding="14,6"
+                           TextColor="{Binding SelectedEngine, Converter={StaticResource ChipText}, ConverterParameter='ALL'}">
+                        <Label.GestureRecognizers>
+                            <TapGestureRecognizer Command="{Binding SetEngineCommand}" CommandParameter="ALL"/>
+                        </Label.GestureRecognizers>
+                    </Label>
+                </Border>
+                <Border BackgroundColor="{Binding SelectedEngine, Converter={StaticResource ChipSelected}, ConverterParameter='Unity'}"
+                        StrokeThickness="0" StrokeShape="RoundRectangle 16" Padding="0">
+                    <Label Text="Unity" FontSize="13" Padding="14,6"
+                           TextColor="{Binding SelectedEngine, Converter={StaticResource ChipText}, ConverterParameter='Unity'}">
+                        <Label.GestureRecognizers>
+                            <TapGestureRecognizer Command="{Binding SetEngineCommand}" CommandParameter="Unity"/>
+                        </Label.GestureRecognizers>
+                    </Label>
+                </Border>
+                <Border BackgroundColor="{Binding SelectedEngine, Converter={StaticResource ChipSelected}, ConverterParameter='Godot'}"
+                        StrokeThickness="0" StrokeShape="RoundRectangle 16" Padding="0">
+                    <Label Text="Godot" FontSize="13" Padding="14,6"
+                           TextColor="{Binding SelectedEngine, Converter={StaticResource ChipText}, ConverterParameter='Godot'}">
+                        <Label.GestureRecognizers>
+                            <TapGestureRecognizer Command="{Binding SetEngineCommand}" CommandParameter="Godot"/>
+                        </Label.GestureRecognizers>
+                    </Label>
+                </Border>
+                <Border BackgroundColor="{Binding SelectedEngine, Converter={StaticResource ChipSelected}, ConverterParameter='Unreal'}"
+                        StrokeThickness="0" StrokeShape="RoundRectangle 16" Padding="0">
+                    <Label Text="Unreal" FontSize="13" Padding="14,6"
+                           TextColor="{Binding SelectedEngine, Converter={StaticResource ChipText}, ConverterParameter='Unreal'}">
+                        <Label.GestureRecognizers>
+                            <TapGestureRecognizer Command="{Binding SetEngineCommand}" CommandParameter="Unreal"/>
+                        </Label.GestureRecognizers>
+                    </Label>
+                </Border>
+            </HorizontalStackLayout>
         </ScrollView>
 
-        <!-- Results -->
-        <CollectionView Grid.Row="3"
-                        ItemsSource="{Binding Results}"
-                        IsVisible="{Binding ShowResults}">
-            <CollectionView.EmptyView>
-                <VerticalStackLayout HorizontalOptions="Center" VerticalOptions="Center" Spacing="10">
-                    <Label Text="&#xe8b6;" FontFamily="MaterialIcons"
-                           FontSize="44" TextColor="{StaticResource TextDisabled}" HorizontalOptions="Center"/>
-                    <Label Text="{Binding [Search_NoResults], Source={StaticResource Loc}}"
-                           TextColor="{StaticResource TextMuted}"
-                           HorizontalOptions="Center" Margin="0,0,0,48"/>
-                </VerticalStackLayout>
-            </CollectionView.EmptyView>
-            <CollectionView.Footer>
-                <BoxView HeightRequest="8" Color="Transparent"/>
-            </CollectionView.Footer>
-            <CollectionView.ItemTemplate>
-                <DataTemplate x:DataType="models:FeedItem">
-                    <Grid Padding="16,10" ColumnDefinitions="36,*" ColumnSpacing="12">
-                        <Border Grid.Column="0"
-                                BackgroundColor="{Binding Engine, Converter={StaticResource EngineColor}}"
-                                StrokeShape="RoundRectangle 6" StrokeThickness="0"
-                                HeightRequest="36" WidthRequest="36" VerticalOptions="Start">
-                            <Label Text="{Binding Engine, Converter={StaticResource EngineLetter}}"
-                                   HorizontalOptions="Center" VerticalOptions="Center"
-                                   FontSize="11" FontAttributes="Bold" TextColor="{StaticResource Bg}"/>
-                        </Border>
-                        <VerticalStackLayout Grid.Column="1" Spacing="4">
-                            <Label Text="{Binding Title}"
-                                   TextColor="{StaticResource TextPrimary}" FontSize="14" FontAttributes="Bold"
-                                   MaxLines="2" LineBreakMode="WordWrap"/>
-                            <HorizontalStackLayout Spacing="4">
-                                <Label Text="{Binding Source}" TextColor="{StaticResource Accent}" FontSize="11"/>
-                                <Label Text="·" TextColor="{StaticResource TextDisabled}" FontSize="11"/>
-                                <Label Text="{Binding Engine}" TextColor="{StaticResource TextMuted}" FontSize="11"/>
-                            </HorizontalStackLayout>
-                        </VerticalStackLayout>
-                        <BoxView Grid.Column="0" Grid.ColumnSpan="2"
-                                 HeightRequest="1" Color="{StaticResource Border}"
-                                 VerticalOptions="End" Margin="0,10,-16,-10"/>
-                    </Grid>
-                </DataTemplate>
-            </CollectionView.ItemTemplate>
-        </CollectionView>
+        <!-- Content area -->
+        <ScrollView Grid.Row="2">
+            <VerticalStackLayout Spacing="0">
 
+                <!-- ── Search results ── -->
+                <VerticalStackLayout IsVisible="{Binding ShowResults}" Spacing="0">
+                    <Label Text="{Binding Results.Count, StringFormat='Найдено: {0}'}"
+                           TextColor="#555555" FontSize="12" Padding="16,10,16,6"/>
+                    <CollectionView ItemsSource="{Binding Results}" SelectionMode="None">
+                        <CollectionView.ItemTemplate>
+                            <DataTemplate x:DataType="models:FeedItem">
+                                <VerticalStackLayout>
+                                    <Grid ColumnDefinitions="Auto,*" ColumnSpacing="12"
+                                          Padding="16,12">
+                                        <Grid.GestureRecognizers>
+                                            <TapGestureRecognizer
+                                                Command="{Binding Source={x:Reference SearchRoot}, Path=BindingContext.OpenArticleCommand}"
+                                                CommandParameter="{Binding .}"/>
+                                        </Grid.GestureRecognizers>
+                                        <Border Grid.Column="0" BackgroundColor="#242424"
+                                                StrokeThickness="0" StrokeShape="RoundRectangle 8"
+                                                HeightRequest="52" WidthRequest="52">
+                                            <Label Text="{Binding Category, Converter={StaticResource CatIcon}}"
+                                                   FontFamily="MaterialIcons" FontSize="28"
+                                                   TextColor="{Binding Category, Converter={StaticResource CatColor}}"
+                                                   HorizontalOptions="Center" VerticalOptions="Center"/>
+                                        </Border>
+                                        <VerticalStackLayout Grid.Column="1" Spacing="4"
+                                                             VerticalOptions="Center">
+                                            <Label Text="{Binding Title}" FontFamily="OpenSansSemibold"
+                                                   FontSize="14" TextColor="#F5F5F5"
+                                                   MaxLines="2" LineBreakMode="TailTruncation"/>
+                                            <HorizontalStackLayout Spacing="5">
+                                                <Border BackgroundColor="#29E53935" StrokeThickness="0"
+                                                        StrokeShape="RoundRectangle 4" Padding="6,2">
+                                                    <Label Text="{Binding Engine}" FontFamily="OpenSansSemibold"
+                                                           FontSize="9" TextColor="#E53935"/>
+                                                </Border>
+                                                <Label Text="{Binding Source}" FontSize="11"
+                                                       TextColor="#888888" VerticalOptions="Center"/>
+                                            </HorizontalStackLayout>
+                                        </VerticalStackLayout>
+                                    </Grid>
+                                    <BoxView HeightRequest="1" BackgroundColor="#1f1f1f"/>
+                                </VerticalStackLayout>
+                            </DataTemplate>
+                        </CollectionView.ItemTemplate>
+                    </CollectionView>
+                </VerticalStackLayout>
+
+                <!-- ── Browse mode ── -->
+                <VerticalStackLayout IsVisible="{Binding ShowResults, Converter={StaticResource InvertBool}}"
+                                     Padding="16,12" Spacing="20">
+
+                    <!-- Category grid (3 cols) -->
+                    <Label Text="КАТЕГОРИИ" Style="{StaticResource SectionLabel}"/>
+                    <CollectionView ItemsSource="{Binding CategoryGrid}" SelectionMode="None">
+                        <CollectionView.ItemsLayout>
+                            <GridItemsLayout Orientation="Vertical" Span="3"
+                                             HorizontalItemSpacing="8"
+                                             VerticalItemSpacing="8"/>
+                        </CollectionView.ItemsLayout>
+                        <CollectionView.ItemTemplate>
+                            <DataTemplate x:DataType="vm:CategoryTile">
+                                <Border BackgroundColor="#1a1a1a" StrokeThickness="1" Stroke="#2a2a2a"
+                                        StrokeShape="RoundRectangle 10" HeightRequest="80" Padding="0">
+                                    <Border.GestureRecognizers>
+                                        <TapGestureRecognizer
+                                            Command="{Binding Source={x:Reference SearchRoot}, Path=BindingContext.SelectCategoryCommand}"
+                                            CommandParameter="{Binding Filter}"/>
+                                    </Border.GestureRecognizers>
+                                    <VerticalStackLayout HorizontalOptions="Center"
+                                                         VerticalOptions="Center" Spacing="4">
+                                        <Label Text="{Binding Letter}"
+                                               FontFamily="OpenSansSemibold" FontSize="22"
+                                               TextColor="{Binding Color}"
+                                               HorizontalOptions="Center"/>
+                                        <Label Text="{Binding Name}" FontSize="11"
+                                               TextColor="#888888" HorizontalOptions="Center"
+                                               HorizontalTextAlignment="Center"
+                                               MaxLines="2" LineBreakMode="WordWrap"/>
+                                    </VerticalStackLayout>
+                                </Border>
+                            </DataTemplate>
+                        </CollectionView.ItemTemplate>
+                    </CollectionView>
+
+                    <!-- Popular tags -->
+                    <Label Text="ПОПУЛЯРНЫЕ ТЕГИ" Style="{StaticResource SectionLabel}"
+                           Margin="0,8,0,0"/>
+                    <FlexLayout BindableLayout.ItemsSource="{Binding PopularTags}"
+                                Wrap="Wrap" JustifyContent="Start" AlignItems="Center"
+                                Direction="Row">
+                        <BindableLayout.ItemTemplate>
+                            <DataTemplate x:DataType="x:String">
+                                <Border BackgroundColor="#1a1a1a" StrokeThickness="1"
+                                        Stroke="#2a2a2a" StrokeShape="RoundRectangle 14"
+                                        Padding="0" Margin="0,0,8,8">
+                                    <Border.GestureRecognizers>
+                                        <TapGestureRecognizer
+                                            Command="{Binding Source={x:Reference SearchRoot}, Path=BindingContext.SelectTagCommand}"
+                                            CommandParameter="{Binding .}"/>
+                                    </Border.GestureRecognizers>
+                                    <Label Text="{Binding .}" FontSize="13"
+                                           TextColor="#888888" Padding="12,6"/>
+                                </Border>
+                            </DataTemplate>
+                        </BindableLayout.ItemTemplate>
+                    </FlexLayout>
+
+                </VerticalStackLayout>
+            </VerticalStackLayout>
+        </ScrollView>
     </Grid>
 </ContentPage>

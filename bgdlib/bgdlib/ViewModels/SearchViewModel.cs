@@ -27,6 +27,7 @@ public partial class SearchViewModel : ObservableObject
 
     [ObservableProperty] private string _searchQuery = string.Empty;
     [ObservableProperty] private bool _showResults = false;
+    [ObservableProperty] private string _selectedEngine = "ALL";
 
     public ObservableCollection<FeedItem> Results { get; } = [];
     public ObservableCollection<CategoryTile> CategoryGrid { get; } = [];
@@ -92,4 +93,10 @@ public partial class SearchViewModel : ObservableObject
 
     [RelayCommand]
     public void SelectTag(string tag) => SearchQuery = tag;
+
+    [RelayCommand]
+    public void ClearSearch() { SearchQuery = string.Empty; }
+
+    [RelayCommand]
+    public void SetEngine(string engine) { SelectedEngine = engine; }
 }

@@ -98,6 +98,13 @@ public partial class FeedViewModel : ObservableObject
         ApplyFilters();
     }
 
+    [RelayCommand]
+    public async Task OpenArticleAsync(FeedItem item)
+    {
+        await Shell.Current.GoToAsync(nameof(bgdlib.Views.ArticlePage),
+            new Dictionary<string, object> { ["Item"] = item });
+    }
+
     partial void OnSelectedEngineChanged(string value) => ApplyFilters();
     partial void OnSelectedCategoryChanged(string value) => ApplyFilters();
 

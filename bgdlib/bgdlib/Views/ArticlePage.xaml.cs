@@ -1,43 +1,10 @@
-using bgdlib.Models;
-using bgdlib.Services;
-
 namespace bgdlib.Views;
 
-[QueryProperty(nameof(Url), "Url")]
-[QueryProperty(nameof(ArticleTitle), "Title")]
 public partial class ArticlePage : ContentPage
 {
-    private readonly DatabaseService _db;
-    public string Url { get; set; } = string.Empty;
-    public string ArticleTitle { get; set; } = string.Empty;
-
-    public ArticlePage(DatabaseService db)
+    public ArticlePage(ViewModels.ArticleViewModel vm)
     {
         InitializeComponent();
-        _db = db;
-    }
-
-    protected override void OnAppearing()
-    {
-        base.OnAppearing();
-        Title = ArticleTitle;
-        ArticleWebView.Source = new UrlWebViewSource { Url = Url };
-    }
-
-    private async void OnBackTapped(object sender, EventArgs e)
-    {
-        await Shell.Current.GoToAsync("..");
-    }
-
-    private async void OnFavoriteClicked(object sender, EventArgs e)
-    {
-        var loc = LocalizationService.Instance;
-        if (await _db.IsFavoriteAsync(Url))
-        {
-            await DisplayAlert(loc["Article_AlreadySaved"], loc["Article_AlreadySavedMsg"], loc["OK"]);
-            return;
-        }
-        await _db.AddFavoriteAsync(new FavoriteItem { Title = ArticleTitle, Url = Url });
-        await DisplayAlert(loc["Article_Saved"], loc["Article_SavedMsg"], loc["OK"]);
+        BindingContext = vm;
     }
 }

@@ -2,114 +2,143 @@
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:vm="clr-namespace:bgdlib.ViewModels"
-             xmlns:conv="clr-namespace:bgdlib.Converters"
              x:Class="bgdlib.Views.AuthPage"
              x:DataType="vm:AuthViewModel"
-             BackgroundColor="{StaticResource Bg}">
-
-    <ContentPage.Resources>
-        <conv:InvertBoolConverter x:Key="InvertBool"/>
-        <conv:BoolToAccentConverter x:Key="BoolToAccent"/>
-        <conv:BoolToAccentInvConverter x:Key="BoolToAccentInv"/>
-    </ContentPage.Resources>
+             BackgroundColor="#0f0f0f"
+             Shell.NavBarIsVisible="False">
 
     <ScrollView>
-        <VerticalStackLayout Padding="24" Spacing="16" VerticalOptions="Center">
+        <VerticalStackLayout Padding="28,64,28,32" Spacing="0">
 
             <!-- Logo -->
-            <Image Source="logo.jpg"
-                   HorizontalOptions="Center"
-                   HeightRequest="160"
-                   Aspect="AspectFit"
-                   Margin="0,40,0,4"/>
-            <Label Text="{Binding [Auth_Subtitle], Source={StaticResource Loc}}"
-                   TextColor="{StaticResource TextMuted}" FontSize="13"
-                   HorizontalOptions="Center" Margin="0,0,0,16"/>
+            <VerticalStackLayout Spacing="6" Margin="0,0,0,48" HorizontalOptions="Center">
+                <Label HorizontalOptions="Center">
+                    <Label.FormattedText>
+                        <FormattedString>
+                            <Span Text="BGD" TextColor="#FFFFFF" FontFamily="OpenSansSemibold" FontSize="38"/>
+                            <Span Text="Lib" TextColor="#E53935" FontFamily="OpenSansSemibold" FontSize="38"/>
+                        </FormattedString>
+                    </Label.FormattedText>
+                </Label>
+                <Label Text="Gamedev-библиотека" TextColor="#555555" FontSize="14"
+                       HorizontalOptions="Center"/>
+            </VerticalStackLayout>
 
-            <!-- Login / Register toggle -->
-            <Border BackgroundColor="{StaticResource Surface}" StrokeThickness="0"
-                    StrokeShape="RoundRectangle 14" Padding="4">
-                <Grid ColumnDefinitions="*,*">
-                    <Border Grid.Column="0" StrokeShape="RoundRectangle 10" StrokeThickness="0"
-                            BackgroundColor="{Binding IsLogin, Converter={StaticResource BoolToAccent}}" Padding="0">
-                        <Label Text="{Binding [Auth_Login], Source={StaticResource Loc}}"
-                               TextColor="{StaticResource TextPrimary}" HorizontalOptions="Center"
-                               Padding="0,12" FontSize="14" FontAttributes="Bold">
-                            <Label.GestureRecognizers>
-                                <TapGestureRecognizer Command="{Binding SwitchToLoginCommand}"/>
-                            </Label.GestureRecognizers>
-                        </Label>
-                    </Border>
-                    <Border Grid.Column="1" StrokeShape="RoundRectangle 10" StrokeThickness="0"
-                            BackgroundColor="{Binding IsLogin, Converter={StaticResource BoolToAccentInv}}" Padding="0">
-                        <Label Text="{Binding [Auth_Register], Source={StaticResource Loc}}"
-                               TextColor="{StaticResource TextPrimary}" HorizontalOptions="Center"
-                               Padding="0,12" FontSize="14">
-                            <Label.GestureRecognizers>
-                                <TapGestureRecognizer Command="{Binding SwitchToRegisterCommand}"/>
-                            </Label.GestureRecognizers>
-                        </Label>
-                    </Border>
-                </Grid>
-            </Border>
+            <!-- Tab strip: Войти / Регистрация -->
+            <Grid ColumnDefinitions="*,*" BackgroundColor="#1a1a1a"
+                  Margin="0,0,0,28">
+                <VerticalStackLayout Grid.Column="0">
+                    <BoxView HeightRequest="2"
+                             BackgroundColor="{Binding IsLogin, Converter={StaticResource BoolToAccent}}"
+                             HorizontalOptions="Fill"/>
+                    <Label Text="Войти" FontFamily="OpenSansSemibold" FontSize="15"
+                           HorizontalOptions="Center" Padding="0,12"
+                           TextColor="{Binding IsLogin, Converter={StaticResource BoolToWhite}}">
+                        <Label.GestureRecognizers>
+                            <TapGestureRecognizer Command="{Binding SwitchToLoginCommand}"/>
+                        </Label.GestureRecognizers>
+                    </Label>
+                </VerticalStackLayout>
+                <VerticalStackLayout Grid.Column="1">
+                    <BoxView HeightRequest="2"
+                             BackgroundColor="{Binding IsLogin, Converter={StaticResource InvertBoolToAccent}}"
+                             HorizontalOptions="Fill"/>
+                    <Label Text="Регистрация" FontFamily="OpenSansSemibold" FontSize="15"
+                           HorizontalOptions="Center" Padding="0,12"
+                           TextColor="{Binding IsLogin, Converter={StaticResource BoolToMuted}}">
+                        <Label.GestureRecognizers>
+                            <TapGestureRecognizer Command="{Binding SwitchToRegisterCommand}"/>
+                        </Label.GestureRecognizers>
+                    </Label>
+                </VerticalStackLayout>
+            </Grid>
 
-            <!-- Name (register only) -->
-            <Border Style="{StaticResource InputBorder}" Padding="14,4"
+            <!-- Name field (register only) -->
+            <Border BackgroundColor="#1a1a1a" StrokeThickness="1" Stroke="#2a2a2a"
+                    StrokeShape="RoundRectangle 10" Padding="14,4"
+                    Margin="0,0,0,12"
                     IsVisible="{Binding IsLogin, Converter={StaticResource InvertBool}}">
-                <Entry Placeholder="{Binding [Auth_Name], Source={StaticResource Loc}}"
-                       Text="{Binding Name}"/>
+                <Entry Text="{Binding Name}" Placeholder="Имя пользователя"
+                       PlaceholderColor="#555555" TextColor="#F5F5F5"
+                       BackgroundColor="Transparent" FontSize="15"/>
             </Border>
 
             <!-- Email -->
-            <Border Style="{StaticResource InputBorder}" Padding="14,4">
-                <Entry Placeholder="{Binding [Auth_Email], Source={StaticResource Loc}}"
-                       Text="{Binding Email}" Keyboard="Email"/>
+            <Border BackgroundColor="#1a1a1a" StrokeThickness="1" Stroke="#2a2a2a"
+                    StrokeShape="RoundRectangle 10" Padding="14,4" Margin="0,0,0,12">
+                <Entry Text="{Binding Email}" Placeholder="Email"
+                       Keyboard="Email" PlaceholderColor="#555555"
+                       TextColor="#F5F5F5" BackgroundColor="Transparent" FontSize="15"/>
             </Border>
 
             <!-- Password -->
-            <Border Style="{StaticResource InputBorder}" Padding="14,4">
-                <Entry Placeholder="{Binding [Auth_Password], Source={StaticResource Loc}}"
-                       Text="{Binding Password}" IsPassword="True"/>
+            <Border BackgroundColor="#1a1a1a" StrokeThickness="1" Stroke="#2a2a2a"
+                    StrokeShape="RoundRectangle 10" Padding="14,4" Margin="0,0,0,6">
+                <Entry Text="{Binding Password}" Placeholder="Пароль"
+                       IsPassword="True" PlaceholderColor="#555555"
+                       TextColor="#F5F5F5" BackgroundColor="Transparent" FontSize="15"/>
             </Border>
 
             <!-- Error -->
-            <Label Text="{Binding ErrorMessage}" TextColor="{StaticResource Accent}" FontSize="13"
-                   IsVisible="{Binding HasError}" HorizontalOptions="Center"/>
+            <Label Text="{Binding ErrorMessage}" TextColor="#E53935" FontSize="13"
+                   Margin="0,4,0,12" IsVisible="{Binding HasError}"/>
 
             <!-- Submit button -->
-            <Border Style="{StaticResource PrimaryBtn}"
-                    IsEnabled="{Binding IsBusy, Converter={StaticResource InvertBool}}" Padding="0">
-                <Label Text="{Binding SubmitLabel}" TextColor="{StaticResource TextPrimary}"
-                       FontSize="15" FontAttributes="Bold"
-                       HorizontalOptions="Center" Padding="0,16">
-                    <Label.GestureRecognizers>
-                        <TapGestureRecognizer Command="{Binding SubmitCommand}"/>
-                    </Label.GestureRecognizers>
-                </Label>
-            </Border>
-
-            <!-- Google sign-in -->
-            <Border Style="{StaticResource SecondaryBtn}"
-                    IsEnabled="{Binding IsBusy, Converter={StaticResource InvertBool}}" Padding="0">
-                <Grid ColumnDefinitions="Auto,*" Padding="14,0">
-                    <Label Grid.Column="0" Text="G" TextColor="{StaticResource Accent}" FontSize="18" FontAttributes="Bold"
-                           VerticalOptions="Center" Margin="0,0,10,0"/>
-                    <Label Grid.Column="1" Text="{Binding [Auth_LoginGoogle], Source={StaticResource Loc}}"
-                           TextColor="{StaticResource TextPrimary}" FontSize="15"
-                           HorizontalOptions="Start" Padding="0,16">
+            <Border BackgroundColor="#E53935" StrokeThickness="0"
+                    StrokeShape="RoundRectangle 10" Margin="0,8,0,16">
+                <Grid>
+                    <ActivityIndicator IsRunning="{Binding IsBusy}" Color="#FFFFFF"
+                                       HeightRequest="22" WidthRequest="22"
+                                       IsVisible="{Binding IsBusy}"
+                                       HorizontalOptions="Center" Margin="0,13"/>
+                    <Label Text="{Binding SubmitLabel}" FontFamily="OpenSansSemibold"
+                           FontSize="16" TextColor="#FFFFFF"
+                           HorizontalOptions="Center" Padding="0,14"
+                           IsVisible="{Binding IsBusy, Converter={StaticResource InvertBool}}">
                         <Label.GestureRecognizers>
-                            <TapGestureRecognizer Command="{Binding LoginGoogleCommand}"/>
+                            <TapGestureRecognizer Command="{Binding SubmitCommand}"/>
                         </Label.GestureRecognizers>
                     </Label>
                 </Grid>
             </Border>
 
-            <!-- Guest mode -->
-            <Label Text="{Binding [Auth_GuestMode], Source={StaticResource Loc}}"
-                   TextColor="{StaticResource TextMuted}" FontSize="13" HorizontalOptions="Center">
+            <!-- Divider -->
+            <Grid ColumnDefinitions="*,Auto,*" ColumnSpacing="10"
+                  VerticalOptions="Center" Margin="0,0,0,16">
+                <BoxView Grid.Column="0" HeightRequest="1" BackgroundColor="#2a2a2a"
+                         VerticalOptions="Center"/>
+                <Label Grid.Column="1" Text="или" TextColor="#555555" FontSize="13"/>
+                <BoxView Grid.Column="2" HeightRequest="1" BackgroundColor="#2a2a2a"
+                         VerticalOptions="Center"/>
+            </Grid>
+
+            <!-- Google button -->
+            <Border BackgroundColor="#1a1a1a" StrokeThickness="1" Stroke="#2a2a2a"
+                    StrokeShape="RoundRectangle 10" Margin="0,0,0,14">
+                <Grid ColumnDefinitions="Auto,*" ColumnSpacing="10"
+                      Padding="16,13">
+                    <Grid.GestureRecognizers>
+                        <TapGestureRecognizer Command="{Binding LoginGoogleCommand}"/>
+                    </Grid.GestureRecognizers>
+                    <Label Grid.Column="0" Text="G" FontFamily="OpenSansSemibold"
+                           FontSize="18" TextColor="#E53935" VerticalOptions="Center"/>
+                    <Label Grid.Column="1" Text="Войти через Google"
+                           FontFamily="OpenSansSemibold" FontSize="15"
+                           TextColor="#F5F5F5" VerticalOptions="Center"/>
+                </Grid>
+            </Border>
+
+            <!-- Guest -->
+            <Label FontSize="14" HorizontalOptions="Center">
                 <Label.GestureRecognizers>
                     <TapGestureRecognizer Command="{Binding GuestCommand}"/>
                 </Label.GestureRecognizers>
+                <Label.FormattedText>
+                    <FormattedString>
+                        <Span Text="Продолжить без аккаунта " TextColor="#888888"/>
+                        <Span Text="→" TextColor="#E53935" FontFamily="OpenSansSemibold"/>
+                    </FormattedString>
+                </Label.FormattedText>
             </Label>
 
         </VerticalStackLayout>

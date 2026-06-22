@@ -22,8 +22,18 @@ public partial class FavoritesPage : ContentPage
         if (e.CurrentSelection.FirstOrDefault() is FavoriteItem item)
         {
             ((CollectionView)sender).SelectedItem = null;
+            var feedItem = new bgdlib.Models.FeedItem
+            {
+                Title    = item.Title,
+                Url      = item.Url,
+                Source   = item.Source,
+                ImageUrl = item.ImageUrl,
+                Engine   = item.Engine,
+                Category = item.Category,
+                IsFavorite = true,
+            };
             await Shell.Current.GoToAsync(nameof(ArticlePage),
-                new Dictionary<string, object> { ["Url"] = item.Url, ["Title"] = item.Title });
+                new Dictionary<string, object> { ["Item"] = feedItem });
         }
     }
 }

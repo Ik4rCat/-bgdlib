@@ -71,7 +71,7 @@ public class ChipTextColorConverter : IValueConverter
             bool b when parameter is string p   => b && p == "True",
             _ => false
         };
-        return selected ? Color.FromArgb("#FFFFFF") : Color.FromArgb("#888888");
+        return selected ? Color.FromArgb("#FFFFFF") : Color.FromArgb("#666666");
     }
     public object? ConvertBack(object? value, Type targetType, object? parameter, CultureInfo culture)
         => throw new NotImplementedException();
@@ -85,7 +85,7 @@ public class EngineColorConverter : IValueConverter
             "Unity"  => Color.FromArgb("#a6e3a1"),
             "Godot"  => Color.FromArgb("#89b4fa"),
             "Unreal" => Color.FromArgb("#f38ba8"),
-            _        => Color.FromArgb("#f9e2af"),
+            _        => Color.FromArgb("#888888"),
         };
     public object? ConvertBack(object? value, Type targetType, object? parameter, CultureInfo culture)
         => throw new NotImplementedException();
@@ -102,5 +102,21 @@ public class EngineLetterConverter : IValueConverter
             _        => "?",
         };
     public object? ConvertBack(object? value, Type targetType, object? parameter, CultureInfo culture)
+        => throw new NotImplementedException();
+}
+
+public class BookmarkIconConverter : IValueConverter
+{
+    public object? Convert(object? value, Type targetType, object? parameter, System.Globalization.CultureInfo culture)
+        => value is true ? "" : "";  // filled vs outline bookmark
+    public object? ConvertBack(object? value, Type targetType, object? parameter, System.Globalization.CultureInfo culture)
+        => throw new NotImplementedException();
+}
+
+public class BookmarkColorConverter : IValueConverter
+{
+    public object? Convert(object? value, Type targetType, object? parameter, System.Globalization.CultureInfo culture)
+        => value is true ? Color.FromArgb("#E53935") : Color.FromArgb("#888888");
+    public object? ConvertBack(object? value, Type targetType, object? parameter, System.Globalization.CultureInfo culture)
         => throw new NotImplementedException();
 }

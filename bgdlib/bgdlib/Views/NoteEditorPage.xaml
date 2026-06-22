@@ -1,42 +1,153 @@
 <?xml version="1.0" encoding="utf-8" ?>
+<!--
+  NoteEditorPage.xaml — Markdown note editor.
+  ViewModel: NoteEditorViewModel (unchanged).
+  Uses a WebView to render the Markdown preview (EasyMDE / Markdig via JS bridge).
+  The ViewModel fires ContentLoaded event → code-behind injects content into WebView.
+  See NoteEditorPage.xaml.cs for the JS bridge wiring.
+-->
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:vm="clr-namespace:bgdlib.ViewModels"
+             xmlns:conv="clr-namespace:bgdlib.Converters"
              x:Class="bgdlib.Views.NoteEditorPage"
-             BackgroundColor="{StaticResource Bg}">
+             x:DataType="vm:NoteEditorViewModel"
+             BackgroundColor="#0f0f0f"
+             Shell.NavBarIsVisible="False">
 
-    <ContentPage.ToolbarItems>
-        <ToolbarItem Text="Сохранить" Clicked="OnSaveClicked" Order="Primary"/>
-        <ToolbarItem Text="&#xe173;" Clicked="OnExportClicked" Order="Secondary"/>
-    </ContentPage.ToolbarItems>
+    <ContentPage.Resources>
+        <conv:InvertBoolConverter x:Key="InvertBool"/>
+    </ContentPage.Resources>
 
-    <Grid RowDefinitions="Auto,Auto,1,*">
+    <Grid RowDefinitions="Auto,Auto,*,Auto">
 
-        <!-- Title -->
-        <Entry Grid.Row="0" x:Name="TitleEntry"
-               Text="{Binding Title}"
-               Placeholder="Заголовок заметки"
-               TextColor="{StaticResource TextPrimary}"
-               PlaceholderColor="{StaticResource TextMuted}"
-               BackgroundColor="{StaticResource Bg}"
-               FontSize="20" FontAttributes="Bold"
-               Margin="16,12,16,0"/>
+        <!-- AppBar -->
+        <Grid Grid.Row="0" ColumnDefinitions="Auto,*,Auto,Auto"
+              BackgroundColor="#1a1a1a" Padding="10,12" ColumnSpacing="4">
+            <Label Grid.Column="0" Text="&#xe5c4;" FontFamily="MaterialIcons"
+                   FontSize="24" TextColor="#F5F5F5" VerticalOptions="Center" Margin="4,0,6,0">
+                <Label.GestureRecognizers>
+                    <TapGestureRecognizer Command="{Binding GoBackCommand}"/>
+                </Label.GestureRecognizers>
+            </Label>
+            <Entry Grid.Column="1" Text="{Binding Title}"
+                   FontFamily="OpenSansSemibold" FontSize="17"
+                   TextColor="#F5F5F5" BackgroundColor="Transparent"
+                   PlaceholderColor="#555555" Placeholder="Название заметки"
+                   VerticalOptions="Center"/>
+            <!-- Export -->
+            <Label Grid.Column="2" Text="&#xe2c4;" FontFamily="MaterialIcons"
+                   FontSize="22" TextColor="#888888" VerticalOptions="Center" Margin="0,0,4,0">
+                <Label.GestureRecognizers>
+                    <TapGestureRecognizer Command="{Binding ExportCommand}"/>
+                </Label.GestureRecognizers>
+            </Label>
+            <!-- Save -->
+            <Border Grid.Column="3" BackgroundColor="#E53935"
+                    StrokeThickness="0" StrokeShape="RoundRectangle 8"
+                    Padding="14,7" VerticalOptions="Center" Margin="0,0,4,0">
+                <Grid>
+                    <ActivityIndicator IsRunning="{Binding IsSaving}" Color="#FFFFFF"
+                                       HeightRequest="18" WidthRequest="18"
+                                       IsVisible="{Binding IsSaving}"
+                                       HorizontalOptions="Center"/>
+                    <Label Text="&#xe161;" FontFamily="MaterialIcons"
+                           FontSize="18" TextColor="#FFFFFF"
+                           HorizontalOptions="Center"
+                           IsVisible="{Binding IsSaving, Converter={StaticResource InvertBool}}">
+                        <Label.GestureRecognizers>
+                            <TapGestureRecognizer Command="{Binding SaveCommand}"/>
+                        </Label.GestureRecognizers>
+                    </Label>
+                </Grid>
+            </Border>
+        </Grid>
 
         <!-- Tags -->
-        <Entry Grid.Row="1"
-               Text="{Binding Tags}"
-               Placeholder="#теги через пробел"
-               TextColor="{StaticResource TextSecondary}"
-               PlaceholderColor="{StaticResource TextMuted}"
-               BackgroundColor="{StaticResource Bg}"
-               FontSize="13"
-               Margin="16,4,16,8"/>
+        <Border Grid.Row="1" BackgroundColor="#1a1a1a"
+                StrokeThickness="0" Padding="12,4,12,8">
+            <Grid ColumnDefinitions="Auto,*">
+                <Label Grid.Column="0" Text="&#xe892;" FontFamily="MaterialIcons"
+                       FontSize="18" TextColor="#555555" VerticalOptions="Center"
+                       Margin="0,0,8,0"/>
+                <Entry Grid.Column="1" Text="{Binding Tags}"
+                       Placeholder="шейдеры, unity, туториал"
+                       PlaceholderColor="#555555" TextColor="#E53935"
+                       BackgroundColor="Transparent" FontSize="13"/>
+            </Grid>
+        </Border>
 
-        <BoxView Grid.Row="2" HeightRequest="1" Color="{StaticResource Border}"/>
+        <!-- Markdown editor (WebView) -->
+        <!--
+            The WebView loads a local HTML file (Resources/Raw/editor.html) that
+            contains a minimal CodeMirror / plain <textarea> Markdown editor.
+            NoteEditorPage.xaml.cs subscribes to ViewModel.ContentLoaded and calls
+            editorWebView.EvaluateJavaScriptAsync($"setContent({JsonSerializer.Serialize(content)})");
+            On save, it calls
+            editorWebView.EvaluateJavaScriptAsync("getContent()") and passes result to ViewModel.SaveAsync.
+        -->
+        <WebView Grid.Row="2" x:Name="EditorWebView"
+                 BackgroundColor="#0f0f0f"
+                 Source="editor.html"/>
 
-        <!-- Markdown editor -->
-        <WebView Grid.Row="3" x:Name="EditorWebView"
-                 BackgroundColor="{StaticResource Bg}"
-                 Navigating="OnEditorNavigating"/>
+        <!-- Bottom toolbar -->
+        <ScrollView Grid.Row="3" Orientation="Horizontal"
+                    BackgroundColor="#1a1a1a" HorizontalScrollBarVisibility="Never">
+            <HorizontalStackLayout Spacing="0" Padding="4,2">
+                <!-- Bold -->
+                <Label Text="&#xe238;" FontFamily="MaterialIcons" FontSize="24"
+                       TextColor="#888888" Padding="12,8">
+                    <Label.GestureRecognizers>
+                        <TapGestureRecognizer Command="{Binding InsertBoldCommand}"/>
+                    </Label.GestureRecognizers>
+                </Label>
+                <!-- Italic -->
+                <Label Text="&#xe23f;" FontFamily="MaterialIcons" FontSize="24"
+                       TextColor="#888888" Padding="12,8">
+                    <Label.GestureRecognizers>
+                        <TapGestureRecognizer Command="{Binding InsertItalicCommand}"/>
+                    </Label.GestureRecognizers>
+                </Label>
+                <!-- Heading -->
+                <Label Text="&#xe264;" FontFamily="MaterialIcons" FontSize="24"
+                       TextColor="#888888" Padding="12,8">
+                    <Label.GestureRecognizers>
+                        <TapGestureRecognizer Command="{Binding InsertHeadingCommand}"/>
+                    </Label.GestureRecognizers>
+                </Label>
+                <!-- Code -->
+                <Label Text="&#xe86f;" FontFamily="MaterialIcons" FontSize="24"
+                       TextColor="#888888" Padding="12,8">
+                    <Label.GestureRecognizers>
+                        <TapGestureRecognizer Command="{Binding InsertCodeCommand}"/>
+                    </Label.GestureRecognizers>
+                </Label>
+                <!-- List -->
+                <Label Text="&#xe241;" FontFamily="MaterialIcons" FontSize="24"
+                       TextColor="#888888" Padding="12,8">
+                    <Label.GestureRecognizers>
+                        <TapGestureRecognizer Command="{Binding InsertListCommand}"/>
+                    </Label.GestureRecognizers>
+                </Label>
+                <!-- Link -->
+                <Label Text="&#xe157;" FontFamily="MaterialIcons" FontSize="24"
+                       TextColor="#888888" Padding="12,8">
+                    <Label.GestureRecognizers>
+                        <TapGestureRecognizer Command="{Binding InsertLinkCommand}"/>
+                    </Label.GestureRecognizers>
+                </Label>
+                <!-- Separator -->
+                <BoxView WidthRequest="1" BackgroundColor="#2a2a2a"
+                         VerticalOptions="Fill" Margin="4,8"/>
+                <!-- Preview toggle -->
+                <Label Text="&#xe8f4;" FontFamily="MaterialIcons" FontSize="24"
+                       TextColor="#888888" Padding="12,8">
+                    <Label.GestureRecognizers>
+                        <TapGestureRecognizer Command="{Binding TogglePreviewCommand}"/>
+                    </Label.GestureRecognizers>
+                </Label>
+            </HorizontalStackLayout>
+        </ScrollView>
 
     </Grid>
 </ContentPage>

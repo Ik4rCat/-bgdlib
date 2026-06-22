@@ -35,16 +35,16 @@
 
     <!-- ─── Cards ───────────────────────────────────────────────────── -->
     <Style x:Key="Card" TargetType="Border">
-        <Setter Property="BackgroundColor"  Value="{StaticResource Surface2}" />
+        <Setter Property="BackgroundColor"  Value="{StaticResource Surface}" />
         <Setter Property="Stroke"           Value="{StaticResource Border}" />
         <Setter Property="StrokeThickness"  Value="1" />
-        <Setter Property="StrokeShape"      Value="RoundRectangle 10" />
+        <Setter Property="StrokeShape"      Value="RoundRectangle 12" />
         <Setter Property="Padding"          Value="0" />
     </Style>
 
     <!-- ─── Chips ───────────────────────────────────────────────────── -->
     <Style x:Key="Chip" TargetType="Border">
-        <Setter Property="BackgroundColor"  Value="{StaticResource Surface2}" />
+        <Setter Property="BackgroundColor"  Value="{StaticResource Surface}" />
         <Setter Property="Stroke"           Value="{StaticResource Border}" />
         <Setter Property="StrokeThickness"  Value="1" />
         <Setter Property="StrokeShape"      Value="RoundRectangle 16" />
@@ -64,24 +64,24 @@
         <Setter Property="BackgroundColor"  Value="{StaticResource Accent}" />
         <Setter Property="Stroke"           Value="{StaticResource Accent}" />
         <Setter Property="StrokeThickness"  Value="0" />
-        <Setter Property="StrokeShape"      Value="RoundRectangle 10" />
+        <Setter Property="StrokeShape"      Value="RoundRectangle 12" />
         <Setter Property="Padding"          Value="0" />
     </Style>
 
     <Style x:Key="SecondaryBtn" TargetType="Border">
-        <Setter Property="BackgroundColor"  Value="Transparent" />
+        <Setter Property="BackgroundColor"  Value="{StaticResource Surface2}" />
         <Setter Property="Stroke"           Value="{StaticResource Border2}" />
         <Setter Property="StrokeThickness"  Value="1" />
-        <Setter Property="StrokeShape"      Value="RoundRectangle 10" />
+        <Setter Property="StrokeShape"      Value="RoundRectangle 12" />
         <Setter Property="Padding"          Value="0" />
     </Style>
 
     <!-- ─── Entries ─────────────────────────────────────────────────── -->
     <Style x:Key="InputBorder" TargetType="Border">
-        <Setter Property="BackgroundColor"  Value="{StaticResource Surface3}" />
+        <Setter Property="BackgroundColor"  Value="{StaticResource Surface}" />
         <Setter Property="Stroke"           Value="{StaticResource Border}" />
         <Setter Property="StrokeThickness"  Value="1" />
-        <Setter Property="StrokeShape"      Value="RoundRectangle 10" />
+        <Setter Property="StrokeShape"      Value="RoundRectangle 12" />
         <Setter Property="Padding"          Value="0" />
     </Style>
 

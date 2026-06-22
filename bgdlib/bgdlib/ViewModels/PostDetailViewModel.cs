@@ -56,7 +56,8 @@ public partial class PostDetailViewModel : ObservableObject
         IsLoading = true;
         try
         {
-            var comments = await _api.GetCommentsAsync(Post.Id);
+            var comments = await _api.GetCommentsAsync(Post.Id, CommentSort);
+            if (comments == null) return;
             Comments.Clear();
             FlatComments.Clear();
             foreach (var c in comments)

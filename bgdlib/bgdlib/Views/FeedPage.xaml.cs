@@ -27,7 +27,7 @@ public partial class FeedPage : ContentPage
         {
             ((CollectionView)sender).SelectedItem = null;
             await Shell.Current.GoToAsync(nameof(ArticlePage),
-                new Dictionary<string, object> { ["Url"] = item.Url, ["Title"] = item.Title });
+                new Dictionary<string, object> { ["Item"] = item });
         }
     }
 }
