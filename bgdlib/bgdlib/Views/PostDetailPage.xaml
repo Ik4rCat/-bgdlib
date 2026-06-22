@@ -1,117 +1,333 @@
 <?xml version="1.0" encoding="utf-8" ?>
+<!--
+  PostDetailPage.xaml — Reddit-style threaded comments.
+  ViewModel: PostDetailViewModel_updated.cs (use instead of original).
+  FlatComments collection binds the thread with depth/rail/collapse data.
+-->
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:vm="clr-namespace:bgdlib.ViewModels"
              xmlns:models="clr-namespace:bgdlib.Models"
+             xmlns:conv="clr-namespace:bgdlib.Converters"
              x:Class="bgdlib.Views.PostDetailPage"
              x:DataType="vm:PostDetailViewModel"
              x:Name="PostDetailRoot"
-             BackgroundColor="#0f0f0f">
+             BackgroundColor="#0f0f0f"
+             Shell.NavBarIsVisible="False">
 
-    <Grid RowDefinitions="*,Auto">
-        <ScrollView Grid.Row="0">
-            <VerticalStackLayout Padding="16,12" Spacing="12">
+    <ContentPage.Resources>
+        <conv:InvertBoolConverter x:Key="InvertBool"/>
+        <conv:NotEmptyConverter   x:Key="NotEmpty"/>
+    </ContentPage.Resources>
 
-                <!-- Title -->
-                <Label Text="{Binding Post.Title}"
-                       TextColor="#FFFFFF" FontSize="20" FontAttributes="Bold"/>
+    <Grid RowDefinitions="Auto,*,Auto">
 
-                <!-- Author / date -->
-                <HorizontalStackLayout Spacing="8">
-                    <Border BackgroundColor="#242424" StrokeShape="RoundRectangle 10" StrokeThickness="0"
-                            Padding="6,3">
-                        <Label Text="{Binding Post.Author.DisplayName}"
-                               TextColor="#888888" FontSize="12"/>
-                    </Border>
-                    <Label Text="{Binding Post.CreatedAt, StringFormat='{0:dd MMM yyyy}'}"
-                           TextColor="#555555" FontSize="12" VerticalOptions="Center"/>
-                </HorizontalStackLayout>
+        <!-- ── AppBar ──────────────────────────────────────────────── -->
+        <Grid Grid.Row="0" ColumnDefinitions="Auto,*,Auto"
+              BackgroundColor="#1a1a1a" Padding="10,12">
+            <Label Grid.Column="0" Text="&#xe5c4;" FontFamily="MaterialIcons"
+                   FontSize="24" TextColor="#F5F5F5" VerticalOptions="Center" Margin="4,0,4,0">
+                <Label.GestureRecognizers>
+                    <TapGestureRecognizer Command="{Binding GoBackCommand}"/>
+                </Label.GestureRecognizers>
+            </Label>
+            <Label Grid.Column="1" Text="Пост" FontFamily="OpenSansSemibold"
+                   FontSize="17" TextColor="#F5F5F5" VerticalOptions="Center" Margin="8,0,0,0"/>
+            <Label Grid.Column="2" Text="&#xe87e;" FontFamily="MaterialIcons"
+                   FontSize="22" TextColor="#888888" VerticalOptions="Center" Margin="0,0,8,0"
+                   IsVisible="{Binding Post.IsFavorite, Converter={StaticResource InvertBool}}">
+                <Label.GestureRecognizers>
+                    <TapGestureRecognizer Command="{Binding ToggleFavoriteCommand}"/>
+                </Label.GestureRecognizers>
+            </Label>
+            <Label Grid.Column="2" Text="&#xe87d;" FontFamily="MaterialIcons"
+                   FontSize="22" TextColor="#E53935" VerticalOptions="Center" Margin="0,0,8,0"
+                   IsVisible="{Binding Post.IsFavorite}">
+                <Label.GestureRecognizers>
+                    <TapGestureRecognizer Command="{Binding ToggleFavoriteCommand}"/>
+                </Label.GestureRecognizers>
+            </Label>
+        </Grid>
 
-                <!-- Vote row -->
-                <HorizontalStackLayout Spacing="8">
-                    <Border BackgroundColor="#242424" StrokeShape="RoundRectangle 10" StrokeThickness="0" Padding="10,6">
+        <!-- ── Scrollable content ──────────────────────────────────── -->
+        <ScrollView Grid.Row="1">
+            <VerticalStackLayout Spacing="0">
+
+                <!-- Post header ────────────────────────────────────── -->
+                <VerticalStackLayout Padding="16,14" Spacing="10"
+                                     BackgroundColor="#0f0f0f">
+                    <!-- Author row -->
+                    <Grid ColumnDefinitions="Auto,*,Auto" ColumnSpacing="10">
+                        <Border Grid.Column="0" BackgroundColor="#E53935"
+                                StrokeThickness="0" StrokeShape="RoundRectangle 22"
+                                HeightRequest="44" WidthRequest="44">
+                            <Label Text="{Binding Post.AuthorInitials}"
+                                   TextColor="#FFFFFF" FontFamily="OpenSansSemibold" FontSize="18"
+                                   HorizontalOptions="Center" VerticalOptions="Center"/>
+                        </Border>
+                        <VerticalStackLayout Grid.Column="1" VerticalOptions="Center" Spacing="2">
+                            <Label Text="{Binding Post.Author.DisplayName}"
+                                   FontFamily="OpenSansSemibold" FontSize="14" TextColor="#F5F5F5"/>
+                            <Label Text="{Binding Post.CreatedAt, StringFormat='{0:dd MMM · HH:mm}'}"
+                                   FontSize="11" TextColor="#555555"/>
+                        </VerticalStackLayout>
+                    </Grid>
+
+                    <!-- Tags row -->
+                    <HorizontalStackLayout Spacing="6">
+                        <Border BackgroundColor="#29E53935" StrokeThickness="0"
+                                StrokeShape="RoundRectangle 4" Padding="7,2"
+                                IsVisible="{Binding Post.Engine, Converter={StaticResource NotEmpty}}">
+                            <Label Text="{Binding Post.Engine}" FontFamily="OpenSansSemibold"
+                                   FontSize="10" TextColor="#E53935"/>
+                        </Border>
+                    </HorizontalStackLayout>
+
+                    <!-- Body -->
+                    <Label Text="{Binding Post.Body}" FontSize="15"
+                           TextColor="#E8E8E8" LineBreakMode="WordWrap"/>
+
+                    <!-- Vote row -->
+                    <HorizontalStackLayout Spacing="18" Margin="0,4,0,0">
                         <HorizontalStackLayout Spacing="6">
                             <Label Text="&#xe316;" FontFamily="MaterialIcons"
-                                   FontSize="18" TextColor="#a6e3a1" VerticalOptions="Center">
+                                   FontSize="20" TextColor="#7C7C7C" VerticalOptions="Center">
                                 <Label.GestureRecognizers>
                                     <TapGestureRecognizer Command="{Binding VoteUpCommand}"/>
                                 </Label.GestureRecognizers>
                             </Label>
                             <Label Text="{Binding Post.Upvotes}"
-                                   TextColor="#FFFFFF" FontSize="13" VerticalOptions="Center"/>
-                        </HorizontalStackLayout>
-                    </Border>
-                    <Border BackgroundColor="#242424" StrokeShape="RoundRectangle 10" StrokeThickness="0" Padding="10,6">
-                        <HorizontalStackLayout Spacing="6">
+                                   FontFamily="OpenSansSemibold" FontSize="14"
+                                   TextColor="#B0B0B0" VerticalOptions="Center"/>
                             <Label Text="&#xe313;" FontFamily="MaterialIcons"
-                                   FontSize="18" TextColor="#f38ba8" VerticalOptions="Center">
+                                   FontSize="20" TextColor="#7C7C7C" VerticalOptions="Center">
                                 <Label.GestureRecognizers>
                                     <TapGestureRecognizer Command="{Binding VoteDownCommand}"/>
                                 </Label.GestureRecognizers>
                             </Label>
-                            <Label Text="{Binding Post.Downvotes}"
-                                   TextColor="#FFFFFF" FontSize="13" VerticalOptions="Center"/>
                         </HorizontalStackLayout>
-                    </Border>
-                </HorizontalStackLayout>
+                        <HorizontalStackLayout Spacing="5">
+                            <Label Text="&#xe0b9;" FontFamily="MaterialIcons"
+                                   FontSize="18" TextColor="#555555" VerticalOptions="Center"/>
+                            <Label Text="{Binding Post.CommentCount}"
+                                   FontSize="13" TextColor="#555555" VerticalOptions="Center"/>
+                        </HorizontalStackLayout>
+                    </HorizontalStackLayout>
+                </VerticalStackLayout>
 
-                <!-- Body -->
-                <Label Text="{Binding Post.Body}"
-                       TextColor="#bac2de" FontSize="14" LineBreakMode="WordWrap"
-                       Margin="0,4,0,0"/>
+                <BoxView HeightRequest="1" BackgroundColor="#2a2a2a"/>
 
-                <!-- Divider -->
-                <BoxView HeightRequest="1" BackgroundColor="#1a1a1a" Margin="0,8"/>
+                <!-- Comment sort bar ───────────────────────────────── -->
+                <Grid ColumnDefinitions="*,Auto,Auto,Auto"
+                      Padding="16,10,16,10" BackgroundColor="#0f0f0f">
+                    <Label Grid.Column="0"
+                           Text="{Binding FlatComments.Count, StringFormat='{0} комментариев'}"
+                           FontFamily="OpenSansSemibold" FontSize="14" TextColor="#F5F5F5"
+                           VerticalOptions="Center"/>
+                    <Label Grid.Column="1" Text="Лучшие" FontSize="12"
+                           FontFamily="OpenSansSemibold"
+                           TextColor="{Binding CommentSort, Converter={StaticResource ChipText}, ConverterParameter='best'}"
+                           Margin="0,0,14,0" VerticalOptions="Center">
+                        <Label.GestureRecognizers>
+                            <TapGestureRecognizer Command="{Binding SetSortCommand}" CommandParameter="best"/>
+                        </Label.GestureRecognizers>
+                    </Label>
+                    <Label Grid.Column="2" Text="Новые" FontSize="12"
+                           FontFamily="OpenSansSemibold"
+                           TextColor="{Binding CommentSort, Converter={StaticResource ChipText}, ConverterParameter='new'}"
+                           Margin="0,0,14,0" VerticalOptions="Center">
+                        <Label.GestureRecognizers>
+                            <TapGestureRecognizer Command="{Binding SetSortCommand}" CommandParameter="new"/>
+                        </Label.GestureRecognizers>
+                    </Label>
+                    <Label Grid.Column="3" Text="Топ" FontSize="12"
+                           FontFamily="OpenSansSemibold"
+                           TextColor="{Binding CommentSort, Converter={StaticResource ChipText}, ConverterParameter='top'}"
+                           VerticalOptions="Center">
+                        <Label.GestureRecognizers>
+                            <TapGestureRecognizer Command="{Binding SetSortCommand}" CommandParameter="top"/>
+                        </Label.GestureRecognizers>
+                    </Label>
+                </Grid>
 
-                <!-- Comments header -->
-                <Label Text="{Binding [Post_Comments], Source={StaticResource Loc}}"
-                       TextColor="#555555" FontSize="11" FontAttributes="Bold" CharacterSpacing="1.2"/>
-
-                <!-- Comments list -->
-                <CollectionView ItemsSource="{Binding Comments}">
+                <!-- Comments (flat list, depth handled by IndentPx) ── -->
+                <CollectionView ItemsSource="{Binding FlatComments}"
+                                SelectionMode="None">
                     <CollectionView.ItemTemplate>
-                        <DataTemplate x:DataType="models:PostComment">
-                            <VerticalStackLayout Padding="0,8" Spacing="6">
-                                <HorizontalStackLayout Spacing="8">
-                                    <Label Text="{Binding Author.DisplayName}"
-                                           TextColor="#E53935" FontSize="12" FontAttributes="Bold"/>
-                                    <Label Text="{Binding CreatedAt, StringFormat='{0:dd MMM}'}"
-                                           TextColor="#555555" FontSize="11" VerticalOptions="Center"/>
-                                </HorizontalStackLayout>
-                                <Label Text="{Binding Body}" TextColor="#bac2de" FontSize="13"/>
-                                <BoxView HeightRequest="1" BackgroundColor="#1a1a1a" Margin="0,4"/>
-                            </VerticalStackLayout>
+                        <DataTemplate x:DataType="models:FlatComment">
+                            <!--
+                              Each row = left indent + optional rail line + comment card.
+                              IndentPx comes from FlatComment.Depth * 14.
+                            -->
+                            <Grid ColumnDefinitions="Auto,Auto,*"
+                                  Padding="{Binding IndentPx, StringFormat='0,0,0,0'}"
+                                  Margin="{Binding IndentPx, StringFormat='{0},0,0,0'}">
+
+                                <!-- Thread rail (visible for depth > 0) -->
+                                <BoxView Grid.Column="0"
+                                         WidthRequest="2" BackgroundColor="{Binding RailColor}"
+                                         VerticalOptions="Fill" Margin="0,0,8,0"
+                                         IsVisible="{Binding ShowRail}">
+                                    <BoxView.GestureRecognizers>
+                                        <TapGestureRecognizer
+                                            Command="{Binding Source={x:Reference PostDetailRoot}, Path=BindingContext.ToggleCollapseCommand}"
+                                            CommandParameter="{Binding .}"/>
+                                    </BoxView.GestureRecognizers>
+                                </BoxView>
+
+                                <!-- Comment content -->
+                                <VerticalStackLayout Grid.Column="2" Padding="0,6,12,0" Spacing="0">
+
+                                    <!-- Header row (tap to collapse) -->
+                                    <Grid ColumnDefinitions="Auto,Auto,*,Auto"
+                                          ColumnSpacing="6" Padding="0,0,0,4">
+                                        <Grid.GestureRecognizers>
+                                            <TapGestureRecognizer
+                                                Command="{Binding Source={x:Reference PostDetailRoot}, Path=BindingContext.ToggleCollapseCommand}"
+                                                CommandParameter="{Binding .}"/>
+                                        </Grid.GestureRecognizers>
+                                        <!-- Avatar -->
+                                        <Border Grid.Column="0" BackgroundColor="{Binding AvatarColor}"
+                                                StrokeThickness="0" StrokeShape="RoundRectangle 11"
+                                                HeightRequest="22" WidthRequest="22"
+                                                VerticalOptions="Center">
+                                            <Label Text="{Binding AvatarLetter}"
+                                                   FontFamily="OpenSansSemibold" FontSize="11"
+                                                   TextColor="#FFFFFF"
+                                                   HorizontalOptions="Center" VerticalOptions="Center"/>
+                                        </Border>
+                                        <!-- Username -->
+                                        <Label Grid.Column="1" Text="{Binding UserName}"
+                                               FontFamily="OpenSansSemibold" FontSize="12.5"
+                                               TextColor="#DCDCDC" VerticalOptions="Center"/>
+                                        <!-- OP badge + score + time -->
+                                        <HorizontalStackLayout Grid.Column="2" Spacing="6"
+                                                               VerticalOptions="Center">
+                                            <Border BackgroundColor="#1A2F74E0" StrokeThickness="0"
+                                                    StrokeShape="RoundRectangle 3" Padding="5,1"
+                                                    IsVisible="{Binding IsOp}">
+                                                <Label Text="OP" FontFamily="OpenSansSemibold"
+                                                       FontSize="9" TextColor="#2F74E0"/>
+                                            </Border>
+                                            <Label Text="{Binding Score, StringFormat='· {0}'}"
+                                                   FontSize="11" TextColor="#6F6F6F"
+                                                   VerticalOptions="Center"/>
+                                            <Label Text="{Binding TimeLabel, StringFormat='· {0}'}"
+                                                   FontSize="11" TextColor="#6F6F6F"
+                                                   VerticalOptions="Center"/>
+                                        </HorizontalStackLayout>
+                                        <!-- Collapse indicator -->
+                                        <Label Grid.Column="3"
+                                               Text="{Binding CollapseGlyph}"
+                                               FontFamily="MaterialIcons" FontSize="18"
+                                               TextColor="#6F6F6F" VerticalOptions="Center"/>
+                                    </Grid>
+
+                                    <!-- Hidden label (when collapsed) -->
+                                    <Label Text="{Binding HiddenLabel}"
+                                           FontSize="11" TextColor="#6F6F6F"
+                                           Margin="28,0,0,8"
+                                           IsVisible="{Binding Collapsed}"/>
+
+                                    <!-- Body + actions (hidden when collapsed) -->
+                                    <VerticalStackLayout IsVisible="{Binding BodyVisible}" Spacing="6">
+                                        <Label Text="{Binding Body}"
+                                               FontSize="13.5" TextColor="#E8E8E8"
+                                               LineBreakMode="WordWrap" Margin="28,0,0,0"/>
+                                        <!-- Action row: vote + reply -->
+                                        <HorizontalStackLayout Spacing="18" Margin="28,2,0,8">
+                                            <!-- Up / score / Down -->
+                                            <HorizontalStackLayout Spacing="6">
+                                                <Label Text="&#xe316;" FontFamily="MaterialIcons"
+                                                       FontSize="18" TextColor="{Binding UpColor}"
+                                                       VerticalOptions="Center">
+                                                    <Label.GestureRecognizers>
+                                                        <TapGestureRecognizer Tapped="OnUpvoteTapped"/>
+                                                    </Label.GestureRecognizers>
+                                                </Label>
+                                                <Label Text="{Binding Score}"
+                                                       FontFamily="OpenSansSemibold" FontSize="12"
+                                                       TextColor="{Binding ScoreColor}"
+                                                       VerticalOptions="Center"/>
+                                                <Label Text="&#xe313;" FontFamily="MaterialIcons"
+                                                       FontSize="18" TextColor="{Binding DownColor}"
+                                                       VerticalOptions="Center">
+                                                    <Label.GestureRecognizers>
+                                                        <TapGestureRecognizer Tapped="OnDownvoteTapped"/>
+                                                    </Label.GestureRecognizers>
+                                                </Label>
+                                            </HorizontalStackLayout>
+                                            <!-- Reply -->
+                                            <HorizontalStackLayout Spacing="4">
+                                                <Label Text="&#xe0b9;" FontFamily="MaterialIcons"
+                                                       FontSize="16" TextColor="#7C7C7C"
+                                                       VerticalOptions="Center"/>
+                                                <Label Text="Ответить" FontSize="12"
+                                                       FontFamily="OpenSansSemibold"
+                                                       TextColor="#7C7C7C" VerticalOptions="Center">
+                                                    <Label.GestureRecognizers>
+                                                        <TapGestureRecognizer
+                                                            Command="{Binding Source={x:Reference PostDetailRoot}, Path=BindingContext.SetReplyCommand}"
+                                                            CommandParameter="{Binding .}"/>
+                                                    </Label.GestureRecognizers>
+                                                </Label>
+                                            </HorizontalStackLayout>
+                                        </HorizontalStackLayout>
+                                    </VerticalStackLayout>
+
+                                    <BoxView HeightRequest="1" BackgroundColor="#1A1A1A" Margin="-100,0,-100,0"/>
+                                </VerticalStackLayout>
+
+                            </Grid>
                         </DataTemplate>
                     </CollectionView.ItemTemplate>
                 </CollectionView>
 
+                <BoxView HeightRequest="16" BackgroundColor="Transparent"/>
             </VerticalStackLayout>
         </ScrollView>
 
-        <!-- Add comment -->
-        <Border Grid.Row="1" BackgroundColor="#181825"
-                Stroke="#313244" 
-                StrokeShape="RoundRectangle 0" Padding="12,10"
-                IsVisible="{Binding CanComment}">
-            <Grid ColumnDefinitions="*,Auto" ColumnSpacing="10">
-                <Border Grid.Column="0" BackgroundColor="#1a1a1a"
-                        StrokeThickness="0" 
-                        StrokeShape="RoundRectangle 12" Padding="12,4">
+        <!-- ── Comment input bar ───────────────────────────────────── -->
+        <Grid Grid.Row="2" RowDefinitions="Auto,Auto"
+              BackgroundColor="#1a1a1a">
+            <!-- Reply context bar -->
+            <Grid Grid.Row="0" ColumnDefinitions="*,Auto" Padding="12,8,12,4"
+                  IsVisible="{Binding IsReplying}">
+                <Label Grid.Column="0" Text="{Binding ReplyingToLabel}"
+                       FontSize="12" TextColor="#2F74E0" VerticalOptions="Center"/>
+                <Label Grid.Column="1" Text="&#xe5cd;" FontFamily="MaterialIcons"
+                       FontSize="18" TextColor="#888888" VerticalOptions="Center">
+                    <Label.GestureRecognizers>
+                        <TapGestureRecognizer Command="{Binding CancelReplyCommand}"/>
+                    </Label.GestureRecognizers>
+                </Label>
+            </Grid>
+            <!-- Input row -->
+            <Grid Grid.Row="1" ColumnDefinitions="*,Auto"
+                  ColumnSpacing="10" Padding="12,8,12,12"
+                  IsVisible="{Binding CanComment}">
+                <Border Grid.Column="0" BackgroundColor="#242424"
+                        StrokeThickness="1" Stroke="#2a2a2a"
+                        StrokeShape="RoundRectangle 20" Padding="14,0">
                     <Entry Text="{Binding NewComment}"
-                           Placeholder="{Binding [Post_AddComment], Source={StaticResource Loc}}"
-                           PlaceholderColor="#555555" TextColor="#FFFFFF"
-                           BackgroundColor="Transparent"/>
+                           Placeholder="Добавить комментарий…"
+                           PlaceholderColor="#555555" TextColor="#F5F5F5"
+                           BackgroundColor="Transparent" FontSize="14"
+                           ReturnCommand="{Binding SendCommentCommand}"/>
                 </Border>
                 <Border Grid.Column="1" BackgroundColor="#E53935"
-                        StrokeShape="RoundRectangle 12" StrokeThickness="0" Padding="12,10">
+                        StrokeThickness="0" StrokeShape="RoundRectangle 19"
+                        HeightRequest="38" WidthRequest="38" Padding="0">
                     <Label Text="&#xe163;" FontFamily="MaterialIcons"
-                           FontSize="20" TextColor="#1e1e2e" VerticalOptions="Center">
+                           FontSize="20" TextColor="#FFFFFF"
+                           HorizontalOptions="Center" VerticalOptions="Center">
                         <Label.GestureRecognizers>
                             <TapGestureRecognizer Command="{Binding SendCommentCommand}"/>
                         </Label.GestureRecognizers>
                     </Label>
                 </Border>
             </Grid>
-        </Border>
+        </Grid>
+
     </Grid>
 </ContentPage>

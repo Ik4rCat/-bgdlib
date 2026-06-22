@@ -6,7 +6,7 @@
              xmlns:conv="clr-namespace:bgdlib.Converters"
              x:Class="bgdlib.Views.JobsPage"
              x:DataType="vm:JobsViewModel"
-             BackgroundColor="#0f0f0f">
+             BackgroundColor="{StaticResource Bg}">
 
     <ContentPage.Resources>
         <conv:ChipSelectedConverter x:Key="ChipSelected"/>
@@ -18,19 +18,20 @@
     <Grid RowDefinitions="Auto,Auto,*">
 
         <!-- Header -->
-        <Grid Grid.Row="0" Padding="20,16,20,8">
+        <Grid Grid.Row="0" BackgroundColor="{StaticResource Surface}" Padding="20,16,20,16">
             <VerticalStackLayout Spacing="2">
                 <Label Text="{Binding [Jobs_Title], Source={StaticResource Loc}}"
-                       FontSize="24" FontAttributes="Bold" TextColor="#FFFFFF"/>
-                <Label Text="Gamedev вакансии" TextColor="#555555" FontSize="12"/>
+                       FontSize="24" FontAttributes="Bold" TextColor="{StaticResource TextPrimary}"/>
+                <Label Text="Gamedev вакансии" TextColor="{StaticResource TextMuted}" FontSize="12"/>
             </VerticalStackLayout>
         </Grid>
 
         <!-- Filter chips -->
-        <ScrollView Grid.Row="1" Orientation="Horizontal" HorizontalScrollBarVisibility="Never">
+        <ScrollView Grid.Row="1" Orientation="Horizontal"
+                    BackgroundColor="{StaticResource Surface}" HorizontalScrollBarVisibility="Never">
             <HorizontalStackLayout Spacing="8" Padding="16,4,16,12">
                 <Border BackgroundColor="{Binding SelectedLevel, Converter={StaticResource ChipSelected}, ConverterParameter='ALL'}"
-                        StrokeThickness="0" 
+                        StrokeThickness="0"
                         StrokeShape="RoundRectangle 20" Padding="0">
                     <Label Text="{Binding [Filter_AllLevels], Source={StaticResource Loc}}" FontSize="12" Padding="16,8"
                            TextColor="{Binding SelectedLevel, Converter={StaticResource ChipText}, ConverterParameter='ALL'}">
@@ -40,7 +41,7 @@
                     </Label>
                 </Border>
                 <Border BackgroundColor="{Binding SelectedLevel, Converter={StaticResource ChipSelected}, ConverterParameter='Junior'}"
-                        StrokeThickness="0" 
+                        StrokeThickness="0"
                         StrokeShape="RoundRectangle 20" Padding="0">
                     <Label Text="Junior" FontSize="12" Padding="16,8"
                            TextColor="{Binding SelectedLevel, Converter={StaticResource ChipText}, ConverterParameter='Junior'}">
@@ -50,7 +51,7 @@
                     </Label>
                 </Border>
                 <Border BackgroundColor="{Binding SelectedLevel, Converter={StaticResource ChipSelected}, ConverterParameter='Middle'}"
-                        StrokeThickness="0" 
+                        StrokeThickness="0"
                         StrokeShape="RoundRectangle 20" Padding="0">
                     <Label Text="Middle" FontSize="12" Padding="16,8"
                            TextColor="{Binding SelectedLevel, Converter={StaticResource ChipText}, ConverterParameter='Middle'}">
@@ -60,7 +61,7 @@
                     </Label>
                 </Border>
                 <Border BackgroundColor="{Binding SelectedLevel, Converter={StaticResource ChipSelected}, ConverterParameter='Senior'}"
-                        StrokeThickness="0" 
+                        StrokeThickness="0"
                         StrokeShape="RoundRectangle 20" Padding="0">
                     <Label Text="Senior" FontSize="12" Padding="16,8"
                            TextColor="{Binding SelectedLevel, Converter={StaticResource ChipText}, ConverterParameter='Senior'}">
@@ -69,9 +70,9 @@
                         </Label.GestureRecognizers>
                     </Label>
                 </Border>
-                <BoxView WidthRequest="1" HeightRequest="20" BackgroundColor="#242424" VerticalOptions="Center"/>
+                <BoxView WidthRequest="1" HeightRequest="20" Color="{StaticResource Border}" VerticalOptions="Center"/>
                 <Border BackgroundColor="{Binding SelectedEngine, Converter={StaticResource ChipSelected}, ConverterParameter='ALL'}"
-                        StrokeThickness="0" 
+                        StrokeThickness="0"
                         StrokeShape="RoundRectangle 20" Padding="0">
                     <Label Text="{Binding [Filter_AllEngines], Source={StaticResource Loc}}" FontSize="12" Padding="16,8"
                            TextColor="{Binding SelectedEngine, Converter={StaticResource ChipText}, ConverterParameter='ALL'}">
@@ -81,7 +82,7 @@
                     </Label>
                 </Border>
                 <Border BackgroundColor="{Binding SelectedEngine, Converter={StaticResource ChipSelected}, ConverterParameter='Unity'}"
-                        StrokeThickness="0" 
+                        StrokeThickness="0"
                         StrokeShape="RoundRectangle 20" Padding="0">
                     <Label Text="Unity" FontSize="12" Padding="16,8"
                            TextColor="{Binding SelectedEngine, Converter={StaticResource ChipText}, ConverterParameter='Unity'}">
@@ -91,7 +92,7 @@
                     </Label>
                 </Border>
                 <Border BackgroundColor="{Binding SelectedEngine, Converter={StaticResource ChipSelected}, ConverterParameter='Godot'}"
-                        StrokeThickness="0" 
+                        StrokeThickness="0"
                         StrokeShape="RoundRectangle 20" Padding="0">
                     <Label Text="Godot" FontSize="12" Padding="16,8"
                            TextColor="{Binding SelectedEngine, Converter={StaticResource ChipText}, ConverterParameter='Godot'}">
@@ -101,7 +102,7 @@
                     </Label>
                 </Border>
                 <Border BackgroundColor="{Binding SelectedEngine, Converter={StaticResource ChipSelected}, ConverterParameter='Unreal'}"
-                        StrokeThickness="0" 
+                        StrokeThickness="0"
                         StrokeShape="RoundRectangle 20" Padding="0">
                     <Label Text="Unreal" FontSize="12" Padding="16,8"
                            TextColor="{Binding SelectedEngine, Converter={StaticResource ChipText}, ConverterParameter='Unreal'}">
@@ -110,15 +111,15 @@
                         </Label.GestureRecognizers>
                     </Label>
                 </Border>
-                <BoxView WidthRequest="1" HeightRequest="20" BackgroundColor="#242424" VerticalOptions="Center"/>
-                <Border StrokeShape="RoundRectangle 20"  Padding="0"
+                <BoxView WidthRequest="1" HeightRequest="20" Color="{StaticResource Border}" VerticalOptions="Center"/>
+                <Border StrokeShape="RoundRectangle 20" Padding="0"
                         StrokeThickness="0"
                         BackgroundColor="{Binding RemoteOnly, Converter={StaticResource ChipSelected}, ConverterParameter='True'}">
                     <HorizontalStackLayout Padding="14,8" Spacing="6">
                         <Label Text="&#xe8f9;" FontFamily="MaterialIcons" FontSize="14"
-                               TextColor="#888888" VerticalOptions="Center"/>
+                               TextColor="{StaticResource TextSecondary}" VerticalOptions="Center"/>
                         <Label Text="{Binding [Jobs_Remote], Source={StaticResource Loc}}"
-                               FontSize="12" TextColor="#888888" VerticalOptions="Center">
+                               FontSize="12" TextColor="{StaticResource TextSecondary}" VerticalOptions="Center">
                             <Label.GestureRecognizers>
                                 <TapGestureRecognizer Command="{Binding ToggleRemoteCommand}"/>
                             </Label.GestureRecognizers>
@@ -132,7 +133,7 @@
         <CollectionView Grid.Row="2" ItemsSource="{Binding Jobs}">
             <CollectionView.EmptyView>
                 <Label Text="{Binding [Jobs_Empty], Source={StaticResource Loc}}"
-                       TextColor="#555555"
+                       TextColor="{StaticResource TextMuted}"
                        HorizontalOptions="Center" VerticalOptions="Center"
                        HorizontalTextAlignment="Center" Margin="0,48"/>
             </CollectionView.EmptyView>
@@ -141,9 +142,10 @@
             </CollectionView.Footer>
             <CollectionView.ItemTemplate>
                 <DataTemplate x:DataType="models:FeedItem">
-                    <Border Margin="16,4" Padding="14" BackgroundColor="#1a1a1a"
-                            StrokeThickness="0" 
-                            StrokeShape="RoundRectangle 14">
+                    <Border Margin="16,4" Padding="14" BackgroundColor="{StaticResource Surface}"
+                            StrokeShape="RoundRectangle 12"
+                            Stroke="{StaticResource Border}"
+                            StrokeThickness="1">
                         <Grid ColumnDefinitions="46,*" ColumnSpacing="14">
                             <Border Grid.Column="0"
                                     BackgroundColor="{Binding Engine, Converter={StaticResource EngineColor}}"
@@ -151,20 +153,20 @@
                                     HeightRequest="46" WidthRequest="46" VerticalOptions="Start">
                                 <Label Text="{Binding Engine, Converter={StaticResource EngineLetter}}"
                                        HorizontalOptions="Center" VerticalOptions="Center"
-                                       FontSize="14" FontAttributes="Bold" TextColor="#1e1e2e"/>
+                                       FontSize="14" FontAttributes="Bold" TextColor="{StaticResource Bg}"/>
                             </Border>
                             <Grid Grid.Column="1" RowDefinitions="Auto,Auto,Auto" RowSpacing="4">
                                 <Label Grid.Row="0" Text="{Binding Title}"
-                                       TextColor="#FFFFFF" FontSize="14" FontAttributes="Bold"
+                                       TextColor="{StaticResource TextPrimary}" FontSize="14" FontAttributes="Bold"
                                        MaxLines="2" LineBreakMode="WordWrap"/>
                                 <HorizontalStackLayout Grid.Row="1" Spacing="6">
-                                    <Label Text="{Binding Source}" TextColor="#E53935" FontSize="11"/>
-                                    <Label Text="·" TextColor="#333333" FontSize="11"/>
-                                    <Label Text="{Binding Engine}" TextColor="#555555" FontSize="11"/>
+                                    <Label Text="{Binding Source}" TextColor="{StaticResource Accent}" FontSize="11"/>
+                                    <Label Text="·" TextColor="{StaticResource TextDisabled}" FontSize="11"/>
+                                    <Label Text="{Binding Engine}" TextColor="{StaticResource TextMuted}" FontSize="11"/>
                                 </HorizontalStackLayout>
                                 <Label Grid.Row="2"
                                        Text="{Binding PublishedAt, StringFormat='{0:dd MMM yyyy}'}"
-                                       TextColor="#555555" FontSize="10"/>
+                                       TextColor="{StaticResource TextMuted}" FontSize="10"/>
                             </Grid>
                         </Grid>
                     </Border>

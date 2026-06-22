@@ -1,4 +1,10 @@
 <?xml version="1.0" encoding="utf-8" ?>
+<!--
+  FeedPage.xaml — Pinterest-style 2-column card feed.
+  ViewModel: FeedViewModel (unchanged — same Engine/Category filters, same Items collection).
+  New converters needed: CategoryColorConverter, CategoryBgConverter, CategoryIconConverter.
+  Add them to Resources/Converters and register in this page's Resources section.
+-->
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:vm="clr-namespace:bgdlib.ViewModels"
@@ -7,44 +13,51 @@
              x:Class="bgdlib.Views.FeedPage"
              x:DataType="vm:FeedViewModel"
              x:Name="FeedPageRoot"
-             BackgroundColor="#0f0f0f">
+             BackgroundColor="#0f0f0f"
+             Shell.NavBarIsVisible="False">
 
     <ContentPage.Resources>
-        <conv:ChipSelectedConverter x:Key="ChipSelected"/>
-        <conv:ChipTextColorConverter x:Key="ChipText"/>
-        <conv:EngineColorConverter x:Key="EngineColor"/>
-        <conv:EngineLetterConverter x:Key="EngineLetter"/>
-        <conv:NotEmptyConverter x:Key="NotEmpty"/>
-        <conv:IsEmptyConverter x:Key="IsEmpty"/>
-        <conv:InvertBoolConverter x:Key="InvertBool"/>
+        <conv:ChipSelectedConverter   x:Key="ChipSelected"/>
+        <conv:ChipTextColorConverter  x:Key="ChipText"/>
+        <conv:EngineColorConverter    x:Key="EngineColor"/>
+        <conv:EngineLetterConverter   x:Key="EngineLetter"/>
+        <conv:NotEmptyConverter       x:Key="NotEmpty"/>
+        <conv:InvertBoolConverter     x:Key="InvertBool"/>
+        <conv:CategoryColorConverter  x:Key="CatColor"/>
+        <conv:CategoryBgConverter     x:Key="CatBg"/>
+        <conv:CategoryIconConverter   x:Key="CatIcon"/>
     </ContentPage.Resources>
 
-    <Grid RowDefinitions="Auto,Auto,Auto,*">
+    <Grid RowDefinitions="Auto,Auto,Auto,1,*">
 
-        <!-- Header -->
-        <Grid Grid.Row="0" ColumnDefinitions="*,Auto" Padding="16,14,16,8">
-            <Label Grid.Column="0" VerticalOptions="Center">
+        <!-- ── AppBar ──────────────────────────────────────────────── -->
+        <Grid Grid.Row="0" ColumnDefinitions="*,Auto"
+              BackgroundColor="#1a1a1a" Padding="16,13,12,13">
+            <Label Grid.Column="0" Style="{StaticResource AppBarTitle}">
                 <Label.FormattedText>
                     <FormattedString>
-                        <Span Text="RSS " TextColor="#FFFFFF" FontSize="20" FontAttributes="Bold"/>
-                        <Span Text="{Binding [Feed_RibbonWord], Source={StaticResource Loc}}" TextColor="#E53935" FontSize="20" FontAttributes="Bold"/>
+                        <Span Text="BGD" TextColor="#FFFFFF" FontFamily="OpenSansSemibold" FontSize="22"/>
+                        <Span Text="Lib" TextColor="#E53935" FontFamily="OpenSansSemibold" FontSize="22"/>
                     </FormattedString>
                 </Label.FormattedText>
             </Label>
+            <!-- Filter indicator badge -->
             <Border Grid.Column="1" BackgroundColor="#E53935"
-                    StrokeShape="RoundRectangle 10" StrokeThickness="0" Padding="10,4"
+                    StrokeThickness="0" StrokeShape="RoundRectangle 10" Padding="10,4"
                     VerticalOptions="Center"
                     IsVisible="{Binding StatusText, Converter={StaticResource NotEmpty}}">
-                <Label Text="{Binding StatusText}" TextColor="#FFFFFF" FontSize="11" FontAttributes="Bold"/>
+                <Label Text="{Binding StatusText}" TextColor="#FFFFFF" FontSize="11"
+                       FontFamily="OpenSansSemibold"/>
             </Border>
         </Grid>
 
-        <!-- Engine/source filter chips -->
-        <ScrollView Grid.Row="1" Orientation="Horizontal" HorizontalScrollBarVisibility="Never">
-            <HorizontalStackLayout Spacing="6" Padding="12,0,12,8">
+        <!-- ── Engine chips ────────────────────────────────────────── -->
+        <ScrollView Grid.Row="1" Orientation="Horizontal"
+                    BackgroundColor="#1a1a1a" HorizontalScrollBarVisibility="Never">
+            <HorizontalStackLayout Spacing="6" Padding="12,8,12,8">
                 <Border BackgroundColor="{Binding SelectedEngine, Converter={StaticResource ChipSelected}, ConverterParameter='ALL'}"
-                        StrokeShape="RoundRectangle 6" StrokeThickness="0" Padding="0">
-                    <Label Text="{Binding [Filter_All], Source={StaticResource Loc}}" FontSize="12" Padding="14,7"
+                        StrokeThickness="0" StrokeShape="RoundRectangle 16" Padding="0">
+                    <Label Text="All" FontSize="13" Padding="14,6"
                            TextColor="{Binding SelectedEngine, Converter={StaticResource ChipText}, ConverterParameter='ALL'}">
                         <Label.GestureRecognizers>
                             <TapGestureRecognizer Command="{Binding SetEngineCommand}" CommandParameter="ALL"/>
@@ -52,8 +65,8 @@
                     </Label>
                 </Border>
                 <Border BackgroundColor="{Binding SelectedEngine, Converter={StaticResource ChipSelected}, ConverterParameter='Unity'}"
-                        StrokeShape="RoundRectangle 6" StrokeThickness="0" Padding="0">
-                    <Label Text="Unity" FontSize="12" Padding="14,7"
+                        StrokeThickness="0" StrokeShape="RoundRectangle 16" Padding="0">
+                    <Label Text="Unity" FontSize="13" Padding="14,6"
                            TextColor="{Binding SelectedEngine, Converter={StaticResource ChipText}, ConverterParameter='Unity'}">
                         <Label.GestureRecognizers>
                             <TapGestureRecognizer Command="{Binding SetEngineCommand}" CommandParameter="Unity"/>
@@ -61,8 +74,8 @@
                     </Label>
                 </Border>
                 <Border BackgroundColor="{Binding SelectedEngine, Converter={StaticResource ChipSelected}, ConverterParameter='Godot'}"
-                        StrokeShape="RoundRectangle 6" StrokeThickness="0" Padding="0">
-                    <Label Text="Godot" FontSize="12" Padding="14,7"
+                        StrokeThickness="0" StrokeShape="RoundRectangle 16" Padding="0">
+                    <Label Text="Godot" FontSize="13" Padding="14,6"
                            TextColor="{Binding SelectedEngine, Converter={StaticResource ChipText}, ConverterParameter='Godot'}">
                         <Label.GestureRecognizers>
                             <TapGestureRecognizer Command="{Binding SetEngineCommand}" CommandParameter="Godot"/>
@@ -70,8 +83,8 @@
                     </Label>
                 </Border>
                 <Border BackgroundColor="{Binding SelectedEngine, Converter={StaticResource ChipSelected}, ConverterParameter='Unreal'}"
-                        StrokeShape="RoundRectangle 6" StrokeThickness="0" Padding="0">
-                    <Label Text="Unreal" FontSize="12" Padding="14,7"
+                        StrokeThickness="0" StrokeShape="RoundRectangle 16" Padding="0">
+                    <Label Text="Unreal" FontSize="13" Padding="14,6"
                            TextColor="{Binding SelectedEngine, Converter={StaticResource ChipText}, ConverterParameter='Unreal'}">
                         <Label.GestureRecognizers>
                             <TapGestureRecognizer Command="{Binding SetEngineCommand}" CommandParameter="Unreal"/>
@@ -79,8 +92,8 @@
                     </Label>
                 </Border>
                 <Border BackgroundColor="{Binding SelectedEngine, Converter={StaticResource ChipSelected}, ConverterParameter='Other'}"
-                        StrokeShape="RoundRectangle 6" StrokeThickness="0" Padding="0">
-                    <Label Text="{Binding [Cat_Other], Source={StaticResource Loc}}" FontSize="12" Padding="14,7"
+                        StrokeThickness="0" StrokeShape="RoundRectangle 16" Padding="0">
+                    <Label Text="Other" FontSize="13" Padding="14,6"
                            TextColor="{Binding SelectedEngine, Converter={StaticResource ChipText}, ConverterParameter='Other'}">
                         <Label.GestureRecognizers>
                             <TapGestureRecognizer Command="{Binding SetEngineCommand}" CommandParameter="Other"/>
@@ -90,92 +103,173 @@
             </HorizontalStackLayout>
         </ScrollView>
 
-        <!-- Divider -->
-        <BoxView Grid.Row="2" HeightRequest="1" BackgroundColor="#1a1a1a"/>
+        <!-- ── Category chips ──────────────────────────────────────── -->
+        <ScrollView Grid.Row="2" Orientation="Horizontal"
+                    BackgroundColor="#1a1a1a" HorizontalScrollBarVisibility="Never">
+            <HorizontalStackLayout Spacing="6" Padding="12,4,12,8">
+                <Border BackgroundColor="{Binding SelectedCategory, Converter={StaticResource ChipSelected}, ConverterParameter='ALL'}"
+                        StrokeThickness="0" StrokeShape="RoundRectangle 14" Padding="0">
+                    <Label Text="All" FontSize="12" Padding="12,5"
+                           TextColor="{Binding SelectedCategory, Converter={StaticResource ChipText}, ConverterParameter='ALL'}">
+                        <Label.GestureRecognizers>
+                            <TapGestureRecognizer Command="{Binding SetCategoryCommand}" CommandParameter="ALL"/>
+                        </Label.GestureRecognizers>
+                    </Label>
+                </Border>
+                <Border BackgroundColor="{Binding SelectedCategory, Converter={StaticResource ChipSelected}, ConverterParameter='tutorial'}"
+                        StrokeThickness="0" StrokeShape="RoundRectangle 14" Padding="0">
+                    <Label Text="Tutorial" FontSize="12" Padding="12,5"
+                           TextColor="{Binding SelectedCategory, Converter={StaticResource ChipText}, ConverterParameter='tutorial'}">
+                        <Label.GestureRecognizers>
+                            <TapGestureRecognizer Command="{Binding SetCategoryCommand}" CommandParameter="tutorial"/>
+                        </Label.GestureRecognizers>
+                    </Label>
+                </Border>
+                <Border BackgroundColor="{Binding SelectedCategory, Converter={StaticResource ChipSelected}, ConverterParameter='news'}"
+                        StrokeThickness="0" StrokeShape="RoundRectangle 14" Padding="0">
+                    <Label Text="News" FontSize="12" Padding="12,5"
+                           TextColor="{Binding SelectedCategory, Converter={StaticResource ChipText}, ConverterParameter='news'}">
+                        <Label.GestureRecognizers>
+                            <TapGestureRecognizer Command="{Binding SetCategoryCommand}" CommandParameter="news"/>
+                        </Label.GestureRecognizers>
+                    </Label>
+                </Border>
+                <Border BackgroundColor="{Binding SelectedCategory, Converter={StaticResource ChipSelected}, ConverterParameter='tool'}"
+                        StrokeThickness="0" StrokeShape="RoundRectangle 14" Padding="0">
+                    <Label Text="Tool" FontSize="12" Padding="12,5"
+                           TextColor="{Binding SelectedCategory, Converter={StaticResource ChipText}, ConverterParameter='tool'}">
+                        <Label.GestureRecognizers>
+                            <TapGestureRecognizer Command="{Binding SetCategoryCommand}" CommandParameter="tool"/>
+                        </Label.GestureRecognizers>
+                    </Label>
+                </Border>
+                <Border BackgroundColor="{Binding SelectedCategory, Converter={StaticResource ChipSelected}, ConverterParameter='postmortem'}"
+                        StrokeThickness="0" StrokeShape="RoundRectangle 14" Padding="0">
+                    <Label Text="Postmortem" FontSize="12" Padding="12,5"
+                           TextColor="{Binding SelectedCategory, Converter={StaticResource ChipText}, ConverterParameter='postmortem'}">
+                        <Label.GestureRecognizers>
+                            <TapGestureRecognizer Command="{Binding SetCategoryCommand}" CommandParameter="postmortem"/>
+                        </Label.GestureRecognizers>
+                    </Label>
+                </Border>
+                <Border BackgroundColor="{Binding SelectedCategory, Converter={StaticResource ChipSelected}, ConverterParameter='job'}"
+                        StrokeThickness="0" StrokeShape="RoundRectangle 14" Padding="0">
+                    <Label Text="Jobs" FontSize="12" Padding="12,5"
+                           TextColor="{Binding SelectedCategory, Converter={StaticResource ChipText}, ConverterParameter='job'}">
+                        <Label.GestureRecognizers>
+                            <TapGestureRecognizer Command="{Binding SetCategoryCommand}" CommandParameter="job"/>
+                        </Label.GestureRecognizers>
+                    </Label>
+                </Border>
+                <Border BackgroundColor="{Binding SelectedCategory, Converter={StaticResource ChipSelected}, ConverterParameter='docs'}"
+                        StrokeThickness="0" StrokeShape="RoundRectangle 14" Padding="0">
+                    <Label Text="Docs" FontSize="12" Padding="12,5"
+                           TextColor="{Binding SelectedCategory, Converter={StaticResource ChipText}, ConverterParameter='docs'}">
+                        <Label.GestureRecognizers>
+                            <TapGestureRecognizer Command="{Binding SetCategoryCommand}" CommandParameter="docs"/>
+                        </Label.GestureRecognizers>
+                    </Label>
+                </Border>
+            </HorizontalStackLayout>
+        </ScrollView>
 
-        <!-- News list -->
-        <RefreshView Grid.Row="3"
+        <BoxView Grid.Row="3" HeightRequest="1" BackgroundColor="#2a2a2a"/>
+
+        <!-- ── Pinterest cards grid ─────────────────────────────────── -->
+        <RefreshView Grid.Row="4"
                      Command="{Binding LoadCommand}"
                      IsRefreshing="{Binding IsLoading}"
                      RefreshColor="#E53935">
             <CollectionView ItemsSource="{Binding Items}"
-                            SelectionMode="Single"
-                            SelectionChanged="OnArticleSelected">
+                            x:Name="FeedCollection"
+                            Margin="8,8,8,0">
+                <CollectionView.ItemsLayout>
+                    <GridItemsLayout Orientation="Vertical" Span="2"
+                                     HorizontalItemSpacing="8"
+                                     VerticalItemSpacing="8"/>
+                </CollectionView.ItemsLayout>
                 <CollectionView.EmptyView>
-                    <Label Text="{Binding [Feed_Empty], Source={StaticResource Loc}}"
-                           TextColor="#555555" HorizontalOptions="Center"
-                           VerticalOptions="Center" HorizontalTextAlignment="Center"
-                           Margin="24,48"/>
+                    <Label Text="Нет статей" TextColor="#555555"
+                           HorizontalOptions="Center" VerticalOptions="Center"
+                           HorizontalTextAlignment="Center" Margin="24,48"/>
                 </CollectionView.EmptyView>
-                <CollectionView.Footer>
-                    <BoxView HeightRequest="8" Color="Transparent"/>
-                </CollectionView.Footer>
                 <CollectionView.ItemTemplate>
                     <DataTemplate x:DataType="models:FeedItem">
-                        <Grid Padding="16,10" ColumnDefinitions="36,*,Auto" ColumnSpacing="12">
+                        <Border BackgroundColor="#161616"
+                                Stroke="#2a2a2a" StrokeThickness="1"
+                                StrokeShape="RoundRectangle 12">
+                            <Border.GestureRecognizers>
+                                <TapGestureRecognizer
+                                    Command="{Binding Source={x:Reference FeedPageRoot}, Path=BindingContext.OpenArticleCommand}"
+                                    CommandParameter="{Binding .}"/>
+                            </Border.GestureRecognizers>
+                            <Grid RowDefinitions="140,Auto">
 
-                            <!-- Source badge -->
-                            <Border Grid.Column="0"
-                                    BackgroundColor="{Binding Engine, Converter={StaticResource EngineColor}}"
-                                    StrokeShape="RoundRectangle 6" StrokeThickness="0"
-                                    HeightRequest="36" WidthRequest="36" VerticalOptions="Start">
-                                <Label Text="{Binding Engine, Converter={StaticResource EngineLetter}}"
-                                       HorizontalOptions="Center" VerticalOptions="Center"
-                                       FontSize="11" FontAttributes="Bold" TextColor="#0f0f0f"/>
-                            </Border>
+                                <!-- Cover: coloured bg + category icon + engine badge + bookmark -->
+                                <Grid Grid.Row="0" HeightRequest="140">
+                                    <BoxView BackgroundColor="{Binding Category, Converter={StaticResource CatColor}}"
+                                             Opacity="0.35"/>
+                                    <!-- Big category icon centred -->
+                                    <Label Text="{Binding Category, Converter={StaticResource CatIcon}}"
+                                           FontFamily="MaterialIcons" FontSize="52"
+                                           TextColor="{Binding Category, Converter={StaticResource CatColor}}"
+                                           Opacity="0.85"
+                                           HorizontalOptions="Center" VerticalOptions="Center"/>
+                                    <!-- Engine badge (top-left) -->
+                                    <Border BackgroundColor="#73000000" StrokeThickness="0"
+                                            StrokeShape="RoundRectangle 5" Padding="7,3"
+                                            HorizontalOptions="Start" VerticalOptions="Start" Margin="8">
+                                        <Label Text="{Binding Engine}" FontFamily="OpenSansSemibold"
+                                               FontSize="9" TextColor="#FFFFFF"/>
+                                    </Border>
+                                    <!-- Bookmark (top-right) -->
+                                    <Label Text="&#xe87e;" FontFamily="MaterialIcons"
+                                           FontSize="18" TextColor="#888888"
+                                           HorizontalOptions="End" VerticalOptions="Start" Margin="0,6,8,0"
+                                           IsVisible="{Binding IsFavorite, Converter={StaticResource InvertBool}}">
+                                        <Label.GestureRecognizers>
+                                            <TapGestureRecognizer
+                                                Command="{Binding Source={x:Reference FeedPageRoot}, Path=BindingContext.ToggleFavoriteCommand}"
+                                                CommandParameter="{Binding .}"/>
+                                        </Label.GestureRecognizers>
+                                    </Label>
+                                    <Label Text="&#xe87d;" FontFamily="MaterialIcons"
+                                           FontSize="18" TextColor="#E53935"
+                                           HorizontalOptions="End" VerticalOptions="Start" Margin="0,6,8,0"
+                                           IsVisible="{Binding IsFavorite}">
+                                        <Label.GestureRecognizers>
+                                            <TapGestureRecognizer
+                                                Command="{Binding Source={x:Reference FeedPageRoot}, Path=BindingContext.ToggleFavoriteCommand}"
+                                                CommandParameter="{Binding .}"/>
+                                        </Label.GestureRecognizers>
+                                    </Label>
+                                </Grid>
 
-                            <!-- Content -->
-                            <VerticalStackLayout Grid.Column="1" Spacing="4">
-                                <!-- Engine · Category -->
-                                <Label TextColor="#E53935" FontSize="9" FontAttributes="Bold" CharacterSpacing="0.5">
-                                    <Label.FormattedText>
-                                        <FormattedString>
-                                            <Span Text="{Binding Engine}" TextColor="#E53935"/>
-                                            <Span Text=" · " TextColor="#444444"/>
-                                            <Span Text="{Binding Category}" TextColor="#888888"/>
-                                        </FormattedString>
-                                    </Label.FormattedText>
-                                </Label>
-                                <!-- Title -->
-                                <Label Text="{Binding Title}"
-                                       TextColor="#FFFFFF" FontSize="14" FontAttributes="Bold"
-                                       MaxLines="2" LineBreakMode="WordWrap"/>
-                                <!-- Source · Time -->
-                                <HorizontalStackLayout Spacing="4">
-                                    <Label Text="{Binding Source}" TextColor="#555555" FontSize="11"/>
-                                    <Label Text="·" TextColor="#333333" FontSize="11"/>
-                                    <Label Text="{Binding PublishedAt, StringFormat='{0:dd MMM}'}"
-                                           TextColor="#555555" FontSize="11"/>
-                                </HorizontalStackLayout>
-                            </VerticalStackLayout>
+                                <!-- Card body -->
+                                <VerticalStackLayout Grid.Row="1" Padding="10,8,10,10" Spacing="6">
+                                    <!-- Category badge -->
+                                    <Border BackgroundColor="{Binding Category, Converter={StaticResource CatBg}}"
+                                            StrokeThickness="0" StrokeShape="RoundRectangle 4"
+                                            Padding="7,2" HorizontalOptions="Start">
+                                        <Label Text="{Binding Category}" FontFamily="OpenSansSemibold"
+                                               FontSize="9"
+                                               TextColor="{Binding Category, Converter={StaticResource CatColor}}"/>
+                                    </Border>
+                                    <!-- Title -->
+                                    <Label Text="{Binding Title}" FontFamily="OpenSansSemibold"
+                                           FontSize="13" TextColor="#FFFFFF"
+                                           MaxLines="3" LineBreakMode="WordWrap"/>
+                                    <!-- Source · date -->
+                                    <HorizontalStackLayout Spacing="3">
+                                        <Label Text="{Binding Source}" FontSize="10" TextColor="#888888"/>
+                                        <Label Text="·" FontSize="10" TextColor="#555555"/>
+                                        <Label Text="{Binding PublishedAt, StringFormat='{0:dd MMM}'}"
+                                               FontSize="10" TextColor="#555555"/>
+                                    </HorizontalStackLayout>
+                                </VerticalStackLayout>
 
-                            <!-- Favorite -->
-                            <VerticalStackLayout Grid.Column="2" VerticalOptions="Center">
-                                <Label IsVisible="{Binding IsFavorite, Converter={StaticResource InvertBool}}"
-                                       Text="&#xe87e;" FontFamily="MaterialIcons"
-                                       FontSize="20" TextColor="#333333">
-                                    <Label.GestureRecognizers>
-                                        <TapGestureRecognizer
-                                            Command="{Binding Source={x:Reference FeedPageRoot}, Path=BindingContext.ToggleFavoriteCommand}"
-                                            CommandParameter="{Binding .}"/>
-                                    </Label.GestureRecognizers>
-                                </Label>
-                                <Label IsVisible="{Binding IsFavorite}"
-                                       Text="&#xe87d;" FontFamily="MaterialIcons"
-                                       FontSize="20" TextColor="#E53935">
-                                    <Label.GestureRecognizers>
-                                        <TapGestureRecognizer
-                                            Command="{Binding Source={x:Reference FeedPageRoot}, Path=BindingContext.ToggleFavoriteCommand}"
-                                            CommandParameter="{Binding .}"/>
-                                    </Label.GestureRecognizers>
-                                </Label>
-                            </VerticalStackLayout>
-
-                            <!-- Bottom divider -->
-                            <BoxView Grid.Column="0" Grid.ColumnSpan="3"
-                                     HeightRequest="1" BackgroundColor="#1a1a1a"
-                                     VerticalOptions="End" Margin="0,10,0,-10"/>
-                        </Grid>
+                            </Grid>
+                        </Border>
                     </DataTemplate>
                 </CollectionView.ItemTemplate>
             </CollectionView>

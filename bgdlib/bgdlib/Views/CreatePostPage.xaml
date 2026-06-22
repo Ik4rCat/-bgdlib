@@ -5,7 +5,7 @@
              xmlns:conv="clr-namespace:bgdlib.Converters"
              x:Class="bgdlib.Views.CreatePostPage"
              x:DataType="vm:CreatePostViewModel"
-             BackgroundColor="#0f0f0f">
+             BackgroundColor="{StaticResource Bg}">
 
     <ContentPage.Resources>
         <conv:InvertBoolConverter x:Key="InvertBool"/>
@@ -15,33 +15,28 @@
         <VerticalStackLayout Padding="16" Spacing="12">
 
             <Label Text="{Binding [Ribbon_CreatePost], Source={StaticResource Loc}}"
-                   TextColor="#FFFFFF" FontSize="22" FontAttributes="Bold" Margin="4,12,0,8"/>
+                   Style="{StaticResource AppBarTitle}"
+                   Margin="4,12,0,8"/>
 
-            <Border BackgroundColor="#1a1a1a" StrokeThickness="0" 
-                    StrokeShape="RoundRectangle 14" Padding="14,4">
+            <Border Style="{StaticResource InputBorder}" Padding="14,4">
                 <Entry Placeholder="{Binding [Post_Title], Source={StaticResource Loc}}"
-                       PlaceholderColor="#555555" TextColor="#FFFFFF" BackgroundColor="Transparent"
                        Text="{Binding Title}"/>
             </Border>
 
-            <Border BackgroundColor="#1a1a1a" StrokeThickness="0" 
-                    StrokeShape="RoundRectangle 14" Padding="14,8">
+            <Border Style="{StaticResource InputBorder}" Padding="14,8">
                 <Editor Placeholder="{Binding [Post_Body], Source={StaticResource Loc}}"
-                        PlaceholderColor="#555555" TextColor="#FFFFFF" BackgroundColor="Transparent"
                         Text="{Binding Body}" MinimumHeightRequest="140" AutoSize="TextChanges"/>
             </Border>
 
-            <Border BackgroundColor="#1a1a1a" StrokeThickness="0" 
-                    StrokeShape="RoundRectangle 14" Padding="14,4">
+            <Border Style="{StaticResource InputBorder}" Padding="14,4">
                 <Entry Placeholder="{Binding [Post_Tags], Source={StaticResource Loc}}"
-                       PlaceholderColor="#555555" TextColor="#FFFFFF" BackgroundColor="Transparent"
                        Text="{Binding TagsRaw}"/>
             </Border>
 
-            <Border BackgroundColor="#1a1a1a" StrokeThickness="0" 
-                    StrokeShape="RoundRectangle 14" Padding="14,4">
+            <Border Style="{StaticResource InputBorder}" Padding="14,4">
                 <Picker Title="{Binding [Post_Engine], Source={StaticResource Loc}}"
-                        TextColor="#FFFFFF" TitleColor="#555555" BackgroundColor="Transparent"
+                        TextColor="{StaticResource TextPrimary}" TitleColor="{StaticResource TextMuted}"
+                        BackgroundColor="Transparent"
                         SelectedItem="{Binding Engine}">
                     <Picker.Items>
                         <x:String>Unity</x:String>
@@ -52,11 +47,11 @@
                 </Picker>
             </Border>
 
-            <Border BackgroundColor="#E53935" StrokeShape="RoundRectangle 14" StrokeThickness="0"
+            <Border Style="{StaticResource PrimaryBtn}"
                     IsEnabled="{Binding IsBusy, Converter={StaticResource InvertBool}}" Padding="0"
                     Margin="0,8,0,0">
                 <Label Text="{Binding [Post_Submit], Source={StaticResource Loc}}"
-                       TextColor="#1e1e2e" FontSize="15" FontAttributes="Bold"
+                       TextColor="{StaticResource TextPrimary}" FontSize="15" FontAttributes="Bold"
                        HorizontalOptions="Center" Padding="0,16">
                     <Label.GestureRecognizers>
                         <TapGestureRecognizer Command="{Binding SubmitCommand}"/>

@@ -2,30 +2,40 @@
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="bgdlib.Views.NoteEditorPage"
-             BackgroundColor="#1e1e2e">
+             BackgroundColor="{StaticResource Bg}">
 
     <ContentPage.ToolbarItems>
-        <ToolbarItem Text="💾" Clicked="OnSaveClicked" Order="Primary"/>
-        <ToolbarItem Text="↗" Clicked="OnExportClicked" Order="Primary"/>
+        <ToolbarItem Text="Сохранить" Clicked="OnSaveClicked" Order="Primary"/>
+        <ToolbarItem Text="&#xe173;" Clicked="OnExportClicked" Order="Secondary"/>
     </ContentPage.ToolbarItems>
 
-    <Grid RowDefinitions="Auto,*">
+    <Grid RowDefinitions="Auto,Auto,1,*">
 
-        <!-- Заголовок и теги -->
-        <VerticalStackLayout Grid.Row="0" Padding="12,8" Spacing="6">
-            <Entry x:Name="TitleEntry"
-                   Text="{Binding Title}"
-                   Placeholder="Заголовок заметки"
-                   BackgroundColor="#313244" TextColor="#cdd6f4"
-                   PlaceholderColor="#6c7086" FontSize="16" FontAttributes="Bold"/>
-            <Entry Text="{Binding Tags}"
-                   Placeholder="#теги через пробел"
-                   BackgroundColor="#313244" TextColor="#89b4fa"
-                   PlaceholderColor="#6c7086" FontSize="13"/>
-        </VerticalStackLayout>
+        <!-- Title -->
+        <Entry Grid.Row="0" x:Name="TitleEntry"
+               Text="{Binding Title}"
+               Placeholder="Заголовок заметки"
+               TextColor="{StaticResource TextPrimary}"
+               PlaceholderColor="{StaticResource TextMuted}"
+               BackgroundColor="{StaticResource Bg}"
+               FontSize="20" FontAttributes="Bold"
+               Margin="16,12,16,0"/>
 
-        <!-- EasyMDE в WebView -->
-        <WebView x:Name="EditorWebView" Grid.Row="1"
+        <!-- Tags -->
+        <Entry Grid.Row="1"
+               Text="{Binding Tags}"
+               Placeholder="#теги через пробел"
+               TextColor="{StaticResource TextSecondary}"
+               PlaceholderColor="{StaticResource TextMuted}"
+               BackgroundColor="{StaticResource Bg}"
+               FontSize="13"
+               Margin="16,4,16,8"/>
+
+        <BoxView Grid.Row="2" HeightRequest="1" Color="{StaticResource Border}"/>
+
+        <!-- Markdown editor -->
+        <WebView Grid.Row="3" x:Name="EditorWebView"
+                 BackgroundColor="{StaticResource Bg}"
                  Navigating="OnEditorNavigating"/>
 
     </Grid>

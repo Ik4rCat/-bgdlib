@@ -1,41 +1,80 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-<ResourceDictionary
-    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
-    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml">
+<ResourceDictionary xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml">
 
-    <Color x:Key="BgBase">#0f0f0f</Color>
+    <!-- ─── Base palette ─────────────────────────────────────────── -->
+    <Color x:Key="Bg">#0F0F0F</Color>
+    <Color x:Key="Surface">#1A1A1A</Color>
+    <Color x:Key="Surface2">#242424</Color>
+    <Color x:Key="Surface3">#161616</Color>
+    <Color x:Key="Border">#2A2A2A</Color>
+    <Color x:Key="Border2">#3A3A3A</Color>
+
+    <!-- ─── Accent ────────────────────────────────────────────────── -->
+    <Color x:Key="Accent">#E53935</Color>
+    <Color x:Key="AccentDark">#B71C1C</Color>
+    <Color x:Key="AccentTint">#29E53935</Color>
+
+    <!-- ─── Text ──────────────────────────────────────────────────── -->
+    <Color x:Key="TextPrimary">#FFFFFF</Color>
+    <Color x:Key="TextSecondary">#888888</Color>
+    <Color x:Key="TextMuted">#555555</Color>
+    <Color x:Key="TextDisabled">#333333</Color>
+
+    <!-- ─── Category colours (keep in sync with CategoryColorConverter) -->
+    <Color x:Key="CatTutorial">#1E88E5</Color>
+    <Color x:Key="CatJob">#43A047</Color>
+    <Color x:Key="CatTool">#8E24AA</Color>
+    <Color x:Key="CatNews">#E53935</Color>
+    <Color x:Key="CatPostmortem">#F9A825</Color>
+    <Color x:Key="CatDocs">#78909C</Color>
+    <Color x:Key="CatVfx">#E0792B</Color>
+    <Color x:Key="CatGameplay">#43A047</Color>
+    <Color x:Key="CatAi">#1FA463</Color>
+    <Color x:Key="CatShaders">#17B0B8</Color>
+
+    <!-- ─── Engine colours ────────────────────────────────────────── -->
+    <Color x:Key="EngineUnity">#CCCCCC</Color>
+    <Color x:Key="EngineGodot">#5BA3D9</Color>
+    <Color x:Key="EngineUnreal">#9E9E9E</Color>
+    <Color x:Key="EngineOther">#555555</Color>
+
+    <!-- ─── Comment thread rails ─────────────────────────────────── -->
+    <Color x:Key="Rail0">#E0792B</Color>
+    <Color x:Key="Rail1">#2F74E0</Color>
+    <Color x:Key="Rail2">#1FA463</Color>
+    <Color x:Key="Rail3">#9061F0</Color>
+    <Color x:Key="Rail4">#17B0B8</Color>
+    <Color x:Key="Rail5">#E0418E</Color>
+
+    <!-- ─── Brushes ───────────────────────────────────────────────── -->
+    <SolidColorBrush x:Key="BgBrush"      Color="{StaticResource Bg}" />
+    <SolidColorBrush x:Key="SurfaceBrush" Color="{StaticResource Surface}" />
+    <SolidColorBrush x:Key="AccentBrush"  Color="{StaticResource Accent}" />
+
+    <!-- ─── Legacy aliases (keep old code working) ───────────────── -->
+    <Color x:Key="Primary">#E53935</Color>
+    <Color x:Key="Secondary">#1A1A1A</Color>
+    <Color x:Key="Tertiary">#242424</Color>
+    <Color x:Key="BgBase">#0F0F0F</Color>
     <Color x:Key="BgMantle">#0a0a0a</Color>
-    <Color x:Key="Surface0">#1a1a1a</Color>
+    <Color x:Key="OffBlack">#0F0F0F</Color>
+    <Color x:Key="MidnightBlue">#0F0F0F</Color>
+    <Color x:Key="Surface0">#1A1A1A</Color>
     <Color x:Key="Surface1">#242424</Color>
-    <Color x:Key="Surface2">#2e2e2e</Color>
     <Color x:Key="Overlay0">#333333</Color>
     <Color x:Key="Overlay1">#444444</Color>
     <Color x:Key="Overlay2">#555555</Color>
     <Color x:Key="Subtext0">#888888</Color>
-    <Color x:Key="Subtext1">#aaaaaa</Color>
+    <Color x:Key="Subtext1">#AAAAAA</Color>
     <Color x:Key="CatText">#FFFFFF</Color>
-    <Color x:Key="Accent">#E53935</Color>
-    <Color x:Key="AccentDark">#b71c1c</Color>
+    <Color x:Key="Magenta">#E53935</Color>
     <Color x:Key="AccentLight">#ef5350</Color>
-
-    <!-- Engine colors -->
-    <Color x:Key="UnityColor">#a6e3a1</Color>
-    <Color x:Key="GodotColor">#89b4fa</Color>
-    <Color x:Key="UnrealColor">#f38ba8</Color>
-    <Color x:Key="OtherColor">#f9e2af</Color>
-
-    <!-- Legacy aliases -->
-    <Color x:Key="Primary">#E53935</Color>
     <Color x:Key="PrimaryDark">#b71c1c</Color>
     <Color x:Key="PrimaryDarkText">#FFFFFF</Color>
-    <Color x:Key="Secondary">#1a1a1a</Color>
     <Color x:Key="SecondaryDarkText">#FFFFFF</Color>
-    <Color x:Key="Tertiary">#242424</Color>
     <Color x:Key="White">#FFFFFF</Color>
     <Color x:Key="Black">#0a0a0a</Color>
-    <Color x:Key="Magenta">#E53935</Color>
-    <Color x:Key="MidnightBlue">#0f0f0f</Color>
-    <Color x:Key="OffBlack">#0f0f0f</Color>
     <Color x:Key="Gray100">#aaaaaa</Color>
     <Color x:Key="Gray200">#888888</Color>
     <Color x:Key="Gray300">#666666</Color>
@@ -44,19 +83,22 @@
     <Color x:Key="Gray600">#333333</Color>
     <Color x:Key="Gray900">#1a1a1a</Color>
     <Color x:Key="Gray950">#0f0f0f</Color>
-
-    <SolidColorBrush x:Key="PrimaryBrush" Color="{StaticResource Accent}"/>
-    <SolidColorBrush x:Key="SecondaryBrush" Color="{StaticResource Surface0}"/>
-    <SolidColorBrush x:Key="TertiaryBrush" Color="{StaticResource Surface1}"/>
-    <SolidColorBrush x:Key="WhiteBrush" Color="{StaticResource White}"/>
-    <SolidColorBrush x:Key="BlackBrush" Color="{StaticResource Black}"/>
-    <SolidColorBrush x:Key="Gray100Brush" Color="{StaticResource Gray100}"/>
-    <SolidColorBrush x:Key="Gray200Brush" Color="{StaticResource Gray200}"/>
-    <SolidColorBrush x:Key="Gray300Brush" Color="{StaticResource Gray300}"/>
-    <SolidColorBrush x:Key="Gray400Brush" Color="{StaticResource Gray400}"/>
-    <SolidColorBrush x:Key="Gray500Brush" Color="{StaticResource Gray500}"/>
-    <SolidColorBrush x:Key="Gray600Brush" Color="{StaticResource Gray600}"/>
-    <SolidColorBrush x:Key="Gray900Brush" Color="{StaticResource Gray900}"/>
-    <SolidColorBrush x:Key="Gray950Brush" Color="{StaticResource Gray950}"/>
+    <Color x:Key="UnityColor">#a6e3a1</Color>
+    <Color x:Key="GodotColor">#89b4fa</Color>
+    <Color x:Key="UnrealColor">#f38ba8</Color>
+    <Color x:Key="OtherColor">#f9e2af</Color>
+    <SolidColorBrush x:Key="PrimaryBrush"  Color="{StaticResource Accent}" />
+    <SolidColorBrush x:Key="SecondaryBrush" Color="{StaticResource Surface0}" />
+    <SolidColorBrush x:Key="TertiaryBrush" Color="{StaticResource Surface1}" />
+    <SolidColorBrush x:Key="WhiteBrush"    Color="{StaticResource White}" />
+    <SolidColorBrush x:Key="BlackBrush"    Color="{StaticResource Black}" />
+    <SolidColorBrush x:Key="Gray100Brush"  Color="{StaticResource Gray100}" />
+    <SolidColorBrush x:Key="Gray200Brush"  Color="{StaticResource Gray200}" />
+    <SolidColorBrush x:Key="Gray300Brush"  Color="{StaticResource Gray300}" />
+    <SolidColorBrush x:Key="Gray400Brush"  Color="{StaticResource Gray400}" />
+    <SolidColorBrush x:Key="Gray500Brush"  Color="{StaticResource Gray500}" />
+    <SolidColorBrush x:Key="Gray600Brush"  Color="{StaticResource Gray600}" />
+    <SolidColorBrush x:Key="Gray900Brush"  Color="{StaticResource Gray900}" />
+    <SolidColorBrush x:Key="Gray950Brush"  Color="{StaticResource Gray950}" />
 
 </ResourceDictionary>

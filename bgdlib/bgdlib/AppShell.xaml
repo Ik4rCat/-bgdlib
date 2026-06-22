@@ -9,10 +9,10 @@
     <Shell.Resources>
         <ResourceDictionary>
             <Style TargetType="Shell" ApplyToDerivedTypes="True">
-                <Setter Property="Shell.TabBarBackgroundColor" Value="#0f0f0f"/>
-                <Setter Property="Shell.TabBarForegroundColor" Value="#E53935"/>
-                <Setter Property="Shell.TabBarUnselectedColor" Value="#555555"/>
-                <Setter Property="Shell.TabBarTitleColor" Value="#E53935"/>
+                <Setter Property="Shell.TabBarBackgroundColor" Value="{StaticResource Surface}"/>
+                <Setter Property="Shell.TabBarForegroundColor" Value="{StaticResource Accent}"/>
+                <Setter Property="Shell.TabBarUnselectedColor" Value="{StaticResource TextMuted}"/>
+                <Setter Property="Shell.TabBarTitleColor" Value="{StaticResource Accent}"/>
             </Style>
         </ResourceDictionary>
     </Shell.Resources>

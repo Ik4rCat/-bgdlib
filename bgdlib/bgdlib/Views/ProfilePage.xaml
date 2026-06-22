@@ -1,197 +1,225 @@
 <?xml version="1.0" encoding="utf-8" ?>
+<!--
+  ProfilePage.xaml — Instagram-style: avatar/stats header + 3-col post grid.
+  ViewModel additions needed (see ViewModels/ProfileViewModel_updated.cs):
+    - PostsGrid: ObservableCollection<ProfileGridItem>
+    - FollowersCount, FollowingCount (int)
+    - Bio (string)
+    - ProfileTab (string "posts"/"saved")
+    - GoToPostsCommand, GoToSavedCommand
+-->
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:vm="clr-namespace:bgdlib.ViewModels"
+             xmlns:models="clr-namespace:bgdlib.Models"
              xmlns:conv="clr-namespace:bgdlib.Converters"
              x:Class="bgdlib.Views.ProfilePage"
              x:DataType="vm:ProfileViewModel"
-             BackgroundColor="#0f0f0f">
+             x:Name="ProfileRoot"
+             BackgroundColor="#0f0f0f"
+             Shell.NavBarIsVisible="False">
 
     <ContentPage.Resources>
-        <conv:InvertBoolConverter x:Key="InvertBool"/>
-        <conv:ChipSelectedConverter x:Key="ChipSelected"/>
-        <conv:ChipTextColorConverter x:Key="ChipText"/>
+        <conv:InvertBoolConverter     x:Key="InvertBool"/>
+        <conv:ChipSelectedConverter   x:Key="ChipSelected"/>
+        <conv:ChipTextColorConverter  x:Key="ChipText"/>
+        <conv:CategoryColorConverter  x:Key="CatColor"/>
+        <conv:CategoryIconConverter   x:Key="CatIcon"/>
+        <conv:NotEmptyConverter       x:Key="NotEmpty"/>
     </ContentPage.Resources>
 
-    <ScrollView>
-        <VerticalStackLayout Spacing="0">
+    <Grid RowDefinitions="Auto,*">
 
-            <!-- Header -->
-            <Grid ColumnDefinitions="Auto,*" Padding="16,14,16,0">
-                <Label Grid.Column="0" Text="&#xe5c4;" FontFamily="MaterialIcons"
-                       FontSize="22" TextColor="#555555" VerticalOptions="Center" Margin="0,0,12,0"/>
-                <Label Grid.Column="1" Text="{Binding [Profile_Title], Source={StaticResource Loc}}"
-                       TextColor="#FFFFFF" FontSize="18" FontAttributes="Bold" VerticalOptions="Center"/>
-            </Grid>
+        <!-- ── AppBar ──────────────────────────────────────────────── -->
+        <Grid Grid.Row="0" ColumnDefinitions="*,Auto"
+              BackgroundColor="#1a1a1a" Padding="16,13,12,13">
+            <Label Grid.Column="0" Text="Профиль"
+                   Style="{StaticResource AppBarTitle}"/>
+            <Label Grid.Column="1" Text="&#xe5d2;" FontFamily="MaterialIcons"
+                   FontSize="24" TextColor="#888888" VerticalOptions="Center" Margin="0,0,4,0">
+                <Label.GestureRecognizers>
+                    <TapGestureRecognizer Command="{Binding OpenMenuCommand}"/>
+                </Label.GestureRecognizers>
+            </Label>
+        </Grid>
 
-            <!-- Avatar + username -->
-            <VerticalStackLayout HorizontalOptions="Center" Spacing="8" Margin="0,28,0,20">
-                <Border BackgroundColor="#E53935"
-                        StrokeShape="RoundRectangle 44" StrokeThickness="0"
-                        HeightRequest="88" WidthRequest="88"
-                        HorizontalOptions="Center">
-                    <!-- Initials or icon -->
-                    <Label Text="{Binding Initials}"
-                           TextColor="#FFFFFF" FontSize="28" FontAttributes="Bold"
-                           HorizontalOptions="Center" VerticalOptions="Center"/>
-                </Border>
-                <Label Text="{Binding DisplayName}"
-                       TextColor="#FFFFFF" FontSize="18" FontAttributes="Bold"
-                       HorizontalOptions="Center"/>
-                <Label Text="{Binding [Profile_Guest], Source={StaticResource Loc}}"
-                       TextColor="#555555" FontSize="13"
-                       HorizontalOptions="Center"
-                       IsVisible="{Binding IsGuest}"/>
-                <Label Text="{Binding Email}"
-                       TextColor="#555555" FontSize="13"
-                       HorizontalOptions="Center"
-                       IsVisible="{Binding IsGuest, Converter={StaticResource InvertBool}}"/>
+        <!-- ── Scrollable content ──────────────────────────────────── -->
+        <ScrollView Grid.Row="1">
+            <VerticalStackLayout Spacing="0">
+
+                <!-- Profile header ─────────────────────────────────── -->
+                <VerticalStackLayout Padding="18,20,18,0" Spacing="0"
+                                     BackgroundColor="#0f0f0f">
+
+                    <!-- Avatar + stats row -->
+                    <Grid ColumnDefinitions="Auto,*" ColumnSpacing="20" Margin="0,0,0,14">
+                        <!-- Avatar -->
+                        <Border Grid.Column="0" BackgroundColor="#E53935"
+                                StrokeShape="RoundRectangle 44" StrokeThickness="3"
+                                Stroke="#E53935"
+                                HeightRequest="86" WidthRequest="86">
+                            <Label Text="{Binding Initials}"
+                                   TextColor="#FFFFFF" FontFamily="OpenSansSemibold" FontSize="32"
+                                   HorizontalOptions="Center" VerticalOptions="Center"/>
+                        </Border>
+                        <!-- Stats -->
+                        <Grid Grid.Column="1" ColumnDefinitions="*,*,*"
+                              HorizontalOptions="Fill" VerticalOptions="Center">
+                            <VerticalStackLayout Grid.Column="0" HorizontalOptions="Center" Spacing="2">
+                                <Label Text="{Binding PostsCount}" FontFamily="OpenSansSemibold"
+                                       FontSize="20" TextColor="#FFFFFF" HorizontalOptions="Center"/>
+                                <Label Text="постов" FontSize="11" TextColor="#888888"
+                                       HorizontalOptions="Center"/>
+                            </VerticalStackLayout>
+                            <VerticalStackLayout Grid.Column="1" HorizontalOptions="Center" Spacing="2">
+                                <Label Text="{Binding FollowersCount}" FontFamily="OpenSansSemibold"
+                                       FontSize="20" TextColor="#FFFFFF" HorizontalOptions="Center"/>
+                                <Label Text="подписч." FontSize="11" TextColor="#888888"
+                                       HorizontalOptions="Center"/>
+                            </VerticalStackLayout>
+                            <VerticalStackLayout Grid.Column="2" HorizontalOptions="Center" Spacing="2">
+                                <Label Text="{Binding FollowingCount}" FontFamily="OpenSansSemibold"
+                                       FontSize="20" TextColor="#FFFFFF" HorizontalOptions="Center"/>
+                                <Label Text="подписки" FontSize="11" TextColor="#888888"
+                                       HorizontalOptions="Center"/>
+                            </VerticalStackLayout>
+                        </Grid>
+                    </Grid>
+
+                    <!-- Name + handle + bio -->
+                    <Label Text="{Binding DisplayName}" FontFamily="OpenSansSemibold"
+                           FontSize="15" TextColor="#FFFFFF" Margin="0,0,0,2"/>
+                    <Label Text="{Binding Email}" FontSize="13" TextColor="#888888" Margin="0,0,0,6"/>
+                    <Label Text="{Binding Bio}" FontSize="13" TextColor="#E8E8E8"
+                           LineBreakMode="WordWrap" Margin="0,0,0,14"
+                           IsVisible="{Binding Bio, Converter={StaticResource NotEmpty}}"/>
+
+                    <!-- Edit / Share buttons -->
+                    <Grid ColumnDefinitions="*,*" ColumnSpacing="10" Margin="0,0,0,18"
+                          IsVisible="{Binding IsGuest, Converter={StaticResource InvertBool}}">
+                        <Border Grid.Column="0" BackgroundColor="#242424"
+                                StrokeThickness="0" StrokeShape="RoundRectangle 8" Padding="0">
+                            <Label Text="Редактировать" FontFamily="OpenSansSemibold"
+                                   FontSize="13" TextColor="#F5F5F5"
+                                   HorizontalOptions="Center" Padding="0,10">
+                                <Label.GestureRecognizers>
+                                    <TapGestureRecognizer Command="{Binding EditProfileCommand}"/>
+                                </Label.GestureRecognizers>
+                            </Label>
+                        </Border>
+                        <Border Grid.Column="1" BackgroundColor="#242424"
+                                StrokeThickness="0" StrokeShape="RoundRectangle 8" Padding="0">
+                            <Label Text="Поделиться" FontFamily="OpenSansSemibold"
+                                   FontSize="13" TextColor="#F5F5F5"
+                                   HorizontalOptions="Center" Padding="0,10">
+                                <Label.GestureRecognizers>
+                                    <TapGestureRecognizer Command="{Binding ShareProfileCommand}"/>
+                                </Label.GestureRecognizers>
+                            </Label>
+                        </Border>
+                    </Grid>
+
+                    <!-- Login button (guest) -->
+                    <Border BackgroundColor="#E53935" StrokeThickness="0"
+                            StrokeShape="RoundRectangle 8" Padding="0"
+                            IsVisible="{Binding IsGuest}" Margin="0,0,0,18">
+                        <Label Text="Войти в аккаунт" FontFamily="OpenSansSemibold"
+                               FontSize="15" TextColor="#FFFFFF"
+                               HorizontalOptions="Center" Padding="0,14">
+                            <Label.GestureRecognizers>
+                                <TapGestureRecognizer Command="{Binding LoginCommand}"/>
+                            </Label.GestureRecognizers>
+                        </Label>
+                    </Border>
+                </VerticalStackLayout>
+
+                <!-- Tab strip (Посты / Сохранённое) ─────────────────── -->
+                <Grid ColumnDefinitions="*,*"
+                      BackgroundColor="#0f0f0f">
+                    <BoxView Grid.ColumnSpan="2" HeightRequest="1"
+                             BackgroundColor="#2a2a2a" VerticalOptions="Start"/>
+                    <VerticalStackLayout Grid.Column="0" HorizontalOptions="Fill">
+                        <BoxView HeightRequest="2"
+                                 BackgroundColor="{Binding ProfileTab, Converter={StaticResource ChipSelected}, ConverterParameter='posts'}"
+                                 HorizontalOptions="Fill"/>
+                        <Label Text="&#xe3f4;" FontFamily="MaterialIcons" FontSize="24"
+                               TextColor="{Binding ProfileTab, Converter={StaticResource ChipText}, ConverterParameter='posts'}"
+                               HorizontalOptions="Center" Padding="0,10">
+                            <Label.GestureRecognizers>
+                                <TapGestureRecognizer Command="{Binding GoToPostsCommand}"/>
+                            </Label.GestureRecognizers>
+                        </Label>
+                    </VerticalStackLayout>
+                    <VerticalStackLayout Grid.Column="1" HorizontalOptions="Fill">
+                        <BoxView HeightRequest="2"
+                                 BackgroundColor="{Binding ProfileTab, Converter={StaticResource ChipSelected}, ConverterParameter='saved'}"
+                                 HorizontalOptions="Fill"/>
+                        <Label Text="&#xe87e;" FontFamily="MaterialIcons" FontSize="24"
+                               TextColor="{Binding ProfileTab, Converter={StaticResource ChipText}, ConverterParameter='saved'}"
+                               HorizontalOptions="Center" Padding="0,10">
+                            <Label.GestureRecognizers>
+                                <TapGestureRecognizer Command="{Binding GoToSavedCommand}"/>
+                            </Label.GestureRecognizers>
+                        </Label>
+                    </VerticalStackLayout>
+                </Grid>
+
+                <!-- Post grid (3 columns via CollectionView) ────────── -->
+                <CollectionView ItemsSource="{Binding PostsGrid}"
+                                SelectionMode="None">
+                    <CollectionView.ItemsLayout>
+                        <GridItemsLayout Orientation="Vertical" Span="3"
+                                         HorizontalItemSpacing="2"
+                                         VerticalItemSpacing="2"/>
+                    </CollectionView.ItemsLayout>
+                    <CollectionView.EmptyView>
+                        <VerticalStackLayout HorizontalOptions="Center" Spacing="10"
+                                             Margin="0,60,0,40">
+                            <Label Text="&#xe3f4;" FontFamily="MaterialIcons"
+                                   FontSize="64" TextColor="#2a2a2a"
+                                   HorizontalOptions="Center"/>
+                            <Label Text="Нет постов" FontSize="15" TextColor="#888888"
+                                   HorizontalOptions="Center"/>
+                        </VerticalStackLayout>
+                    </CollectionView.EmptyView>
+                    <CollectionView.ItemTemplate>
+                        <DataTemplate x:DataType="models:ProfileGridItem">
+                            <Grid HeightRequest="130">
+                                <Grid.GestureRecognizers>
+                                    <TapGestureRecognizer
+                                        Command="{Binding Source={x:Reference ProfileRoot}, Path=BindingContext.OpenPostCommand}"
+                                        CommandParameter="{Binding .}"/>
+                                </Grid.GestureRecognizers>
+                                <!-- Coloured cover -->
+                                <BoxView BackgroundColor="{Binding CoverColor}" Opacity="0.85"/>
+                                <!-- Category icon -->
+                                <Label Text="{Binding CoverIcon}" FontFamily="MaterialIcons"
+                                       FontSize="36" TextColor="{Binding IconColor}" Opacity="0.8"
+                                       HorizontalOptions="Center" VerticalOptions="Center"/>
+                                <!-- Gradient scrim at bottom -->
+                                <!-- Text snippet -->
+                                <VerticalStackLayout VerticalOptions="End" Padding="6,0,6,6">
+                                    <Label Text="{Binding TextSnippet}" FontSize="10"
+                                           TextColor="#FFFFFF" MaxLines="3"
+                                           LineBreakMode="WordWrap" Opacity="0.9"/>
+                                </VerticalStackLayout>
+                                <!-- Vote count top-left -->
+                                <HorizontalStackLayout HorizontalOptions="Start"
+                                                       VerticalOptions="Start" Spacing="3" Margin="6">
+                                    <Label Text="&#xe87c;" FontFamily="MaterialIcons"
+                                           FontSize="13" TextColor="White" Opacity="0.9"/>
+                                    <Label Text="{Binding VoteCount}" FontSize="10"
+                                           FontFamily="OpenSansSemibold" TextColor="White"
+                                           VerticalOptions="Center" Opacity="0.9"/>
+                                </HorizontalStackLayout>
+                            </Grid>
+                        </DataTemplate>
+                    </CollectionView.ItemTemplate>
+                </CollectionView>
+
+                <BoxView HeightRequest="20" BackgroundColor="Transparent"/>
             </VerticalStackLayout>
+        </ScrollView>
 
-            <!-- Stats row (logged-in only) -->
-            <Grid ColumnDefinitions="*,1,*,1,*" Margin="16,0,16,20"
-                  IsVisible="{Binding IsGuest, Converter={StaticResource InvertBool}}">
-                <VerticalStackLayout Grid.Column="0" HorizontalOptions="Center" Spacing="2">
-                    <Label Text="0" TextColor="#FFFFFF" FontSize="22" FontAttributes="Bold" HorizontalOptions="Center"/>
-                    <Label Text="{Binding [Profile_Posts], Source={StaticResource Loc}}" TextColor="#555555" FontSize="11" HorizontalOptions="Center"/>
-                </VerticalStackLayout>
-                <BoxView Grid.Column="1" BackgroundColor="#1a1a1a" WidthRequest="1"/>
-                <VerticalStackLayout Grid.Column="2" HorizontalOptions="Center" Spacing="2">
-                    <Label Text="0" TextColor="#FFFFFF" FontSize="22" FontAttributes="Bold" HorizontalOptions="Center"/>
-                    <Label Text="{Binding [Profile_Read], Source={StaticResource Loc}}" TextColor="#555555" FontSize="11" HorizontalOptions="Center"/>
-                </VerticalStackLayout>
-                <BoxView Grid.Column="3" BackgroundColor="#1a1a1a" WidthRequest="1"/>
-                <VerticalStackLayout Grid.Column="4" HorizontalOptions="Center" Spacing="2">
-                    <Label Text="0" TextColor="#FFFFFF" FontSize="22" FontAttributes="Bold" HorizontalOptions="Center"/>
-                    <Label Text="{Binding [Profile_Tags], Source={StaticResource Loc}}" TextColor="#555555" FontSize="11" HorizontalOptions="Center"/>
-                </VerticalStackLayout>
-            </Grid>
-
-            <!-- Sign in button (guest) -->
-            <Border BackgroundColor="#E53935" StrokeShape="RoundRectangle 8" StrokeThickness="0"
-                    IsVisible="{Binding IsGuest}" Margin="16,0,16,16" Padding="0">
-                <Label Text="{Binding [Profile_LoginBtn], Source={StaticResource Loc}}"
-                       TextColor="#FFFFFF" FontSize="15" FontAttributes="Bold"
-                       HorizontalOptions="Center" Padding="0,14">
-                    <Label.GestureRecognizers>
-                        <TapGestureRecognizer Command="{Binding LoginCommand}"/>
-                    </Label.GestureRecognizers>
-                </Label>
-            </Border>
-
-            <BoxView HeightRequest="1" BackgroundColor="#1a1a1a" Margin="0,0,0,0"/>
-
-            <!-- Menu items -->
-            <!-- Favorites -->
-            <Grid ColumnDefinitions="Auto,*,Auto" Padding="16,14">
-                <Label Grid.Column="0" Text="&#xe87d;" FontFamily="MaterialIcons"
-                       FontSize="20" TextColor="#E53935" VerticalOptions="Center" Margin="0,0,14,0"/>
-                <VerticalStackLayout Grid.Column="1" VerticalOptions="Center" Spacing="2">
-                    <Label Text="{Binding [Profile_Favorites], Source={StaticResource Loc}}" TextColor="#FFFFFF" FontSize="15"/>
-                    <Label Text="{Binding [Profile_FavoritesDesc], Source={StaticResource Loc}}" TextColor="#555555" FontSize="12"/>
-                </VerticalStackLayout>
-                <Label Grid.Column="2" Text="&#xe5c8;" FontFamily="MaterialIcons"
-                       FontSize="18" TextColor="#333333" VerticalOptions="Center"/>
-                <Grid.GestureRecognizers>
-                    <TapGestureRecognizer Command="{Binding GoToFavoritesCommand}"/>
-                </Grid.GestureRecognizers>
-            </Grid>
-            <BoxView HeightRequest="1" BackgroundColor="#1a1a1a" Margin="16,0"/>
-
-            <!-- Docs -->
-            <Grid ColumnDefinitions="Auto,*,Auto" Padding="16,14">
-                <Label Grid.Column="0" Text="&#xe86f;" FontFamily="MaterialIcons"
-                       FontSize="20" TextColor="#888888" VerticalOptions="Center" Margin="0,0,14,0"/>
-                <VerticalStackLayout Grid.Column="1" VerticalOptions="Center" Spacing="2">
-                    <Label Text="{Binding [Tab_Docs], Source={StaticResource Loc}}" TextColor="#FFFFFF" FontSize="15"/>
-                    <Label Text="{Binding [Profile_DocsDesc], Source={StaticResource Loc}}" TextColor="#555555" FontSize="12"/>
-                </VerticalStackLayout>
-                <Label Grid.Column="2" Text="&#xe5c8;" FontFamily="MaterialIcons"
-                       FontSize="18" TextColor="#333333" VerticalOptions="Center"/>
-                <Grid.GestureRecognizers>
-                    <TapGestureRecognizer Command="{Binding GoToDocsCommand}"/>
-                </Grid.GestureRecognizers>
-            </Grid>
-            <BoxView HeightRequest="1" BackgroundColor="#1a1a1a" Margin="16,0"/>
-
-            <!-- Notes -->
-            <Grid ColumnDefinitions="Auto,*,Auto" Padding="16,14">
-                <Label Grid.Column="0" Text="&#xe3f4;" FontFamily="MaterialIcons"
-                       FontSize="20" TextColor="#888888" VerticalOptions="Center" Margin="0,0,14,0"/>
-                <VerticalStackLayout Grid.Column="1" VerticalOptions="Center" Spacing="2">
-                    <Label Text="{Binding [Tab_Notes], Source={StaticResource Loc}}" TextColor="#FFFFFF" FontSize="15"/>
-                    <Label Text="{Binding [Profile_NotesDesc], Source={StaticResource Loc}}" TextColor="#555555" FontSize="12"/>
-                </VerticalStackLayout>
-                <Label Grid.Column="2" Text="&#xe5c8;" FontFamily="MaterialIcons"
-                       FontSize="18" TextColor="#333333" VerticalOptions="Center"/>
-                <Grid.GestureRecognizers>
-                    <TapGestureRecognizer Command="{Binding GoToNotesCommand}"/>
-                </Grid.GestureRecognizers>
-            </Grid>
-            <BoxView HeightRequest="1" BackgroundColor="#1a1a1a" Margin="16,0"/>
-
-            <!-- Cache -->
-            <Grid ColumnDefinitions="Auto,*,Auto" Padding="16,14">
-                <Label Grid.Column="0" Text="&#xe871;" FontFamily="MaterialIcons"
-                       FontSize="20" TextColor="#888888" VerticalOptions="Center" Margin="0,0,14,0"/>
-                <VerticalStackLayout Grid.Column="1" VerticalOptions="Center" Spacing="2">
-                    <Label Text="{Binding [Profile_Cache], Source={StaticResource Loc}}" TextColor="#FFFFFF" FontSize="15"/>
-                    <Label Text="{Binding CacheSize}" TextColor="#555555" FontSize="12"/>
-                </VerticalStackLayout>
-                <Label Grid.Column="2"
-                       Text="{Binding [Profile_ClearCache], Source={StaticResource Loc}}"
-                       TextColor="#E53935" FontSize="12" VerticalOptions="Center">
-                    <Label.GestureRecognizers>
-                        <TapGestureRecognizer Command="{Binding ClearCacheCommand}"/>
-                    </Label.GestureRecognizers>
-                </Label>
-            </Grid>
-            <BoxView HeightRequest="1" BackgroundColor="#1a1a1a" Margin="16,0"/>
-
-            <!-- Language -->
-            <Grid ColumnDefinitions="Auto,*,Auto,Auto" Padding="16,14" ColumnSpacing="10">
-                <Label Grid.Column="0" Text="&#xe894;" FontFamily="MaterialIcons"
-                       FontSize="20" TextColor="#888888" VerticalOptions="Center" Margin="0,0,4,0"/>
-                <Label Grid.Column="1" Text="{Binding [Profile_Lang], Source={StaticResource Loc}}"
-                       TextColor="#FFFFFF" FontSize="15" VerticalOptions="Center"/>
-                <Border Grid.Column="2" Margin="0,0,6,0"
-                        BackgroundColor="{Binding CurrentLang, Converter={StaticResource ChipSelected}, ConverterParameter='ru'}"
-                        StrokeShape="RoundRectangle 6" StrokeThickness="0" Padding="0">
-                    <Label Text="{Binding [Profile_LangRU], Source={StaticResource Loc}}"
-                           Padding="12,6" FontSize="13"
-                           TextColor="{Binding CurrentLang, Converter={StaticResource ChipText}, ConverterParameter='ru'}">
-                        <Label.GestureRecognizers>
-                            <TapGestureRecognizer Command="{Binding SetLanguageCommand}" CommandParameter="ru"/>
-                        </Label.GestureRecognizers>
-                    </Label>
-                </Border>
-                <Border Grid.Column="3"
-                        BackgroundColor="{Binding CurrentLang, Converter={StaticResource ChipSelected}, ConverterParameter='en'}"
-                        StrokeShape="RoundRectangle 6" StrokeThickness="0" Padding="0">
-                    <Label Text="{Binding [Profile_LangEN], Source={StaticResource Loc}}"
-                           Padding="12,6" FontSize="13"
-                           TextColor="{Binding CurrentLang, Converter={StaticResource ChipText}, ConverterParameter='en'}">
-                        <Label.GestureRecognizers>
-                            <TapGestureRecognizer Command="{Binding SetLanguageCommand}" CommandParameter="en"/>
-                        </Label.GestureRecognizers>
-                    </Label>
-                </Border>
-            </Grid>
-            <BoxView HeightRequest="1" BackgroundColor="#1a1a1a"/>
-
-            <!-- Logout -->
-            <Border BackgroundColor="#1a1a1a" StrokeShape="RoundRectangle 8" StrokeThickness="0"
-                    IsVisible="{Binding IsGuest, Converter={StaticResource InvertBool}}"
-                    Margin="16,20,16,8" Padding="0">
-                <Label Text="{Binding [Profile_Logout], Source={StaticResource Loc}}"
-                       TextColor="#E53935" FontSize="15" FontAttributes="Bold"
-                       HorizontalOptions="Center" Padding="0,14">
-                    <Label.GestureRecognizers>
-                        <TapGestureRecognizer Command="{Binding LogoutCommand}"/>
-                    </Label.GestureRecognizers>
-                </Label>
-            </Border>
-
-        </VerticalStackLayout>
-    </ScrollView>
+    </Grid>
 </ContentPage>

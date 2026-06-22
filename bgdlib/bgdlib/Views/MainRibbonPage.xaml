@@ -7,7 +7,7 @@
              x:Class="bgdlib.Views.MainRibbonPage"
              x:DataType="vm:MainRibbonViewModel"
              x:Name="MainRibbonPageRoot"
-             BackgroundColor="#0f0f0f">
+             BackgroundColor="{StaticResource Bg}">
 
     <ContentPage.Resources>
         <conv:ChipSelectedConverter x:Key="ChipSelected"/>
@@ -19,19 +19,20 @@
     <Grid RowDefinitions="Auto,Auto,1,*,Auto">
 
         <!-- Header -->
-        <Grid Grid.Row="0" ColumnDefinitions="*,Auto,Auto" Padding="16,14,16,8">
+        <Grid Grid.Row="0" ColumnDefinitions="*,Auto,Auto"
+              BackgroundColor="{StaticResource Surface}" Padding="16,14,16,14">
             <Label Grid.Column="0" VerticalOptions="Center">
                 <Label.FormattedText>
                     <FormattedString>
-                        <Span Text="BGD" TextColor="#FFFFFF" FontSize="22" FontAttributes="Bold"/>
-                        <Span Text="lib" TextColor="#E53935" FontSize="22" FontAttributes="Bold"/>
+                        <Span Text="BGD" TextColor="{StaticResource TextPrimary}" FontSize="22" FontAttributes="Bold"/>
+                        <Span Text="lib" TextColor="{StaticResource Accent}" FontSize="22" FontAttributes="Bold"/>
                     </FormattedString>
                 </Label.FormattedText>
             </Label>
             <Label Grid.Column="1" Text="&#xe8b6;" FontFamily="MaterialIcons"
-                   FontSize="22" TextColor="#555555" VerticalOptions="Center" Margin="0,0,16,0"/>
+                   FontSize="22" TextColor="{StaticResource TextMuted}" VerticalOptions="Center" Margin="0,0,16,0"/>
             <Label Grid.Column="2" Text="&#xe145;" FontFamily="MaterialIcons"
-                   FontSize="24" TextColor="#E53935" VerticalOptions="Center"
+                   FontSize="24" TextColor="{StaticResource Accent}" VerticalOptions="Center"
                    IsVisible="{Binding IsGuest, Converter={StaticResource InvertBool}}">
                 <Label.GestureRecognizers>
                     <TapGestureRecognizer Command="{Binding CreatePostCommand}"/>
@@ -40,7 +41,8 @@
         </Grid>
 
         <!-- Engine filter -->
-        <ScrollView Grid.Row="1" Orientation="Horizontal" HorizontalScrollBarVisibility="Never">
+        <ScrollView Grid.Row="1" Orientation="Horizontal"
+                    BackgroundColor="{StaticResource Surface}" HorizontalScrollBarVisibility="Never">
             <HorizontalStackLayout Spacing="6" Padding="12,0,12,8">
                 <Border BackgroundColor="{Binding SelectedEngine, Converter={StaticResource ChipSelected}, ConverterParameter='ALL'}"
                         StrokeShape="RoundRectangle 6" StrokeThickness="0" Padding="0">
@@ -81,96 +83,101 @@
             </HorizontalStackLayout>
         </ScrollView>
 
-        <BoxView Grid.Row="2" HeightRequest="1" BackgroundColor="#1a1a1a"/>
+        <BoxView Grid.Row="2" HeightRequest="1" Color="{StaticResource Border}"/>
 
         <!-- Posts list -->
         <RefreshView Grid.Row="3"
                      IsRefreshing="{Binding IsRefreshing}"
                      Command="{Binding RefreshCommand}">
-        <CollectionView ItemsSource="{Binding Posts}" RemainingItemsThreshold="3"
-                        RemainingItemsThresholdReachedCommand="{Binding LoadMoreCommand}">
-            <CollectionView.EmptyView>
-                <Label Text="{Binding [Ribbon_Empty], Source={StaticResource Loc}}"
-                       TextColor="#555555" HorizontalOptions="Center" VerticalOptions="Center"
-                       HorizontalTextAlignment="Center" Margin="0,48"/>
-            </CollectionView.EmptyView>
-            <CollectionView.Footer>
-                <BoxView HeightRequest="8" Color="Transparent"/>
-            </CollectionView.Footer>
-            <CollectionView.ItemTemplate>
-                <DataTemplate x:DataType="models:CommunityPost">
-                    <Grid Padding="16,12" RowDefinitions="Auto,Auto,Auto,Auto" RowSpacing="6">
-                        <Grid.GestureRecognizers>
-                            <TapGestureRecognizer
-                                Command="{Binding Source={x:Reference MainRibbonPageRoot}, Path=BindingContext.OpenPostCommand}"
-                                CommandParameter="{Binding .}"/>
-                        </Grid.GestureRecognizers>
+            <CollectionView ItemsSource="{Binding Posts}" RemainingItemsThreshold="3"
+                            RemainingItemsThresholdReachedCommand="{Binding LoadMoreCommand}">
+                <CollectionView.EmptyView>
+                    <Label Text="{Binding [Ribbon_Empty], Source={StaticResource Loc}}"
+                           TextColor="{StaticResource TextMuted}" HorizontalOptions="Center" VerticalOptions="Center"
+                           HorizontalTextAlignment="Center" Margin="0,48"/>
+                </CollectionView.EmptyView>
+                <CollectionView.Footer>
+                    <BoxView HeightRequest="8" Color="Transparent"/>
+                </CollectionView.Footer>
+                <CollectionView.ItemTemplate>
+                    <DataTemplate x:DataType="models:CommunityPost">
+                        <Grid Padding="16,12" RowDefinitions="Auto,Auto,Auto,Auto" RowSpacing="6">
+                            <Grid.GestureRecognizers>
+                                <TapGestureRecognizer
+                                    Command="{Binding Source={x:Reference MainRibbonPageRoot}, Path=BindingContext.OpenPostCommand}"
+                                    CommandParameter="{Binding .}"/>
+                            </Grid.GestureRecognizers>
 
-                        <!-- Author row -->
-                        <Grid Grid.Row="0" ColumnDefinitions="Auto,*,Auto">
-                            <Border Grid.Column="0" BackgroundColor="#1a1a1a"
-                                    StrokeShape="RoundRectangle 12" StrokeThickness="0"
-                                    HeightRequest="24" WidthRequest="24">
-                                <Label Text="&#xe7fd;" FontFamily="MaterialIcons"
-                                       FontSize="14" TextColor="#555555"
-                                       HorizontalOptions="Center" VerticalOptions="Center"/>
+                            <!-- Author row -->
+                            <Grid Grid.Row="0" ColumnDefinitions="Auto,*,Auto">
+                                <Border Grid.Column="0" BackgroundColor="{StaticResource Surface}"
+                                        StrokeShape="RoundRectangle 12" StrokeThickness="0"
+                                        HeightRequest="24" WidthRequest="24">
+                                    <Label Text="&#xe7fd;" FontFamily="MaterialIcons"
+                                           FontSize="14" TextColor="{StaticResource TextMuted}"
+                                           HorizontalOptions="Center" VerticalOptions="Center"/>
+                                </Border>
+                                <Label Grid.Column="1" Text="{Binding Author.DisplayName}"
+                                       TextColor="{StaticResource TextMuted}" FontSize="12"
+                                       Margin="8,0,0,0" VerticalOptions="Center"/>
+                                <Label Grid.Column="2" Text="{Binding CreatedAt, StringFormat='{0:dd MMM}'}"
+                                       TextColor="{StaticResource TextDisabled}" FontSize="11" VerticalOptions="Center"/>
+                            </Grid>
+
+                            <!-- Title -->
+                            <Label Grid.Row="1" Text="{Binding Title}"
+                                   TextColor="{StaticResource TextPrimary}" FontSize="15" FontAttributes="Bold"
+                                   MaxLines="2" LineBreakMode="WordWrap"/>
+
+                            <!-- Engine tag -->
+                            <Border Grid.Row="2" BackgroundColor="{StaticResource Surface}"
+                                    StrokeShape="RoundRectangle 4" StrokeThickness="0"
+                                    Padding="8,3" HorizontalOptions="Start"
+                                    IsVisible="{Binding Engine, Converter={StaticResource NotEmpty}}">
+                                <Label Text="{Binding Engine}" TextColor="{StaticResource Accent}"
+                                       FontSize="10" FontAttributes="Bold"/>
                             </Border>
-                            <Label Grid.Column="1" Text="{Binding Author.DisplayName}"
-                                   TextColor="#555555" FontSize="12" Margin="8,0,0,0" VerticalOptions="Center"/>
-                            <Label Grid.Column="2" Text="{Binding CreatedAt, StringFormat='{0:dd MMM}'}"
-                                   TextColor="#333333" FontSize="11" VerticalOptions="Center"/>
+
+                            <!-- Vote row -->
+                            <HorizontalStackLayout Grid.Row="3" Spacing="12">
+                                <HorizontalStackLayout Spacing="4">
+                                    <Label Text="&#xe316;" FontFamily="MaterialIcons"
+                                           FontSize="16" TextColor="{StaticResource TextMuted}" VerticalOptions="Center">
+                                        <Label.GestureRecognizers>
+                                            <TapGestureRecognizer
+                                                Command="{Binding Source={x:Reference MainRibbonPageRoot}, Path=BindingContext.VoteCommand}"
+                                                CommandParameter="{Binding Id}"/>
+                                        </Label.GestureRecognizers>
+                                    </Label>
+                                    <Label Text="{Binding Upvotes}" TextColor="{StaticResource TextMuted}"
+                                           FontSize="12" VerticalOptions="Center"/>
+                                </HorizontalStackLayout>
+                                <HorizontalStackLayout Spacing="4">
+                                    <Label Text="&#xe313;" FontFamily="MaterialIcons"
+                                           FontSize="16" TextColor="{StaticResource TextMuted}" VerticalOptions="Center"/>
+                                    <Label Text="{Binding Downvotes}" TextColor="{StaticResource TextMuted}"
+                                           FontSize="12" VerticalOptions="Center"/>
+                                </HorizontalStackLayout>
+                                <HorizontalStackLayout Spacing="4">
+                                    <Label Text="&#xe0b9;" FontFamily="MaterialIcons"
+                                           FontSize="14" TextColor="{StaticResource TextDisabled}" VerticalOptions="Center"/>
+                                    <Label Text="{Binding CommentCount}" TextColor="{StaticResource TextDisabled}"
+                                           FontSize="12" VerticalOptions="Center"/>
+                                </HorizontalStackLayout>
+                            </HorizontalStackLayout>
+
+                            <!-- Divider -->
+                            <BoxView Grid.Row="3" HeightRequest="1" Color="{StaticResource Border}"
+                                     VerticalOptions="End" Margin="0,30,-16,-12"/>
                         </Grid>
-
-                        <!-- Title -->
-                        <Label Grid.Row="1" Text="{Binding Title}"
-                               TextColor="#FFFFFF" FontSize="15" FontAttributes="Bold"
-                               MaxLines="2" LineBreakMode="WordWrap"/>
-
-                        <!-- Engine tag -->
-                        <Border Grid.Row="2" BackgroundColor="#1a1a1a"
-                                StrokeShape="RoundRectangle 4" StrokeThickness="0"
-                                Padding="8,3" HorizontalOptions="Start"
-                                IsVisible="{Binding Engine, Converter={StaticResource NotEmpty}}">
-                            <Label Text="{Binding Engine}" TextColor="#E53935" FontSize="10" FontAttributes="Bold"/>
-                        </Border>
-
-                        <!-- Vote row -->
-                        <HorizontalStackLayout Grid.Row="3" Spacing="12">
-                            <HorizontalStackLayout Spacing="4">
-                                <Label Text="&#xe316;" FontFamily="MaterialIcons"
-                                       FontSize="16" TextColor="#555555" VerticalOptions="Center">
-                                    <Label.GestureRecognizers>
-                                        <TapGestureRecognizer
-                                            Command="{Binding Source={x:Reference MainRibbonPageRoot}, Path=BindingContext.VoteCommand}"
-                                            CommandParameter="{Binding Id}"/>
-                                    </Label.GestureRecognizers>
-                                </Label>
-                                <Label Text="{Binding Upvotes}" TextColor="#555555" FontSize="12" VerticalOptions="Center"/>
-                            </HorizontalStackLayout>
-                            <HorizontalStackLayout Spacing="4">
-                                <Label Text="&#xe313;" FontFamily="MaterialIcons"
-                                       FontSize="16" TextColor="#555555" VerticalOptions="Center"/>
-                                <Label Text="{Binding Downvotes}" TextColor="#555555" FontSize="12" VerticalOptions="Center"/>
-                            </HorizontalStackLayout>
-                            <HorizontalStackLayout Spacing="4">
-                                <Label Text="&#xe0b9;" FontFamily="MaterialIcons"
-                                       FontSize="14" TextColor="#333333" VerticalOptions="Center"/>
-                                <Label Text="{Binding CommentCount}" TextColor="#333333" FontSize="12" VerticalOptions="Center"/>
-                            </HorizontalStackLayout>
-                        </HorizontalStackLayout>
-
-                        <!-- Divider -->
-                        <BoxView Grid.Row="3" HeightRequest="1" BackgroundColor="#1a1a1a"
-                                 VerticalOptions="End" Margin="0,30,-16,-12"/>
-                    </Grid>
-                </DataTemplate>
-            </CollectionView.ItemTemplate>
-        </CollectionView>
+                    </DataTemplate>
+                </CollectionView.ItemTemplate>
+            </CollectionView>
         </RefreshView>
 
         <!-- Loading -->
         <ActivityIndicator Grid.Row="4" IsRunning="{Binding IsLoading}" IsVisible="{Binding IsLoading}"
-                           Color="#E53935" Margin="0,8"/>
+                           Color="{StaticResource Accent}" Margin="0,8"/>
 
     </Grid>
 </ContentPage>
