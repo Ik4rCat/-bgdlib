@@ -13,6 +13,9 @@ public partial class SearchPage : ContentPage
         BindingContext = vm;
     }
 
+    private async void OnJobsTapped(object sender, TappedEventArgs e)
+        => await Shell.Current.GoToAsync(nameof(JobsPage));
+
     protected override async void OnAppearing()
     {
         base.OnAppearing();

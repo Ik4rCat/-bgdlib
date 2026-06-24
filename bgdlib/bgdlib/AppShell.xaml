@@ -18,28 +18,28 @@
     </Shell.Resources>
 
     <TabBar>
-        <ShellContent x:Name="TabMain"
-                      Title="Лента"
-                      ContentTemplate="{DataTemplate views:MainRibbonPage}"
-                      Route="MainRibbonPage">
-            <ShellContent.Icon>
-                <FontImageSource FontFamily="MaterialIcons" Glyph="&#xe7ef;" Size="24"/>
-            </ShellContent.Icon>
-        </ShellContent>
         <ShellContent x:Name="TabRss"
                       Title="Новости"
                       ContentTemplate="{DataTemplate views:FeedPage}"
                       Route="FeedPage">
             <ShellContent.Icon>
+                <FontImageSource FontFamily="MaterialIcons" Glyph="&#xe0e5;" Size="24"/>
+            </ShellContent.Icon>
+        </ShellContent>
+        <ShellContent x:Name="TabMain"
+                      Title="Лента"
+                      ContentTemplate="{DataTemplate views:MainRibbonPage}"
+                      Route="MainRibbonPage">
+            <ShellContent.Icon>
                 <FontImageSource FontFamily="MaterialIcons" Glyph="&#xe88a;" Size="24"/>
             </ShellContent.Icon>
         </ShellContent>
-        <ShellContent x:Name="TabFavs"
-                      Title="Сохранено"
-                      ContentTemplate="{DataTemplate views:FavoritesPage}"
-                      Route="FavoritesPage">
+        <ShellContent x:Name="TabSearch"
+                      Title="Поиск"
+                      ContentTemplate="{DataTemplate views:SearchPage}"
+                      Route="SearchPage">
             <ShellContent.Icon>
-                <FontImageSource FontFamily="MaterialIcons" Glyph="&#xe87d;" Size="24"/>
+                <FontImageSource FontFamily="MaterialIcons" Glyph="&#xe8b6;" Size="24"/>
             </ShellContent.Icon>
         </ShellContent>
         <ShellContent x:Name="TabProfile"
@@ -47,7 +47,7 @@
                       ContentTemplate="{DataTemplate views:ProfilePage}"
                       Route="ProfilePage">
             <ShellContent.Icon>
-                <FontImageSource FontFamily="MaterialIcons" Glyph="&#xe8b8;" Size="24"/>
+                <FontImageSource FontFamily="MaterialIcons" Glyph="&#xe7fd;" Size="24"/>
             </ShellContent.Icon>
         </ShellContent>
     </TabBar>

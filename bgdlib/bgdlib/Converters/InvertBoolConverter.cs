@@ -120,3 +120,36 @@ public class BookmarkColorConverter : IValueConverter
     public object? ConvertBack(object? value, Type targetType, object? parameter, System.Globalization.CultureInfo culture)
         => throw new NotImplementedException();
 }
+
+public class BoolToWhiteConverter : IValueConverter
+{
+    public object? Convert(object? value, Type targetType, object? parameter, System.Globalization.CultureInfo culture)
+        => value is true ? Color.FromArgb("#FFFFFF") : Color.FromArgb("#666666");
+    public object? ConvertBack(object? value, Type targetType, object? parameter, System.Globalization.CultureInfo culture)
+        => throw new NotImplementedException();
+}
+
+public class BoolToAccentBgConverter : IValueConverter
+{
+    public object? Convert(object? value, Type targetType, object? parameter, System.Globalization.CultureInfo culture)
+        => value is true ? Color.FromArgb("#29E53935") : Color.FromArgb("#1A1A1A");
+    public object? ConvertBack(object? value, Type targetType, object? parameter, System.Globalization.CultureInfo culture)
+        => throw new NotImplementedException();
+}
+
+public class BoolToAccentBorderConverter : IValueConverter
+{
+    public object? Convert(object? value, Type targetType, object? parameter, System.Globalization.CultureInfo culture)
+        => value is true ? Color.FromArgb("#E53935") : Color.FromArgb("#2A2A2A");
+    public object? ConvertBack(object? value, Type targetType, object? parameter, System.Globalization.CultureInfo culture)
+        => throw new NotImplementedException();
+}
+
+// Inverse of BoolToWhiteConverter: true → muted (#666666), false → white (#FFFFFF)
+public class BoolToMutedConverter : IValueConverter
+{
+    public object? Convert(object? value, Type targetType, object? parameter, System.Globalization.CultureInfo culture)
+        => value is true ? Color.FromArgb("#666666") : Color.FromArgb("#FFFFFF");
+    public object? ConvertBack(object? value, Type targetType, object? parameter, System.Globalization.CultureInfo culture)
+        => throw new NotImplementedException();
+}

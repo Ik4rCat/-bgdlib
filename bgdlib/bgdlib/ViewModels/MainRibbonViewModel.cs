@@ -32,8 +32,8 @@ public partial class MainRibbonViewModel : ObservableObject
         IsLoading = true;
         _page = 1;
         Posts.Clear();
-        var session = await _db.GetSessionAsync();
-        IsGuest = session.IsGuest;
+        IsGuest = Preferences.Default.Get("is_guest",
+            string.IsNullOrEmpty(Preferences.Default.Get("username", "")));
         try
         {
             var page = await _api.GetPostsAsync(1, SelectedEngine == "ALL" ? null : SelectedEngine);

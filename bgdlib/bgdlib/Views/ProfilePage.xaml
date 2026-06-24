@@ -35,10 +35,10 @@
               BackgroundColor="#1a1a1a" Padding="16,13,12,13">
             <Label Grid.Column="0" Text="Профиль"
                    Style="{StaticResource AppBarTitle}"/>
-            <Label Grid.Column="1" Text="&#xe5d2;" FontFamily="MaterialIcons"
+            <Label Grid.Column="1" Text="&#xe8b8;" FontFamily="MaterialIcons"
                    FontSize="24" TextColor="#888888" VerticalOptions="Center" Margin="0,0,4,0">
                 <Label.GestureRecognizers>
-                    <TapGestureRecognizer Command="{Binding OpenMenuCommand}"/>
+                    <TapGestureRecognizer Command="{Binding GoToSettingsCommand}"/>
                 </Label.GestureRecognizers>
             </Label>
         </Grid>
@@ -53,15 +53,35 @@
 
                     <!-- Avatar + stats row -->
                     <Grid ColumnDefinitions="Auto,*" ColumnSpacing="20" Margin="0,0,0,14">
-                        <!-- Avatar -->
-                        <Border Grid.Column="0" BackgroundColor="#E53935"
-                                StrokeShape="RoundRectangle 44" StrokeThickness="3"
-                                Stroke="#E53935"
-                                HeightRequest="86" WidthRequest="86">
-                            <Label Text="{Binding Initials}"
-                                   TextColor="#FFFFFF" FontFamily="OpenSansSemibold" FontSize="32"
-                                   HorizontalOptions="Center" VerticalOptions="Center"/>
-                        </Border>
+                        <!-- Avatar (tap to change) -->
+                        <VerticalStackLayout Grid.Column="0" HorizontalOptions="Center" Spacing="5">
+                            <Border BackgroundColor="#E53935"
+                                    StrokeShape="RoundRectangle 44" StrokeThickness="3"
+                                    Stroke="#E53935"
+                                    HeightRequest="86" WidthRequest="86">
+                                <Border.GestureRecognizers>
+                                    <TapGestureRecognizer Command="{Binding PickAvatarCommand}"/>
+                                </Border.GestureRecognizers>
+                                <Grid>
+                                    <!-- Photo when set -->
+                                    <Image Source="{Binding AvatarSource}" Aspect="AspectFill"
+                                           IsVisible="{Binding HasAvatar}"/>
+                                    <!-- Initials placeholder when no photo -->
+                                    <Label Text="{Binding Initials}"
+                                           TextColor="#FFFFFF" FontFamily="OpenSansSemibold" FontSize="32"
+                                           HorizontalOptions="Center" VerticalOptions="Center"
+                                           IsVisible="{Binding HasAvatar, Converter={StaticResource InvertBool}}"/>
+                                </Grid>
+                            </Border>
+                            <!-- "Change photo" label shown only for logged-in users -->
+                            <Label Text="Сменить фото" FontSize="11" TextColor="#E53935"
+                                   HorizontalOptions="Center"
+                                   IsVisible="{Binding IsGuest, Converter={StaticResource InvertBool}}">
+                                <Label.GestureRecognizers>
+                                    <TapGestureRecognizer Command="{Binding PickAvatarCommand}"/>
+                                </Label.GestureRecognizers>
+                            </Label>
+                        </VerticalStackLayout>
                         <!-- Stats -->
                         <Grid Grid.Column="1" ColumnDefinitions="*,*,*"
                               HorizontalOptions="Fill" VerticalOptions="Center">
@@ -72,9 +92,9 @@
                                        HorizontalOptions="Center"/>
                             </VerticalStackLayout>
                             <VerticalStackLayout Grid.Column="1" HorizontalOptions="Center" Spacing="2">
-                                <Label Text="{Binding FollowersCount}" FontFamily="OpenSansSemibold"
+                                <Label Text="{Binding SavedCount}" FontFamily="OpenSansSemibold"
                                        FontSize="20" TextColor="#FFFFFF" HorizontalOptions="Center"/>
-                                <Label Text="подписч." FontSize="11" TextColor="#888888"
+                                <Label Text="сохранено" FontSize="11" TextColor="#888888"
                                        HorizontalOptions="Center"/>
                             </VerticalStackLayout>
                             <VerticalStackLayout Grid.Column="2" HorizontalOptions="Center" Spacing="2">
@@ -89,7 +109,9 @@
                     <!-- Name + handle + bio -->
                     <Label Text="{Binding DisplayName}" FontFamily="OpenSansSemibold"
                            FontSize="15" TextColor="#FFFFFF" Margin="0,0,0,2"/>
-                    <Label Text="{Binding Email}" FontSize="13" TextColor="#888888" Margin="0,0,0,6"/>
+                    <Label Text="{Binding Email}" FontSize="13" TextColor="#888888" Margin="0,0,0,2"/>
+                    <Label Text="{Binding JoinDate}" FontSize="12" TextColor="#666666" Margin="0,0,0,6"
+                           IsVisible="{Binding JoinDate, Converter={StaticResource NotEmpty}}"/>
                     <Label Text="{Binding Bio}" FontSize="13" TextColor="#E8E8E8"
                            LineBreakMode="WordWrap" Margin="0,0,0,14"
                            IsVisible="{Binding Bio, Converter={StaticResource NotEmpty}}"/>

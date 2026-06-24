@@ -39,6 +39,7 @@ public static class MauiProgram
         builder.Services.AddTransient<PostDetailViewModel>();
         builder.Services.AddTransient<ArticleViewModel>();
         builder.Services.AddTransient<CreatePostViewModel>();
+        builder.Services.AddTransient<SettingsViewModel>();
 
         // Views
         builder.Services.AddTransient<FeedPage>();
@@ -54,6 +55,7 @@ public static class MauiProgram
         builder.Services.AddTransient<AuthPage>();
         builder.Services.AddTransient<PostDetailPage>();
         builder.Services.AddTransient<CreatePostPage>();
+        builder.Services.AddTransient<SettingsPage>();
 
 #if DEBUG
         builder.Logging.AddDebug();

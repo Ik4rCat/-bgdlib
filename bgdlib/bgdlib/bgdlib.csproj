@@ -50,30 +50,30 @@
 
     <ItemGroup>
         <!-- App Icon -->
-        <MauiIcon Include="Resources\AppIcon\appicon.jpg" Color="#333333"/>
+        <MauiIcon Include="Resources\AppIcon\appicon.jpg" Color="#333333" />
 
         <!-- Splash Screen -->
-        <MauiSplashScreen Include="Resources\Splash\bgdlib_splash.jpg" Color="#3d3d3d" BaseSize="450,360"/>
+        <MauiSplashScreen Include="Resources\Splash\bgdlib_splash.jpg" Color="#3d3d3d" BaseSize="450,360" />
 
         <!-- Images -->
-        <MauiImage Include="Resources\Images\*"/>
+        <MauiImage Include="Resources\Images\*" />
         
         <!-- <MauiImage Update="Resources\Images\dotnet_bot.png" Resize="True" BaseSize="30a0,185"/> -->
 
         <!-- Custom Fonts -->
-        <MauiFont Include="Resources\Fonts\*"/>
+        <MauiFont Include="Resources\Fonts\*" />
 
         <!-- Raw Assets (also remove the "Resources\Raw" prefix) -->
-        <MauiAsset Include="Resources\Raw\**" LogicalName="%(RecursiveDir)%(Filename)%(Extension)"/>
+        <MauiAsset Include="Resources\Raw\**" LogicalName="%(RecursiveDir)%(Filename)%(Extension)" />
     </ItemGroup>
 
     <ItemGroup>
-        <PackageReference Include="Microsoft.Maui.Controls" Version="$(MauiVersion)"/>
-        <PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="10.0.0"/>
-        <PackageReference Include="CommunityToolkit.Mvvm" Version="8.4.0"/>
-        <PackageReference Include="sqlite-net-pcl" Version="1.9.172"/>
-        <PackageReference Include="SQLitePCLRaw.bundle_green" Version="2.1.10"/>
-        <PackageReference Include="CodeHollow.FeedReader" Version="1.2.6"/>
+        <PackageReference Include="Microsoft.Maui.Controls" Version="$(MauiVersion)" />
+        <PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="10.0.0" />
+        <PackageReference Include="CommunityToolkit.Mvvm" Version="8.4.0" />
+        <PackageReference Include="sqlite-net-pcl" Version="1.9.172" />
+        <PackageReference Include="SQLitePCLRaw.bundle_green" Version="2.1.11" />
+        <PackageReference Include="CodeHollow.FeedReader" Version="1.2.6" />
     </ItemGroup>
 
 </Project>

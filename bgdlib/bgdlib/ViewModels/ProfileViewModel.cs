@@ -27,10 +27,44 @@ public partial class ProfileViewModel : ObservableObject
     [RelayCommand]
     public async Task LoadAsync()
     {
-        var session = await _db.GetSessionAsync();
-        IsGuest = session.IsGuest;
-        DisplayName = session.IsGuest ? string.Empty : session.DisplayName;
-        Email = session.Email;
+        var isGuest = Preferences.Default.Get("is_guest",
+            string.IsNullOrEmpty(Preferences.Default.Get("username", "")));
+        IsGuest = isGuest;
+        if (!isGuest)
+        {
+            DisplayName = Preferences.Default.Get("username", "");
+            Email = Preferences.Default.Get("user_email", "");
+
+            // Initialize join date on first profile load
+            var joinDateStr = Preferences.Default.Get("join_date", "");
+            if (string.IsNullOrEmpty(joinDateStr))
+            {
+                joinDateStr = DateTime.Now.ToString("O");
+                Preferences.Default.Set("join_date", joinDateStr);
+            }
+            JoinDate = DateTime.TryParse(joinDateStr, null,
+                System.Globalization.DateTimeStyles.RoundtripKind, out var dt)
+                ? "С " + dt.ToString("MMMM yyyy")
+                : string.Empty;
+
+            // Avatar from local storage
+            var avatarPath = Preferences.Default.Get("avatar_path", "");
+            AvatarSource = !string.IsNullOrEmpty(avatarPath) && File.Exists(avatarPath)
+                ? ImageSource.FromFile(avatarPath)
+                : null;
+
+            // Saved articles count
+            var favs = await _db.GetFavoritesAsync();
+            SavedCount = favs.Count;
+        }
+        else
+        {
+            DisplayName = string.Empty;
+            Email = string.Empty;
+            JoinDate = string.Empty;
+            AvatarSource = null;
+            SavedCount = 0;
+        }
         CurrentLang = LocalizationService.Instance.CurrentLanguage;
         await RefreshCacheSizeAsync();
     }
@@ -53,6 +87,9 @@ public partial class ProfileViewModel : ObservableObject
 
     [RelayCommand]
     public async Task LoginAsync() => await Shell.Current.GoToAsync(nameof(AuthPage));
+
+    [RelayCommand]
+    public async Task GoToSettingsAsync() => await Shell.Current.GoToAsync(nameof(SettingsPage));
 
     [RelayCommand]
     public async Task LogoutAsync()

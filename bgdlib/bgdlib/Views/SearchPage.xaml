@@ -140,8 +140,29 @@
                 <VerticalStackLayout IsVisible="{Binding ShowResults, Converter={StaticResource InvertBool}}"
                                      Padding="16,12" Spacing="20">
 
+                    <!-- Вакансии shortcut -->
+                    <Label Text="РАЗДЕЛЫ" Style="{StaticResource SectionLabel}"/>
+                    <Border BackgroundColor="#1a1a1a" StrokeThickness="1" Stroke="#2a2a2a"
+                            StrokeShape="RoundRectangle 12" Padding="0">
+                        <Border.GestureRecognizers>
+                            <TapGestureRecognizer Tapped="OnJobsTapped"/>
+                        </Border.GestureRecognizers>
+                        <Grid ColumnDefinitions="Auto,*,Auto" Padding="16,14">
+                            <Label Grid.Column="0" Text="&#xe6d6;" FontFamily="MaterialIcons"
+                                   FontSize="24" TextColor="#E53935" VerticalOptions="Center"
+                                   Margin="0,0,12,0"/>
+                            <VerticalStackLayout Grid.Column="1" Spacing="2" VerticalOptions="Center">
+                                <Label Text="Вакансии" FontFamily="OpenSansSemibold"
+                                       FontSize="15" TextColor="#F5F5F5"/>
+                                <Label Text="Работа в геймдеве" FontSize="12" TextColor="#888888"/>
+                            </VerticalStackLayout>
+                            <Label Grid.Column="2" Text="&#xe5c8;" FontFamily="MaterialIcons"
+                                   FontSize="20" TextColor="#555555" VerticalOptions="Center"/>
+                        </Grid>
+                    </Border>
+
                     <!-- Category grid (3 cols) -->
-                    <Label Text="КАТЕГОРИИ" Style="{StaticResource SectionLabel}"/>
+                    <Label Text="КАТЕГОРИИ" Style="{StaticResource SectionLabel}" Margin="0,8,0,0"/>
                     <CollectionView ItemsSource="{Binding CategoryGrid}" SelectionMode="None">
                         <CollectionView.ItemsLayout>
                             <GridItemsLayout Orientation="Vertical" Span="3"

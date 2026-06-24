@@ -45,23 +45,22 @@ public partial class AuthViewModel : ObservableObject
         IsBusy = true;
         try
         {
-            AuthResponse? auth;
             if (IsLogin)
             {
-                auth = await _api.LoginAsync(Email, Password);
+                if (string.IsNullOrWhiteSpace(Email) || string.IsNullOrWhiteSpace(Password))
+                { ShowError(_loc["Auth_Error"]); return; }
+                if (string.IsNullOrEmpty(Preferences.Default.Get("username", string.Empty)))
+                { ShowError(_loc["Auth_Error"]); return; }
             }
             else
             {
-                if (string.IsNullOrWhiteSpace(Name))
-                {
-                    ShowError(_loc["Auth_Error"]);
-                    return;
-                }
-                auth = await _api.RegisterAsync(Email, Name, Password);
+                if (string.IsNullOrWhiteSpace(Name) || string.IsNullOrWhiteSpace(Email) || string.IsNullOrWhiteSpace(Password))
+                { ShowError(_loc["Auth_Error"]); return; }
+                Preferences.Default.Set("username", Name);
+                Preferences.Default.Set("user_email", Email);
             }
-
-            if (auth == null) { ShowError(_loc["Auth_Error"]); return; }
-            await SaveSessionAsync(auth);
+            Preferences.Default.Set("is_registered", true);
+            Preferences.Default.Set("is_guest", false);
             await Shell.Current.GoToAsync("//MainRibbonPage");
         }
         catch { ShowError(_loc["Auth_Error"]); }
@@ -118,8 +117,8 @@ public partial class AuthViewModel : ObservableObject
     [RelayCommand]
     public async Task GuestAsync()
     {
-        var session = new UserSession { IsGuest = true };
-        await _db.SaveSessionAsync(session);
+        Preferences.Default.Set("is_registered", true);
+        Preferences.Default.Set("is_guest", true);
         await Shell.Current.GoToAsync("//MainRibbonPage");
     }
 

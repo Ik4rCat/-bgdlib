@@ -14,9 +14,15 @@ public partial class FeedViewModel : ObservableObject
     private readonly DatabaseService _db;
 
     [ObservableProperty] private bool _isLoading;
+    [ObservableProperty] private bool _isEmpty;
     [ObservableProperty] private string _statusText = string.Empty;
     [ObservableProperty] private string _selectedEngine = "ALL";
     [ObservableProperty] private string _selectedCategory = "ALL";
+
+    partial void OnIsLoadingChanged(bool value)
+    {
+        if (!value) IsEmpty = Items.Count == 0;
+    }
 
     public ObservableCollection<FeedItem> Items { get; } = [];
     public List<string> Engines { get; } = ["ALL", "Unity", "Unreal", "Godot", "Other"];
@@ -119,5 +125,7 @@ public partial class FeedViewModel : ObservableObject
         Items.Clear();
         foreach (var item in filtered)
             Items.Add(item);
+
+        if (!IsLoading) IsEmpty = Items.Count == 0;
     }
 }

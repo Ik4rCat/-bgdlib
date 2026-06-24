@@ -5,7 +5,17 @@
              x:Class="bgdlib.Views.AuthPage"
              x:DataType="vm:AuthViewModel"
              BackgroundColor="#0f0f0f"
-             Shell.NavBarIsVisible="False">
+             Shell.NavBarIsVisible="False"
+             xmlns:conv="clr-namespace:bgdlib.Converters">
+    <ContentPage.Resources>
+        <conv:InvertBoolConverter         x:Key="InvertBool"/>
+        <conv:BoolToAccentConverter       x:Key="BoolToAccent"/>
+        <conv:BoolToAccentInvConverter    x:Key="InvertBoolToAccent"/>
+        <conv:BoolToWhiteConverter        x:Key="BoolToWhite"/>
+        <conv:BoolToMutedConverter        x:Key="BoolToMuted"/>
+        <conv:BoolToAccentBgConverter     x:Key="BoolToAccentBg"/>
+        <conv:BoolToAccentBorderConverter x:Key="BoolToAccentBorder"/>
+    </ContentPage.Resources>
 
     <ScrollView>
         <VerticalStackLayout Padding="28,64,28,32" Spacing="0">
@@ -28,28 +38,26 @@
             <Grid ColumnDefinitions="*,*" BackgroundColor="#1a1a1a"
                   Margin="0,0,0,28">
                 <VerticalStackLayout Grid.Column="0">
+                    <VerticalStackLayout.GestureRecognizers>
+                        <TapGestureRecognizer Command="{Binding SwitchToLoginCommand}"/>
+                    </VerticalStackLayout.GestureRecognizers>
                     <BoxView HeightRequest="2"
                              BackgroundColor="{Binding IsLogin, Converter={StaticResource BoolToAccent}}"
                              HorizontalOptions="Fill"/>
                     <Label Text="Войти" FontFamily="OpenSansSemibold" FontSize="15"
-                           HorizontalOptions="Center" Padding="0,12"
-                           TextColor="{Binding IsLogin, Converter={StaticResource BoolToWhite}}">
-                        <Label.GestureRecognizers>
-                            <TapGestureRecognizer Command="{Binding SwitchToLoginCommand}"/>
-                        </Label.GestureRecognizers>
-                    </Label>
+                           HorizontalOptions="Center" Padding="0,14" MinimumHeightRequest="48"
+                           TextColor="{Binding IsLogin, Converter={StaticResource BoolToWhite}}"/>
                 </VerticalStackLayout>
                 <VerticalStackLayout Grid.Column="1">
+                    <VerticalStackLayout.GestureRecognizers>
+                        <TapGestureRecognizer Command="{Binding SwitchToRegisterCommand}"/>
+                    </VerticalStackLayout.GestureRecognizers>
                     <BoxView HeightRequest="2"
                              BackgroundColor="{Binding IsLogin, Converter={StaticResource InvertBoolToAccent}}"
                              HorizontalOptions="Fill"/>
                     <Label Text="Регистрация" FontFamily="OpenSansSemibold" FontSize="15"
-                           HorizontalOptions="Center" Padding="0,12"
-                           TextColor="{Binding IsLogin, Converter={StaticResource BoolToMuted}}">
-                        <Label.GestureRecognizers>
-                            <TapGestureRecognizer Command="{Binding SwitchToRegisterCommand}"/>
-                        </Label.GestureRecognizers>
-                    </Label>
+                           HorizontalOptions="Center" Padding="0,14" MinimumHeightRequest="48"
+                           TextColor="{Binding IsLogin, Converter={StaticResource BoolToMuted}}"/>
                 </VerticalStackLayout>
             </Grid>
 
@@ -86,7 +94,10 @@
             <!-- Submit button -->
             <Border BackgroundColor="#E53935" StrokeThickness="0"
                     StrokeShape="RoundRectangle 10" Margin="0,8,0,16">
-                <Grid>
+                <Grid MinimumHeightRequest="48">
+                    <Grid.GestureRecognizers>
+                        <TapGestureRecognizer Command="{Binding SubmitCommand}"/>
+                    </Grid.GestureRecognizers>
                     <ActivityIndicator IsRunning="{Binding IsBusy}" Color="#FFFFFF"
                                        HeightRequest="22" WidthRequest="22"
                                        IsVisible="{Binding IsBusy}"
@@ -94,11 +105,7 @@
                     <Label Text="{Binding SubmitLabel}" FontFamily="OpenSansSemibold"
                            FontSize="16" TextColor="#FFFFFF"
                            HorizontalOptions="Center" Padding="0,14"
-                           IsVisible="{Binding IsBusy, Converter={StaticResource InvertBool}}">
-                        <Label.GestureRecognizers>
-                            <TapGestureRecognizer Command="{Binding SubmitCommand}"/>
-                        </Label.GestureRecognizers>
-                    </Label>
+                           IsVisible="{Binding IsBusy, Converter={StaticResource InvertBool}}"/>
                 </Grid>
             </Border>
 
@@ -129,7 +136,8 @@
             </Border>
 
             <!-- Guest -->
-            <Label FontSize="14" HorizontalOptions="Center">
+            <Label FontSize="14" HorizontalOptions="Center"
+                   Padding="16,14" MinimumHeightRequest="48">
                 <Label.GestureRecognizers>
                     <TapGestureRecognizer Command="{Binding GuestCommand}"/>
                 </Label.GestureRecognizers>

@@ -176,10 +176,10 @@
         <BoxView Grid.Row="3" HeightRequest="1" BackgroundColor="#2a2a2a"/>
 
         <!-- ── Pinterest cards grid ─────────────────────────────────── -->
-        <RefreshView Grid.Row="4"
-                     Command="{Binding LoadCommand}"
-                     IsRefreshing="{Binding IsLoading}"
-                     RefreshColor="#E53935">
+        <Grid Grid.Row="4">
+            <RefreshView Command="{Binding LoadCommand}"
+                         IsRefreshing="{Binding IsLoading}"
+                         RefreshColor="#E53935">
             <CollectionView ItemsSource="{Binding Items}"
                             x:Name="FeedCollection"
                             Margin="8,8,8,0">
@@ -188,11 +188,6 @@
                                      HorizontalItemSpacing="8"
                                      VerticalItemSpacing="8"/>
                 </CollectionView.ItemsLayout>
-                <CollectionView.EmptyView>
-                    <Label Text="Нет статей" TextColor="#555555"
-                           HorizontalOptions="Center" VerticalOptions="Center"
-                           HorizontalTextAlignment="Center" Margin="24,48"/>
-                </CollectionView.EmptyView>
                 <CollectionView.ItemTemplate>
                     <DataTemplate x:DataType="models:FeedItem">
                         <Border BackgroundColor="#161616"
@@ -273,7 +268,35 @@
                     </DataTemplate>
                 </CollectionView.ItemTemplate>
             </CollectionView>
-        </RefreshView>
+            </RefreshView>
+
+            <!-- Initial load spinner (no items yet) -->
+            <ActivityIndicator IsRunning="{Binding IsLoading}"
+                               IsVisible="{Binding IsLoading}"
+                               Color="#E53935"
+                               HorizontalOptions="Center" VerticalOptions="Center"/>
+
+            <!-- Empty state (done loading, 0 items) -->
+            <VerticalStackLayout IsVisible="{Binding IsEmpty}"
+                                 HorizontalOptions="Center" VerticalOptions="Center"
+                                 Spacing="12" Padding="32,0">
+                <Label Text="&#xe0e5;" FontFamily="MaterialIcons" FontSize="64"
+                       TextColor="#2a2a2a" HorizontalOptions="Center"/>
+                <Label Text="Нет новостей" TextColor="#666666"
+                       FontSize="15" HorizontalOptions="Center"/>
+                <Label Text="Проверьте интернет-подключение" TextColor="#444444"
+                       FontSize="13" HorizontalOptions="Center" HorizontalTextAlignment="Center"/>
+                <Border BackgroundColor="#242424" StrokeThickness="0"
+                        StrokeShape="RoundRectangle 8" Padding="24,10" HorizontalOptions="Center"
+                        Margin="0,4,0,0">
+                    <Label Text="Обновить" TextColor="#FFFFFF" FontFamily="OpenSansSemibold" FontSize="14">
+                        <Label.GestureRecognizers>
+                            <TapGestureRecognizer Command="{Binding LoadCommand}"/>
+                        </Label.GestureRecognizers>
+                    </Label>
+                </Border>
+            </VerticalStackLayout>
+        </Grid>
 
     </Grid>
 </ContentPage>

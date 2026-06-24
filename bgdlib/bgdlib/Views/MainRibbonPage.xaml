@@ -14,6 +14,7 @@
         <conv:InvertBoolConverter     x:Key="InvertBool"/>
         <conv:ChipSelectedConverter   x:Key="ChipSelected"/>
         <conv:ChipTextColorConverter  x:Key="ChipText"/>
+        <conv:BoolToMutedConverter    x:Key="BoolToMuted"/>
     </ContentPage.Resources>
 
     <Grid RowDefinitions="Auto,Auto,1,*,Auto">
@@ -30,7 +31,15 @@
                 </Label.FormattedText>
             </Label>
             <Label Grid.Column="1" Text="&#xe3c9;" FontFamily="MaterialIcons"
-                   FontSize="26" TextColor="#888888" VerticalOptions="Center">
+                   FontSize="26" TextColor="#666666" Opacity="0.4"
+                   VerticalOptions="Center"
+                   InputTransparent="{Binding IsGuest}">
+                <Label.Triggers>
+                    <DataTrigger TargetType="Label" Binding="{Binding IsGuest}" Value="False">
+                        <Setter Property="TextColor" Value="#F5F5F5"/>
+                        <Setter Property="Opacity" Value="1.0"/>
+                    </DataTrigger>
+                </Label.Triggers>
                 <Label.GestureRecognizers>
                     <TapGestureRecognizer Command="{Binding CreatePostCommand}"/>
                 </Label.GestureRecognizers>
